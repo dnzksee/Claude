@@ -10,18 +10,16 @@ Proje klasöründe `senaryo.py` bulunur; içinde:
     def arka_plan(): ...     # harita.arka_plan_uret(...) döndürür
 """
 import argparse
-import asyncio
 import importlib.util
 import json
 import os
 import re
-import ssl
 import subprocess
 import sys
-import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from motor.sahne import Video, AltYazi  # noqa: E402
+from motor.seslendirme import gemini_seslendir, edge_seslendir  # noqa: E402
 
 BOSLUK = 0.7       # bölümler arası sessizlik (sn)
 GIRIS_PAYI = 1.0   # video başındaki sessizlik
@@ -32,24 +30,12 @@ def _srt_zaman(s):
     return f"{int(s // 3600):02d}:{int(s % 3600 // 60):02d}:{int(s % 60):02d},{int(s * 1000 % 1000):03d}"
 
 
-def _srt_oku(yol):
-    satirlar = []
-    for blok in open(yol, encoding="utf-8").read().strip().split("\n\n"):
-        p = blok.strip().split("\n")
-        if len(p) < 3:
-            continue
-        a, b = p[1].split(" --> ")
-        cev = lambda z: sum(float(x) * m for x, m in zip(z.replace(",", ".").split(":"), (3600, 60, 1)))
-        satirlar.append((cev(a), cev(b), " ".join(p[2:])))
-    return satirlar
-
-
 def _sure(yol):
     return float(subprocess.check_output(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", yol]).strip())
 
 
-def _cumle_bol(satirlar, azami=90):
+def _cumle_bol(satirlar, azami=65):
     """Uzun cümleleri virgül noktalarından bölüp süreyi karakter oranında paylaştır."""
     sonuc = []
     for t0, t1, m in satirlar:
@@ -73,33 +59,20 @@ def _cumle_bol(satirlar, azami=90):
     return sonuc
 
 
-async def _seslendir(metin, mp3, srt, ses, hiz):
-    import edge_tts
-    from edge_tts import communicate
-    ca = os.environ.get("SSL_CERT_FILE")
-    if ca and os.path.exists(ca):
-        communicate._SSL_CTX = ssl.create_default_context(cafile=ca)
-    c = edge_tts.Communicate(metin, ses, rate=hiz, boundary="SentenceBoundary")
-    alt = edge_tts.SubMaker()
-    with open(mp3, "wb") as f:
-        async for parca in c.stream():
-            if parca["type"] == "audio":
-                f.write(parca["data"])
-            elif parca["type"] in ("WordBoundary", "SentenceBoundary"):
-                alt.feed(parca)
-    open(srt, "w", encoding="utf-8").write(alt.get_srt())
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("proje")
-    ap.add_argument("--ses", default="tr-TR-AhmetNeural")
-    ap.add_argument("--hiz", default="-4%", help="konuşma hızı, örn. -5%%, +0%%")
+    ap.add_argument("--motor", choices=["gemini", "edge"],
+                    default="gemini" if os.environ.get("GEMINI_API_KEY") else "edge",
+                    help="seslendirme motoru (gemini = Google, edge = Microsoft)")
+    ap.add_argument("--ses", default=None, help="gemini: Kore, Aoede, Charon... | edge: tr-TR-EmelNeural, tr-TR-AhmetNeural")
+    ap.add_argument("--hiz", default="-4%", help="yalnızca edge: konuşma hızı, örn. -4%%, +0%%")
     ap.add_argument("--sessiz", action="store_true", help="TTS kullanma, süreleri metinden tahmin et")
     ap.add_argument("--altyazi-gom", action="store_true", default=True)
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--onizleme", default="", help="virgülle ayrılmış saniyeler: PNG kare çıkar")
     a = ap.parse_args()
+    a.ses = a.ses or ("Kore" if a.motor == "gemini" else "tr-TR-EmelNeural")
 
     proje = os.path.abspath(a.proje)
     cikti = os.path.join(proje, "cikti")
@@ -113,28 +86,23 @@ def main():
     t = GIRIS_PAYI
     for i, b in enumerate(sen.BOLUMLER):
         mp3 = os.path.join(cikti, f"{i:02d}_{b['id']}.mp3")
-        srt = os.path.join(cikti, f"{i:02d}_{b['id']}.srt")
         if a.sessiz:
             d = len(b["metin"]) / 14.0  # ~14 karakter/sn
             parca_alt = [(0, d, b["metin"])]
         else:
             # metin/ses değişmediyse önceki seslendirmeyi yeniden kullan
-            meta, anahtar = mp3 + ".metin", b["metin"] + a.ses + a.hiz
+            meta, anahtar = mp3 + ".json", a.motor + a.ses + a.hiz + b["metin"]
             if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0 and os.path.exists(meta)
-                    and open(meta, encoding="utf-8").read() == anahtar):
-                print(f"Seslendiriliyor: {b['id']}")
-                for deneme in range(5):  # servis ara sıra boş yanıt dönebiliyor
-                    try:
-                        asyncio.run(_seslendir(b["metin"], mp3, srt, a.ses, a.hiz))
-                        break
-                    except Exception as hata:
-                        if deneme == 4:
-                            raise
-                        print(f"  tekrar deneniyor ({hata.__class__.__name__})")
-                        time.sleep(2 * (deneme + 1))
-                open(meta, "w", encoding="utf-8").write(anahtar)
+                    and json.load(open(meta, encoding="utf-8"))["anahtar"] == anahtar):
+                print(f"Seslendiriliyor ({a.motor}/{a.ses}): {b['id']}", flush=True)
+                if a.motor == "gemini":
+                    zam = gemini_seslendir(b["metin"], mp3, a.ses)
+                else:
+                    zam = edge_seslendir(b["metin"], mp3, a.ses, a.hiz)
+                json.dump({"anahtar": anahtar, "altyazi": zam}, open(meta, "w", encoding="utf-8"),
+                          ensure_ascii=False)
             d = _sure(mp3)
-            parca_alt = _srt_oku(srt)
+            parca_alt = [tuple(x) for x in json.load(open(meta, encoding="utf-8"))["altyazi"]]
             ses_parcalari.append((t, mp3))
         ek = b.get("ek_sure", 0)  # anlatım bittikten sonra animasyonun sürmesi için
         T[b["id"]] = (t, t + d + ek)

@@ -5,6 +5,7 @@ Yatay (1920x1080) YouTube videoları: Türkçe seslendirme + altyazı + taktik s
 ## Kurulum
 ```
 pip install pycairo numpy edge-tts
+export GEMINI_API_KEY=...   # Gemini "Kore" sesi için (varsayılan motor)
 # ffmpeg sistemde kurulu olmalı
 ```
 
@@ -19,7 +20,7 @@ pip install pycairo numpy edge-tts
 ```
 python3 uret.py projeler/kadesh                  # tam video
 python3 uret.py projeler/kadesh --sessiz         # hızlı deneme (TTS yok)
-python3 uret.py projeler/kadesh --ses tr-TR-EmelNeural   # kadın ses
+python3 uret.py projeler/kadesh --motor edge   # Microsoft sesi (GEMINI_API_KEY yoksa varsayılan)
 ```
 
 ## Çıktılar (`projeler/<ad>/cikti/`)
