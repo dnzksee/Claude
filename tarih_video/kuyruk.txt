@@ -1,0 +1,2 @@
+# Sırayla üretilecek projeler (projeler/ altındaki klasör adları)
+malazgirt_tam
