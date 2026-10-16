@@ -10,6 +10,7 @@ Proje klasöründe `senaryo.py` bulunur; içinde:
     def arka_plan(): ...     # harita.arka_plan_uret(...) döndürür
 """
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -96,6 +97,8 @@ def main():
     ap.add_argument("--sessiz", action="store_true", help="TTS kullanma, süreleri metinden tahmin et")
     ap.add_argument("--altyazi-gom", action="store_true", default=True)
     ap.add_argument("--fps", type=int, default=30)
+    ap.add_argument("--tts-azami", type=int, default=3000,
+                    help="tek seslendirme isteğinde azami karakter (kota tasarrufu)")
     ap.add_argument("--onizleme", default="", help="virgülle ayrılmış saniyeler: PNG kare çıkar")
     ap.add_argument("--sadece-kareler", action="store_true",
                     help="video üretme; yalnızca --onizleme karelerini (veya her parçanın ortasını) PNG kaydet")
@@ -109,40 +112,67 @@ def main():
     sen = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(sen)
 
-    # 1) Seslendirme: her "bolum" (YouTube bölümü) tek seferde seslendirilir, sonra
-    #    cümle aralarındaki sessizliklerden animasyon parçalarına bölünür.
+    # 1) Seslendirme. Kotayı korumak için ardışık bölümler, toplam TTS_AZAMI karakteri geçmeyecek
+    #    şekilde tek istekte seslendirilir; ses sonra cümle aralarındaki sessizliklerden
+    #    animasyon parçalarına bölünür. Her istek ayrı önbelleklenir: kota dolarsa ertesi gün
+    #    komut yeniden çalıştırıldığında kalan kısımdan devam eder.
     gruplar = []
     for b in sen.BOLUMLER:
         if b.get("bolum") or not gruplar:
             gruplar.append([])
         gruplar[-1].append(b)
 
-    T, altyazilar, ses_parcalari = {}, [], []
-    t = GIRIS_PAYI
-    for gi, grup in enumerate(gruplar):
-        metin = " ".join(b["metin"].strip() for b in grup)
-        if a.sessiz:
-            parcalar = []
-            for b in grup:
-                d = len(b["metin"]) / 12.0
-                parcalar.append((None, d, [(0, d, b["metin"])]))
+    model = GEMINI_MODEL if a.motor == "gemini" else ""
+    birimler = []  # her biri: ardışık bölüm (grup) listesi
+    for grup in gruplar:
+        uz = sum(len(b["metin"]) for b in grup)
+        if birimler and sum(len(b["metin"]) for g in birimler[-1] for b in g) + uz <= a.tts_azami:
+            birimler[-1].append(grup)
         else:
-            mp3 = os.path.join(cikti, f"g{gi:02d}_{grup[0]['id']}.mp3")
-            model = GEMINI_MODEL if a.motor == "gemini" else ""
-            meta, anahtar = mp3 + ".json", a.motor + model + a.ses + a.hiz + metin
-            if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0 and os.path.exists(meta)
-                    and json.load(open(meta, encoding="utf-8"))["anahtar"] == anahtar):
-                print(f"Seslendiriliyor ({a.motor}/{a.ses}) [{gi + 1}/{len(gruplar)}]: "
-                      f"{grup[0].get('bolum', grup[0]['id'])} ({len(metin)} karakter)", flush=True)
+            birimler.append([grup])
+
+    parca_sonuc = {}  # bolum id -> (mp3, sure, altyazi)
+    for bi, birim in enumerate(birimler):
+        parcalar_b = [b for g in birim for b in g]
+        if a.sessiz:
+            for b in parcalar_b:
+                d = len(b["metin"]) / 12.0
+                parca_sonuc[b["id"]] = (None, d, [(0, d, b["metin"])])
+            continue
+        metin = " ".join(b["metin"].strip() for b in parcalar_b)
+        anahtar = a.motor + model + a.ses + a.hiz + metin
+        mp3 = os.path.join(cikti, f"tts_{hashlib.sha1(anahtar.encode()).hexdigest()[:12]}.mp3")
+        meta = mp3 + ".json"
+        if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0 and os.path.exists(meta)):
+            adlar = ", ".join(g[0].get("bolum", g[0]["id"]) for g in birim)
+            print(f"Seslendiriliyor ({a.motor}/{model + '/' if model else ''}{a.ses}) [{bi + 1}/{len(birimler)}]: "
+                  f"{adlar} ({len(metin)} karakter)", flush=True)
+            try:
                 if a.motor == "gemini":
                     zam = gemini_seslendir(metin, mp3, a.ses)
                 else:
                     zam = edge_seslendir(metin, mp3, a.ses, a.hiz)
-                json.dump({"anahtar": anahtar, "altyazi": zam}, open(meta, "w", encoding="utf-8"),
-                          ensure_ascii=False)
-            cumleler = [tuple(x) for x in json.load(open(meta, encoding="utf-8"))["altyazi"]]
-            parcalar = _parcala(mp3, cumleler, [len(cumlelere_bol(b["metin"])) for b in grup])
-        for b, (pmp3, d, palt) in zip(grup, parcalar):
+            except RuntimeError as hata:
+                kalan = len(birimler) - bi
+                print(f"\nDURDU: {hata}\nTamamlanan istekler kaydedildi; kalan {kalan} istek için komutu "
+                      "daha sonra aynen tekrar çalıştırın.", flush=True)
+                sys.exit(2)
+            d_ses = _sure(mp3)
+            if d_ses < len(metin) / 25:  # makul hızın çok altında: ses yarıda kesilmiş olabilir
+                os.remove(mp3)
+                sys.exit(f"Ses eksik görünüyor ({d_ses:.0f} sn / {len(metin)} karakter). "
+                         "--tts-azami değerini düşürüp tekrar deneyin.")
+            json.dump({"altyazi": zam}, open(meta, "w", encoding="utf-8"), ensure_ascii=False)
+        cumleler = [tuple(x) for x in json.load(open(meta, encoding="utf-8"))["altyazi"]]
+        for b, sonuc in zip(parcalar_b, _parcala(mp3, cumleler,
+                                                 [len(cumlelere_bol(b["metin"])) for b in parcalar_b])):
+            parca_sonuc[b["id"]] = sonuc
+
+    T, altyazilar, ses_parcalari = {}, [], []
+    t = GIRIS_PAYI
+    for grup in gruplar:
+        for b in grup:
+            pmp3, d, palt = parca_sonuc[b["id"]]
             if pmp3:
                 ses_parcalari.append((t, pmp3))
             ek = b.get("ek_sure", 0)  # anlatım bittikten sonra animasyonun sürmesi için

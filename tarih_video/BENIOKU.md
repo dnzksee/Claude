@@ -23,6 +23,13 @@ python3 uret.py projeler/kadesh --sessiz         # hızlı deneme (TTS yok)
 python3 uret.py projeler/kadesh --motor edge   # Microsoft sesi (GEMINI_API_KEY yoksa varsayılan)
 ```
 
+Gemini ücretsiz kotası günde birkaç istekle sınırlı. Bölümler 3000 karakterlik paketlerle
+seslendirilir (`--tts-azami`), her paket önbelleğe alınır. Kota dolarsa komut durur;
+ertesi gün aynı komut kaldığı yerden devam eder. Ses tutarlılığı için model sabittir
+(`GEMINI_TTS_MODEL`, varsayılan gemini-3.8-flash-tts) — değiştirilirse tüm video yeniden seslendirilir.
+```
+```
+
 ## Çıktılar (`projeler/<ad>/cikti/`)
 - `video.mp4`: altyazısı gömülü final video
 - `altyazi.srt`: YouTube'a ayrıca yüklenecek altyazı dosyası
