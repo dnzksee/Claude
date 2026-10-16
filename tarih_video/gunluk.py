@@ -35,7 +35,12 @@ def main():
                                "--ses", "Kore"], cwd=KOK)
         if kod == 0:
             shutil.move(os.path.join(yol, "cikti", "video.mp4"), son)
-            print(f"HAZIR {son}", flush=True)
+            # İndirmesi kolay, ~yarı boyutlu kopya (animasyon olduğu için kalite kaybı fark edilmez)
+            kucuk = son.replace("_kore.mp4", "_kore_kucuk.mp4")
+            subprocess.call(["ffmpeg", "-y", "-loglevel", "error", "-i", son, "-c:v", "libx264",
+                             "-preset", "slow", "-crf", "30", "-tune", "animation", "-pix_fmt", "yuv420p",
+                             "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", kucuk])
+            print(f"HAZIR {kucuk}", flush=True)
         elif kod == 2:
             print(f"KOTA {proje}", flush=True)
             kota_doldu = True
