@@ -19,9 +19,10 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from motor.sahne import Video, AltYazi  # noqa: E402
-from motor.seslendirme import gemini_seslendir, edge_seslendir  # noqa: E402
+from motor.seslendirme import gemini_seslendir, edge_seslendir, cumlelere_bol  # noqa: E402
 
-BOSLUK = 0.7       # bölümler arası sessizlik (sn)
+BOSLUK = 0.8       # YouTube bölümleri arası ek sessizlik (sn)
+PARCA_BOSLUK = 0.15  # aynı bölümdeki parçalar arası ek sessizlik
 GIRIS_PAYI = 1.0   # video başındaki sessizlik
 
 
@@ -59,6 +60,31 @@ def _cumle_bol(satirlar, azami=65):
     return sonuc
 
 
+def _parcala(mp3, cumleler, sayilar):
+    """Bölüm sesini parçalara ayır. sayilar: her parçadaki cümle sayısı.
+    Döndürür: [(parca_mp3, sure, [(t0, t1, cumle), ...]), ...] (zamanlar parçaya göre)."""
+    toplam = _sure(mp3)
+    if len(cumleler) != sum(sayilar):  # güvenlik: eşleşmezse orantılı dağıt
+        print(f"  uyarı: {os.path.basename(mp3)} cümle sayısı {len(cumleler)} != {sum(sayilar)}")
+    kesimler, i = [0.0], 0
+    for n in sayilar[:-1]:
+        i += n
+        if 0 < i < len(cumleler):
+            kesimler.append((cumleler[i - 1][1] + cumleler[i][0]) / 2)
+        else:
+            kesimler.append(toplam * i / max(sum(sayilar), 1))
+    kesimler.append(toplam)
+    sonuc = []
+    for k in range(len(sayilar)):
+        k0, k1 = kesimler[k], kesimler[k + 1]
+        pmp3 = mp3.replace(".mp3", f"_p{k:02d}.mp3")
+        subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-ss", f"{k0:.3f}",
+                               "-to", f"{k1:.3f}", "-c:a", "libmp3lame", "-b:a", "192k", pmp3])
+        alt = [(max(0, c0 - k0), min(k1, c1) - k0, m) for c0, c1, m in cumleler if k0 - 0.05 <= c0 < k1]
+        sonuc.append((pmp3, _sure(pmp3), alt))
+    return sonuc
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("proje")
@@ -71,6 +97,8 @@ def main():
     ap.add_argument("--altyazi-gom", action="store_true", default=True)
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--onizleme", default="", help="virgülle ayrılmış saniyeler: PNG kare çıkar")
+    ap.add_argument("--sadece-kareler", action="store_true",
+                    help="video üretme; yalnızca --onizleme karelerini (veya her parçanın ortasını) PNG kaydet")
     a = ap.parse_args()
     a.ses = a.ses or ("Kore" if a.motor == "gemini" else "tr-TR-EmelNeural")
 
@@ -81,33 +109,46 @@ def main():
     sen = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(sen)
 
-    # 1) Seslendirme ve zamanlama
+    # 1) Seslendirme: her "bolum" (YouTube bölümü) tek seferde seslendirilir, sonra
+    #    cümle aralarındaki sessizliklerden animasyon parçalarına bölünür.
+    gruplar = []
+    for b in sen.BOLUMLER:
+        if b.get("bolum") or not gruplar:
+            gruplar.append([])
+        gruplar[-1].append(b)
+
     T, altyazilar, ses_parcalari = {}, [], []
     t = GIRIS_PAYI
-    for i, b in enumerate(sen.BOLUMLER):
-        mp3 = os.path.join(cikti, f"{i:02d}_{b['id']}.mp3")
+    for gi, grup in enumerate(gruplar):
+        metin = " ".join(b["metin"].strip() for b in grup)
         if a.sessiz:
-            d = len(b["metin"]) / 14.0  # ~14 karakter/sn
-            parca_alt = [(0, d, b["metin"])]
+            parcalar = []
+            for b in grup:
+                d = len(b["metin"]) / 12.0
+                parcalar.append((None, d, [(0, d, b["metin"])]))
         else:
-            # metin/ses değişmediyse önceki seslendirmeyi yeniden kullan
-            meta, anahtar = mp3 + ".json", a.motor + a.ses + a.hiz + b["metin"]
+            mp3 = os.path.join(cikti, f"g{gi:02d}_{grup[0]['id']}.mp3")
+            meta, anahtar = mp3 + ".json", a.motor + a.ses + a.hiz + metin
             if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0 and os.path.exists(meta)
                     and json.load(open(meta, encoding="utf-8"))["anahtar"] == anahtar):
-                print(f"Seslendiriliyor ({a.motor}/{a.ses}): {b['id']}", flush=True)
+                print(f"Seslendiriliyor ({a.motor}/{a.ses}) [{gi + 1}/{len(gruplar)}]: "
+                      f"{grup[0].get('bolum', grup[0]['id'])} ({len(metin)} karakter)", flush=True)
                 if a.motor == "gemini":
-                    zam = gemini_seslendir(b["metin"], mp3, a.ses)
+                    zam = gemini_seslendir(metin, mp3, a.ses)
                 else:
-                    zam = edge_seslendir(b["metin"], mp3, a.ses, a.hiz)
+                    zam = edge_seslendir(metin, mp3, a.ses, a.hiz)
                 json.dump({"anahtar": anahtar, "altyazi": zam}, open(meta, "w", encoding="utf-8"),
                           ensure_ascii=False)
-            d = _sure(mp3)
-            parca_alt = [tuple(x) for x in json.load(open(meta, encoding="utf-8"))["altyazi"]]
-            ses_parcalari.append((t, mp3))
-        ek = b.get("ek_sure", 0)  # anlatım bittikten sonra animasyonun sürmesi için
-        T[b["id"]] = (t, t + d + ek)
-        altyazilar += [(t + x0, t + x1, m) for x0, x1, m in _cumle_bol(parca_alt)]
-        t += d + ek + BOSLUK
+            cumleler = [tuple(x) for x in json.load(open(meta, encoding="utf-8"))["altyazi"]]
+            parcalar = _parcala(mp3, cumleler, [len(cumlelere_bol(b["metin"])) for b in grup])
+        for b, (pmp3, d, palt) in zip(grup, parcalar):
+            if pmp3:
+                ses_parcalari.append((t, pmp3))
+            ek = b.get("ek_sure", 0)  # anlatım bittikten sonra animasyonun sürmesi için
+            T[b["id"]] = (t, t + d + ek)
+            altyazilar += [(t + x0, t + x1, m) for x0, x1, m in _cumle_bol(palt)]
+            t += d + ek + PARCA_BOSLUK
+        t += BOSLUK
     toplam = t + 1.5
 
     # 2) Tam ses izi
@@ -146,10 +187,24 @@ def main():
                 f.write(f"{s // 60}:{s % 60:02d} {b['bolum']}\n")
 
     # 4) Animasyon
-    video = Video(sen.arka_plan(), fps=a.fps)
+    video = Video(sen.arka_plan() if hasattr(sen, "arka_plan") else None, fps=a.fps)
     sen.kur(video, T)
     if a.altyazi_gom:
         video.ekle(AltYazi(altyazilar))
+    if a.sadece_kareler:
+        import cairo
+        from motor.sahne import G as _G, Y as _Y
+        yuzey = cairo.ImageSurface(cairo.FORMAT_ARGB32, _G, _Y)
+        cr = cairo.Context(yuzey)
+        zamanlar = [float(x) for x in a.onizleme.split(",") if x] or \
+            [(T[b["id"]][0] + T[b["id"]][1]) / 2 for b in sen.BOLUMLER]
+        for i, zt in enumerate(zamanlar):
+            cr.set_source_rgb(0, 0, 0)
+            cr.paint()
+            video.kare(cr, zt)
+            yuzey.write_to_png(os.path.join(cikti, f"onizleme_{i:02d}_{zt:07.1f}.png"))
+        print(f"{len(zamanlar)} kare kaydedildi, toplam süre {toplam / 60:.1f} dk")
+        return
     mp4 = os.path.join(cikti, "video.mp4")
     print(f"Render: {toplam:.1f} sn -> {mp4}")
     onizleme = [float(x) for x in a.onizleme.split(",") if x]

@@ -220,6 +220,7 @@ class Komutan:
     """Sancak + isim levhası. Bir birliğe bağlanabilir ya da kendi izi olabilir."""
 
     katman = 4
+    zoom_duyarli = True
 
     def __init__(self, ad, taraf, birlik=None, x=0, y=0, ofset=(0, -70), alfa=0.0, unvan=None):
         self.ad, self.taraf, self.birlik, self.ofset, self.unvan = ad, taraf, birlik, ofset, unvan
@@ -406,12 +407,13 @@ class EtiketBalonu:
     """Haritada bir noktaya bağlı kısa açıklama (örn. 'Sahte ricat!')."""
 
     katman = 5
+    zoom_duyarli = True
 
     def __init__(self, metin, t0, t1, x=0, y=0, birlik=None, ofset=(0, -90), renk=(0.98, 0.93, 0.8)):
         self.metin, self.t0, self.t1, self.x, self.y = metin, t0, t1, x, y
         self.birlik, self.ofset, self.renk = birlik, ofset, renk
 
-    def ciz(self, cr, t):
+    def ciz(self, cr, t, kamera_zoom=1.0):
         if t < self.t0 or t > self.t1:
             return
         a = min(yumusat((t - self.t0) / 0.4), 1 - yumusat((t - self.t1 + 0.4) / 0.4))
@@ -426,7 +428,7 @@ class EtiketBalonu:
         w, h = ext.x_advance + 32, 48
         cr.save()
         cr.translate(x, y)
-        s = 0.85 + 0.15 * a
+        s = (0.85 + 0.15 * a) / max(kamera_zoom, 1) ** 0.75
         cr.scale(s, s)
         _yuvarlak_dikdortgen(cr, -w / 2, -h / 2, w, h, 10)
         cr.set_source_rgba(0.08, 0.07, 0.06, 0.85 * a)
@@ -557,13 +559,15 @@ class AltYazi:
 
 
 # ---------------------------------------------------------------- video
-class Video:
-    def __init__(self, arka_plan, fps=30):
-        self.arka_plan = arka_plan
-        self.fps = fps
+class Sahne:
+    """Kendi arka planı, kamerası ve öğeleri olan zaman aralığı. Sahneler arasında çapraz geçiş yapılır."""
+
+    GECIS = 0.8
+
+    def __init__(self, t0, t1, arka_plan):
+        self.t0, self.t1, self.arka_plan = t0, t1, arka_plan
         self.ogeler = []
         self.kamera = Iz({"x": DUNYA_G / 2, "y": DUNYA_Y / 2, "zoom": 1.0})
-        self.karartma = Iz({"a": 1.0})  # 1 = tamamen siyah
 
     def ekle(self, *ogeler):
         self.ogeler.extend(ogeler)
@@ -573,20 +577,16 @@ class Video:
         ozl = {k: v for k, v in (("x", x), ("y", y), ("zoom", zoom)) if v is not None}
         self.kamera.ekle(t1, ozl, sure=t1 - t0)
 
-    def acilis(self, t, sure=1.0):
-        self.karartma.ekle(t + sure, {"a": 0}, sure=sure)
-
-    def kapanis(self, t, sure=1.0):
-        self.karartma.ekle(t + sure, {"a": 1}, sure=sure)
+    def kamera_ayarla(self, t, x=None, y=None, zoom=None):
+        ozl = {k: v for k, v in (("x", x), ("y", y), ("zoom", zoom)) if v is not None}
+        self.kamera.ekle(t, ozl)
 
     def kare(self, cr, t):
         k = self.kamera.deger(t)
         z = k["zoom"]
-        # kameranın dünya dışına taşmasını engelle
         yari_g, yari_y = G / 2 / z, Y / 2 / z
         kx = min(max(k["x"], yari_g), DUNYA_G - yari_g) if z >= 1 else DUNYA_G / 2
         ky = min(max(k["y"], yari_y), DUNYA_Y - yari_y) if z >= 1 else DUNYA_Y / 2
-
         cr.save()
         cr.translate(G / 2, Y / 2)
         cr.scale(z, z)
@@ -597,14 +597,64 @@ class Video:
         cr.get_source().set_filter(cairo.FILTER_GOOD)
         cr.paint()
         cr.restore()
-        for o in sorted((o for o in self.ogeler if not getattr(o, "ekran", False)), key=lambda o: o.katman):
-            if isinstance(o, Komutan):
+        for o in sorted(self.ogeler, key=lambda o: o.katman):
+            if getattr(o, "zoom_duyarli", False):
                 o.ciz(cr, t, z)
             else:
                 o.ciz(cr, t)
         cr.restore()
 
-        for o in sorted((o for o in self.ogeler if getattr(o, "ekran", False)), key=lambda o: o.katman):
+
+class Video:
+    def __init__(self, arka_plan=None, fps=30):
+        self.fps = fps
+        self.sahneler = []
+        self.ekran_ogeleri = []
+        self.karartma = Iz({"a": 1.0})  # 1 = tamamen siyah
+        self._varsayilan = self.sahne(0, 1e9, arka_plan) if arka_plan is not None else None
+
+    def sahne(self, t0, t1, arka_plan):
+        s = Sahne(t0, t1, arka_plan)
+        self.sahneler.append(s)
+        return s
+
+    # tek sahneli kullanım için kısa yollar
+    @property
+    def kamera(self):
+        return self._varsayilan.kamera
+
+    def kamera_git(self, *a, **k):
+        self._varsayilan.kamera_git(*a, **k)
+
+    def ekle(self, *ogeler):
+        for o in ogeler:
+            (self.ekran_ogeleri if getattr(o, "ekran", False) else self._varsayilan.ogeler).append(o)
+        return ogeler[0] if len(ogeler) == 1 else ogeler
+
+    def ekran(self, *ogeler):
+        self.ekran_ogeleri.extend(ogeler)
+        return ogeler[0] if len(ogeler) == 1 else ogeler
+
+    def acilis(self, t, sure=1.0):
+        self.karartma.ekle(t + sure, {"a": 0}, sure=sure)
+
+    def kapanis(self, t, sure=1.0):
+        self.karartma.ekle(t + sure, {"a": 1}, sure=sure)
+
+    def kare(self, cr, t):
+        aktif = [s for s in self.sahneler if s.t0 <= t <= s.t1 + Sahne.GECIS]
+        aktif.sort(key=lambda s: s.t0)
+        for i, s in enumerate(aktif):
+            gelis = yumusat((t - s.t0) / Sahne.GECIS) if i > 0 else 1.0
+            if gelis >= 0.999:
+                s.kare(cr, t)
+            else:
+                cr.push_group()
+                s.kare(cr, t)
+                cr.pop_group_to_source()
+                cr.paint_with_alpha(gelis)
+
+        for o in sorted(self.ekran_ogeleri, key=lambda o: o.katman):
             o.ciz(cr, t)
 
         kar = self.karartma.deger(t)["a"]
@@ -621,7 +671,7 @@ class Video:
                  "-s", f"{G}x{Y}", "-r", str(self.fps), "-i", "-"]
         if ses:
             komut += ["-i", ses, "-c:a", "aac", "-b:a", "192k", "-shortest"]
-        komut += ["-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
+        komut += ["-c:v", "libx264", "-preset", "medium", "-crf", "22", "-tune", "animation", "-pix_fmt", "yuv420p",
                   "-movflags", "+faststart", cikti]
         p = subprocess.Popen(komut, stdin=subprocess.PIPE)
         toplam = int(sure * self.fps)
