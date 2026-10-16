@@ -20,7 +20,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from motor.sahne import Video, AltYazi  # noqa: E402
-from motor.seslendirme import gemini_seslendir, edge_seslendir, cumlelere_bol, GEMINI_MODEL  # noqa: E402
+from motor.seslendirme import (gemini_seslendir, edge_seslendir, cumlelere_bol, baslangic_dogrula,  # noqa: E402
+                               GEMINI_MODEL, SURUM)
 
 BOSLUK = 0.8       # YouTube bölümleri arası ek sessizlik (sn)
 PARCA_BOSLUK = 0.15  # aynı bölümdeki parçalar arası ek sessizlik
@@ -140,7 +141,7 @@ def main():
                 parca_sonuc[b["id"]] = (None, d, [(0, d, b["metin"])])
             continue
         metin = " ".join(b["metin"].strip() for b in parcalar_b)
-        anahtar = a.motor + model + a.ses + a.hiz + metin
+        anahtar = a.motor + model + a.ses + a.hiz + (SURUM if a.motor == "gemini" else "") + metin
         mp3 = os.path.join(cikti, f"tts_{hashlib.sha1(anahtar.encode()).hexdigest()[:12]}.mp3")
         meta = mp3 + ".json"
         if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0 and os.path.exists(meta)):
@@ -149,7 +150,14 @@ def main():
                   f"{adlar} ({len(metin)} karakter)", flush=True)
             try:
                 if a.motor == "gemini":
-                    zam = gemini_seslendir(metin, mp3, a.ses)
+                    for deneme in range(3):
+                        zam = gemini_seslendir(metin, mp3, a.ses)
+                        if baslangic_dogrula(mp3, metin) is not False:
+                            break
+                        print(f"  yeniden seslendiriliyor ({deneme + 2}/3)", flush=True)
+                    else:
+                        os.remove(mp3)
+                        raise RuntimeError("Ses 3 denemede de metinle başlamadı; seslendirme durduruldu.")
                 else:
                     zam = edge_seslendir(metin, mp3, a.ses, a.hiz)
             except RuntimeError as hata:

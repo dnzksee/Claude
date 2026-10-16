@@ -15,8 +15,10 @@ import urllib.error
 import urllib.request
 
 GEMINI_MODEL = os.environ.get("GEMINI_TTS_MODEL", "gemini-3.8-flash-tts")
-GEMINI_STIL = ("Tarih belgeseli anlatıcısı gibi oku: sakin, net, etkileyici ve hafif dramatik bir tonla; "
-               "cümleler arasında doğal duraklamalar yap: ")
+# Not: gemini-3.8-flash-tts, metne eklenen her ton talimatını ("belgesel gibi oku:", "[sakin]")
+# sesli okuyor ve ayrı sistem talimatını desteklemiyor. Bu yüzden metin talimatsız gönderilir.
+SURUM = "v2-talimatsiz"  # önbellek anahtarına girer; seslendirme mantığı değişince artırın
+DOGRULAMA_MODELI = os.environ.get("GEMINI_DOGRULAMA_MODELI", "gemini-flash-latest")
 
 
 def cumlelere_bol(metin):
@@ -68,7 +70,7 @@ def cumle_zamanla(ses, metin):
 def gemini_seslendir(metin, mp3, ses="Kore", deneme=8):
     anahtar = os.environ["GEMINI_API_KEY"]
     govde = json.dumps({
-        "contents": [{"parts": [{"text": GEMINI_STIL + metin}]}],
+        "contents": [{"parts": [{"text": metin}]}],
         "generationConfig": {"responseModalities": ["AUDIO"],
                              "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": ses}}}},
     }).encode()
@@ -103,6 +105,41 @@ def gemini_seslendir(metin, mp3, ses="Kore", deneme=8):
                            "-c:a", "libmp3lame", "-b:a", "192k", mp3])
     os.remove(pcm)
     return cumle_zamanla(mp3, metin)
+
+
+def _sade(m):
+    m = m.lower().replace("i̇", "i")
+    return re.sub(r"[^a-zçğıöşü0-9 ]", " ", m).split()
+
+
+def baslangic_dogrula(mp3, metin, saniye=12):
+    """Sesin ilk saniyelerini yazıya döktürüp metnin başıyla karşılaştırır.
+    Ses, metinde olmayan bir şeyle başlıyorsa (ör. talimat okunmuşsa) False döner.
+    Doğrulama servisine ulaşılamazsa None döner (üretimi engellemez)."""
+    kesit = mp3 + ".kesit.mp3"
+    subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-t", str(saniye), "-ac", "1",
+                           "-ar", "16000", kesit])
+    govde = json.dumps({"contents": [{"parts": [
+        {"inline_data": {"mime_type": "audio/mp3", "data": base64.b64encode(open(kesit, "rb").read()).decode()}},
+        {"text": "Bu Türkçe ses kaydını kelimesi kelimesine yazıya dök. Sadece metni yaz."}]}]}).encode()
+    os.remove(kesit)
+    try:
+        istek = urllib.request.Request(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{DOGRULAMA_MODELI}:generateContent",
+            govde, {"Content-Type": "application/json", "x-goog-api-key": os.environ["GEMINI_API_KEY"]})
+        with urllib.request.urlopen(istek, timeout=120) as y:
+            yazi = json.load(y)["candidates"][0]["content"]["parts"][0]["text"]
+    except Exception as hata:
+        print(f"  uyarı: başlangıç doğrulaması yapılamadı ({hata.__class__.__name__})", flush=True)
+        return None
+    # sayılar rakamla ya da yazıyla dökülebildiği için karşılaştırma dışı
+    sayisiz = lambda ks: [k for k in ks if not k.isdigit()]
+    duyulan, beklenen = sayisiz(_sade(yazi))[:3], sayisiz(_sade(metin))[:12]
+    # duyulan ilk kelimeler metnin başında geçmeli (talimat okunduysa geçmez)
+    tamam = len(duyulan) > 0 and all(k in beklenen for k in duyulan)
+    if not tamam:
+        print(f"  ses doğrulaması başarısız. Duyulan: {yazi[:80]!r}", flush=True)
+    return tamam
 
 
 def edge_seslendir(metin, mp3, ses="tr-TR-EmelNeural", hiz="+0%"):
