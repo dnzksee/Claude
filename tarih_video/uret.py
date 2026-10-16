@@ -19,7 +19,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from motor.sahne import Video, AltYazi  # noqa: E402
-from motor.seslendirme import gemini_seslendir, edge_seslendir, cumlelere_bol  # noqa: E402
+from motor.seslendirme import gemini_seslendir, edge_seslendir, cumlelere_bol, GEMINI_MODEL  # noqa: E402
 
 BOSLUK = 0.8       # YouTube bölümleri arası ek sessizlik (sn)
 PARCA_BOSLUK = 0.15  # aynı bölümdeki parçalar arası ek sessizlik
@@ -128,7 +128,8 @@ def main():
                 parcalar.append((None, d, [(0, d, b["metin"])]))
         else:
             mp3 = os.path.join(cikti, f"g{gi:02d}_{grup[0]['id']}.mp3")
-            meta, anahtar = mp3 + ".json", a.motor + a.ses + a.hiz + metin
+            model = GEMINI_MODEL if a.motor == "gemini" else ""
+            meta, anahtar = mp3 + ".json", a.motor + model + a.ses + a.hiz + metin
             if not (os.path.exists(mp3) and os.path.getsize(mp3) > 0 and os.path.exists(meta)
                     and json.load(open(meta, encoding="utf-8"))["anahtar"] == anahtar):
                 print(f"Seslendiriliyor ({a.motor}/{a.ses}) [{gi + 1}/{len(gruplar)}]: "

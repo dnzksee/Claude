@@ -14,7 +14,7 @@ import time
 import urllib.error
 import urllib.request
 
-GEMINI_MODEL = os.environ.get("GEMINI_TTS_MODEL", "gemini-2.5-flash-preview-tts")
+GEMINI_MODEL = os.environ.get("GEMINI_TTS_MODEL", "gemini-3.8-flash-tts")
 GEMINI_STIL = ("Tarih belgeseli anlatıcısı gibi oku: sakin, net, etkileyici ve hafif dramatik bir tonla; "
                "cümleler arasında doğal duraklamalar yap: ")
 
@@ -86,6 +86,9 @@ def gemini_seslendir(metin, mp3, ses="Kore", deneme=8):
                 raise RuntimeError(f"Gemini TTS hatası {h.code}: {govde_hata[:400]}")
             bekle = re.search(r'"retryDelay":\s*"(\d+)', govde_hata)
             bekle = int(bekle.group(1)) + 2 if bekle else 10 * (k + 1)
+            if bekle > 300:
+                raise RuntimeError(f"Gemini günlük kotası doldu ({GEMINI_MODEL}); yaklaşık {bekle // 3600} saat "
+                                   "sonra tekrar deneyin ya da GEMINI_TTS_MODEL ile başka model seçin.")
             print(f"  Gemini sınırı ({h.code}), {bekle} sn bekleniyor...", flush=True)
             time.sleep(bekle)
         except (KeyError, IndexError):
