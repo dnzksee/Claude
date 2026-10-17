@@ -9,6 +9,7 @@
 | `renders/ela_pamuk_renkli_kelebek_SULUBOYA.mp4` | **Suluboya** (önerilen ana teknik) |
 | `renders/ela_pamuk_renkli_kelebek_KAGIT_KESME.mp4` | Kâğıt kesme / stop-motion |
 | `renders/ela_pamuk_renkli_kelebek_YUMUSAK_3B.mp4` | Yumuşak 3B / oyuncak görünümü |
+| `renders/ela_pamuk_KARSILASTIRMA_3_teknik.mp4` | Üç teknik aynı anda, yan yana |
 
 Üçü de aynı senaryo, kamera ve oyunculukla üretildi. Böylece yalnızca **teknik** karşılaştırılmış olur.
 
