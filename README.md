@@ -16,6 +16,7 @@
 - `docs/01_dizi_kitabi.md`: karakterler, renk paleti, pedagojik ilkeler, teknik karşılaştırması
 - `docs/02_bolum_formati_25_30_dk.md`: 25–30 dakikalık bölüm iskeleti ve ilk sezon hikâye fikirleri
 - `docs/03_ornek_kesit_cekim_listesi.md`: çekim listesi, animasyon notları, 6:30'a genişletme planı
+- `docs/04_seslendirme_rehberi.md`: gerçek ses kaydı için yönergeli metin (kim, nasıl, hangi duyguyla)
 
 ## Üretim altyapısı (`studio/`)
 Tamamen kodla üretilen bir 2B animasyon stüdyosu:
@@ -28,7 +29,8 @@ studio/
   engine/world.py       6 katmanlı paralaks dünya (gökyüzü, bulut, tepeler, ev, çayır, ön plan)
   engine/audio.py       özgün müzik ve efekt sentezi (kalimba, müzik kutusu, ksilofon…)
   ep01_renkli_kelebek.py  bölüm senaryosu: kamera, oyunculuk, diyalog, müzik zamanlaması
-  make_voices.py        geçici Türkçe seslendirme (Piper TTS)
+  make_voices.py        geçici Türkçe seslendirme (yapay zekâ sesi)
+  import_recordings.py  gerçek ses kayıtlarını temizleyip videoya hazırlar
 ```
 
 ### Çalıştırma
