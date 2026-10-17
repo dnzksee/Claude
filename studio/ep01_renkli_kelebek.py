@@ -1,4 +1,4 @@
-"""Ela ile Pamuk — Örnek Bölüm Kesiti: "Renkli Kelebek"  (≈76 sn)
+"""Umay ile Zıpzıp — Örnek Bölüm Kesiti: "Renkli Kelebek"  (≈76 sn)
 
 Yönetmen / senarist / tasarımcı notları docs/ klasöründedir. Bu dosya bölümün
 "çekim senaryosu"dur: kamera, oyunculuk, diyalog ve efekt zamanlamaları burada.
@@ -23,8 +23,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from engine.core import (W, H, FPS, GROUND_Y, Track, Steps, Path2D, clamp, lerp, smooth, ease_io, ease_out_back,
                          ease_out_elastic, window, hash01, circle, ellipse, blob, noise_patch, hexrgb)
 from engine.styles import Canvas, PAINTERS, PAPER, post_process
-from engine.characters import (PAL, draw_ela, draw_pamuk, draw_butterfly, draw_flower, draw_sparkles,
-                               ela_arm_pose, blend_pose, star)
+from engine.characters import (PAL, draw_umay, draw_zipzip, draw_butterfly, draw_flower, draw_sparkles,
+                               umay_arm_pose, blend_pose, star)
 from engine import world
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,21 +34,21 @@ DURATION = 76.0
 # ============================================================== DİYALOG (seslendirme)
 # (kimlik, başlangıç sn, konuşan, metin, konuşma hızı)
 CUES = [
-    ("n1", 5.6, "anlatici", "Günaydın! Bu, Ela.", 1.15),
-    ("n2", 9.4, "anlatici", "Bu da Ela'nın en iyi arkadaşı... Pamuk!", 1.15),
-    ("p1", 12.5, "pamuk", "Hav! Hav!", 1.0),
-    ("e1", 15.0, "ela", "Bak Pamuk! Bir kelebek!", 1.05),
+    ("n1", 5.6, "anlatici", "Günaydın! Bu, Umay.", 1.15),
+    ("n2", 9.4, "anlatici", "Bu da Umay'ın en iyi arkadaşı... Zıpzıp!", 1.15),
+    ("p1", 12.5, "zipzip", "Hav! Hav!", 1.0),
+    ("e1", 15.0, "umay", "Bak Zıpzıp! Bir kelebek!", 1.05),
     ("n3", 19.6, "anlatici", "Kelebek ne renk?", 1.15),
     ("n3b", 24.0, "anlatici", "Sarı! Evet, sarı!", 1.1),
-    ("e2", 27.6, "ela", "Hadi Pamuk! Kelebeği takip edelim!", 1.05),
+    ("e2", 27.6, "umay", "Hadi Zıpzıp! Kelebeği takip edelim!", 1.05),
     ("n4", 35.6, "anlatici", "Bak! Kırmızı bir çiçek!", 1.1),
     ("n5", 40.8, "anlatici", "Bir de... mavi çiçek!", 1.1),
     ("n6", 47.0, "anlatici", "Kelebek nereye kondu?", 1.15),
-    ("n6b", 51.0, "anlatici", "Pamuk'un burnuna!", 1.1),
-    ("p2", 53.5, "pamuk", "Hap... hapşuuu!", 1.0),
-    ("e4", 55.6, "ela", "Hi hi hi hi!", 1.0),
-    ("e3", 60.0, "ela", "Hoşça kal kelebek!", 1.05),
-    ("n7", 64.6, "anlatici", "Ela ile Pamuk... en iyi iki arkadaş!", 1.15),
+    ("n6b", 51.0, "anlatici", "Zıpzıp'ın burnuna!", 1.1),
+    ("p2", 53.5, "zipzip", "Hap... hapşuuu!", 1.0),
+    ("e4", 55.6, "umay", "Hi hi hi hi!", 1.0),
+    ("e3", 60.0, "umay", "Hoşça kal kelebek!", 1.05),
+    ("n7", 64.6, "anlatici", "Umay ile Zıpzıp... en iyi iki arkadaş!", 1.15),
 ]
 
 # ============================================================== KAMERA
@@ -63,20 +63,20 @@ CAM = Track([
 ])
 
 # ============================================================== OYUNCULAR
-ELA_X = Track([(0, -150), (3.0, -150), (7.0, 700, "lin"), (8.0, 820, "out"), (30.6, 820),
+UMAY_X = Track([(0, -150), (3.0, -150), (7.0, 700, "lin"), (8.0, 820, "out"), (30.6, 820),
                (31.4, 900, "in"), (43.4, 3230, "lin"), (44.2, 3300, "out")])
-PAMUK_X = Track([(0, -320), (8.6, -320), (11.4, 560, "out"), (30.8, 560), (31.6, 650, "in"),
+ZIPZIP_X = Track([(0, -320), (8.6, -320), (11.4, 560, "out"), (30.8, 560), (31.6, 650, "in"),
                  (43.6, 3050, "lin"), (44.4, 3120, "out"), (61.8, 3120), (62.4, 3190, "io")])
-ELA_POSE = Steps([(0, "idle"), (8.1, "wave"), (9.6, "idle"), (15.1, "point"), (18.2, "idle"), (24.15, "cheer"),
+UMAY_POSE = Steps([(0, "idle"), (8.1, "wave"), (9.6, "idle"), (15.1, "point"), (18.2, "idle"), (24.15, "cheer"),
                   (26.0, "idle"), (27.75, "cheer"), (29.0, "point"), (30.6, "idle"), (47.0, "think"),
                   (51.15, "cheer"), (52.5, "idle"), (55.5, "laugh"), (57.3, "idle"), (59.8, "wave"),
                   (61.9, "idle"), (62.4, "hug")], blend=0.3)
-ELA_LOOK = Track([(0, 0.35), (7.9, 0.35), (8.3, 0.0), (9.6, 0.0), (10.1, -0.45), (12.8, -0.45), (14.9, 0.5),
+UMAY_LOOK = Track([(0, 0.35), (7.9, 0.35), (8.3, 0.0), (9.6, 0.0), (10.1, -0.45), (12.8, -0.45), (14.9, 0.5),
                   (27.4, 0.5), (27.9, 0.3), (44.4, 0.3), (45.4, -0.5), (55.2, -0.5), (55.6, 0.0), (57.2, 0.0),
                   (58.0, 0.55), (61.3, 0.55), (61.7, 0.45)])
-ELA_FACING = [(0, 1), (61.75, -1)]
-HOPS_ELA = [24.2, 27.85, 51.2]
-HOPS_PAMUK = [11.7, 24.3, 51.25, 62.45, 63.05]
+UMAY_FACING = [(0, 1), (61.75, -1)]
+HOPS_UMAY = [24.2, 27.85, 51.2]
+HOPS_ZIPZIP = [11.7, 24.3, 51.25, 62.45, 63.05]
 
 BUTTERFLY = Path2D([
     (13.4, 2150, 260), (15.0, 1600, 380), (16.6, 1260, 520), (29.4, 1260, 520), (31.0, 1500, 480),
@@ -140,10 +140,10 @@ GAIT = {}
 
 def gait_at(name, t):
     if name not in GAIT:
-        if name == "ela":
-            GAIT[name] = _gait_tables(ELA_X, DURATION, 150, 230, 150, 210)
+        if name == "umay":
+            GAIT[name] = _gait_tables(UMAY_X, DURATION, 150, 230, 150, 210)
         else:
-            GAIT[name] = _gait_tables(PAMUK_X, DURATION, 120, 220, 120, 190)
+            GAIT[name] = _gait_tables(ZIPZIP_X, DURATION, 120, 220, 120, 190)
     ts, g, ph = GAIT[name]
     i = int(clamp(t * 240, 0, len(ts) - 1))
     return float(g[i]), float(ph[i])
@@ -206,7 +206,7 @@ def cam_at(t):
     cx, cy, z = CAM(t)
     w = window(t, 31.6, 43.0, fade=1.0)
     if w > 0:
-        cx = lerp(cx, ELA_X(t) + 250, w)
+        cx = lerp(cx, UMAY_X(t) + 250, w)
     # hapşırık sarsıntısı
     if TAKEOFF <= t < TAKEOFF + 0.45:
         k = 1 - (t - TAKEOFF) / 0.45
@@ -215,16 +215,16 @@ def cam_at(t):
     return cx, cy, z
 
 
-def ela_state(t, bf):
-    g, ph = gait_at("ela", t)
-    a, b, u = ELA_POSE.blend(t)
-    arms = blend_pose(ela_arm_pose(a, t), ela_arm_pose(b, t), u)
-    f = facing_at(t, ELA_FACING)
-    x = ELA_X(t)
-    st = dict(facing=f, phase=ph, gait=g, arms=arms, look=ELA_LOOK(t))
-    st["blink"] = blink(t, "ela")
-    st["mouth"] = mouth("ela", t)
-    st["jump"] = hop(t, HOPS_ELA)
+def umay_state(t, bf):
+    g, ph = gait_at("umay", t)
+    a, b, u = UMAY_POSE.blend(t)
+    arms = blend_pose(umay_arm_pose(a, t), umay_arm_pose(b, t), u)
+    f = facing_at(t, UMAY_FACING)
+    x = UMAY_X(t)
+    st = dict(facing=f, phase=ph, gait=g, arms=arms, look=UMAY_LOOK(t))
+    st["blink"] = blink(t, "umay")
+    st["mouth"] = mouth("umay", t)
+    st["jump"] = hop(t, HOPS_UMAY)
     if bf is not None and 14.5 < t < 61.6:
         dx, dy = bf[0] - x, bf[1] - (GROUND_Y - 250)
         st["eye_dx"] = clamp(dx / 300, -1, 1)
@@ -238,16 +238,16 @@ def ela_state(t, bf):
     return x, st
 
 
-def pamuk_state(t, bf):
-    g, ph = gait_at("pamuk", t)
-    x = PAMUK_X(t)
+def zipzip_state(t, bf):
+    g, ph = gait_at("zipzip", t)
+    x = ZIPZIP_X(t)
     st = dict(facing=1, phase=ph, gait=g)
-    st["blink"] = blink(t, "pamuk", 3.0)
-    m = mouth("pamuk", t)
+    st["blink"] = blink(t, "zipzip", 3.0)
+    m = mouth("zipzip", t)
     if g > 0.8 and m < 0.1:
         m = 0.35 + 0.08 * math.sin(t * 13)  # koşarken dil dışarıda solur
     st["mouth"] = m
-    st["jump"] = hop(t, HOPS_PAMUK, h=48, d=0.4)
+    st["jump"] = hop(t, HOPS_ZIPZIP, h=48, d=0.4)
     st["wag"] = 1.0 + 0.8 * max(window(t, 11.6, 14.2, 0.3), window(t, 24.0, 26.0), window(t, 31, 44, 0.5),
                                 window(t, 51.0, 52.4), window(t, 55.6, 60), window(t, 62.3, 76))
     st["look_up"] = 0.6 * window(t, 14.5, 30.5, 0.5) + 0.3 * window(t, 55.0, 61.5, 0.5)
@@ -332,11 +332,11 @@ def render_end_card(style, t, frame):
     p.part(lambda c: blob(c, W / 2, 1180, 900, n=12, wobble=0.05, seed=3, sy=0.42), hexrgb("#9FD27A"), seed="ec_hill", flat=True, lw=0.6)
     u = t - END_CARD
     pop = ease_out_back(u / 0.8)
-    draw_title(p, clamp(u / 0.5), max(pop, 0.01), "Ela ile Pamuk", "Yakında yeni maceralarda!", y=250, sub_dy=130)
+    draw_title(p, clamp(u / 0.5), max(pop, 0.01), "Umay ile Zıpzıp", "Yakında yeni maceralarda!", y=250, sub_dy=130)
     draw_flower(p, 300, 1000, 1.3, (0.93, 0.30, 0.30), sway=math.sin(t * 1.5) * 0.3, seed="ecf1")
     draw_flower(p, 1620, 1000, 1.3, (0.36, 0.55, 0.95), sway=math.sin(t * 1.3 + 1) * 0.3, seed="ecf2")
-    draw_pamuk(p, 760, 960, 1.25, dict(wag=2.0, happy=1.0 if (t % 2.6) > 1.3 else 0.0, mouth=0.3, jump=hop(t, [71.0, 73.0], 40)))
-    draw_ela(p, 1150, 960, 1.25, dict(arms=ela_arm_pose("wave", t), look=0.0, blink=blink(t, "ela2"),
+    draw_zipzip(p, 760, 960, 1.25, dict(wag=2.0, happy=1.0 if (t % 2.6) > 1.3 else 0.0, mouth=0.3, jump=hop(t, [71.0, 73.0], 40)))
+    draw_umay(p, 1150, 960, 1.25, dict(arms=umay_arm_pose("wave", t), look=0.0, blink=blink(t, "umay2"),
                                       mouth=0.0, jump=hop(t, [71.5, 73.5], 30)))
     bx, by = 1180 + 200 * math.sin(t * 0.9), 560 + 60 * math.sin(t * 1.8)
     draw_butterfly(p, bx, by, 1.2, t * 13)
@@ -381,8 +381,8 @@ def render_frame(i, style, layers):
     inv = cairo.Matrix(*cam_m)
     inv.invert()
 
-    ex, est = ela_state(t, None)
-    px, pst = pamuk_state(t, None)
+    ex, est = umay_state(t, None)
+    px, pst = zipzip_state(t, None)
     # gölgeler
     shadow_col = hexrgb("#6E7FA6")
     for sx_, j, w_ in ((ex, est["jump"], 62), (px + 10, pst["jump"], 92)):
@@ -396,13 +396,13 @@ def render_frame(i, style, layers):
                   (0.12 * (1 - ease_out_elastic((t - tn - 0.35) / 1.2)) if t > tn + 0.35 else 0)
             draw_flower(p, fx, fy, 1.15, col, sway=math.sin(t * 1.6 + fx) * 0.35, pop=pop, seed=f"nf{fx}")
 
-    # Pamuk (önce, Ela'nın arkasında)
-    anchors = draw_pamuk(p, px, GROUND_Y, 0.95, pst)
+    # Zıpzıp (önce, Umay'ın arkasında)
+    anchors = draw_zipzip(p, px, GROUND_Y, 0.95, pst)
     nose_world = inv.transform_point(*anchors["nose"])
     bfx, bfy, landed = butterfly_pos(t, nose_world)
     # gözler kelebeği takip etsin
-    ex, est = ela_state(t, (bfx, bfy))
-    draw_ela(p, ex, GROUND_Y, 1.0, est)
+    ex, est = umay_state(t, (bfx, bfy))
+    draw_umay(p, ex, GROUND_Y, 1.0, est)
 
     # kelebek
     if 13.3 < t < 64.6:
@@ -464,7 +464,7 @@ def render_frame(i, style, layers):
             ov = Canvas()
             po = PAINTERS[style](ov, t=t, scale=1.0, frame=i)
             pop = ease_out_back((t - 0.4) / 0.9)
-            draw_title(po, a, max(pop, 0.01), "Ela ile Pamuk", "Renkli Kelebek")
+            draw_title(po, a, max(pop, 0.01), "Umay ile Zıpzıp", "Renkli Kelebek")
             ov.surface.flush()
             composite(rgb, ov.arr)
 
@@ -570,9 +570,9 @@ def build_audio(path):
     sfx.add(0.9, A.sparkle(base=A.n("G5")), 0.30)
     for tt in (17.7, 26.2, 45.4, 54.6):
         sfx.add(tt, A.whoosh(0.8, int(tt)), 0.35)
-    for tt in HOPS_ELA:
+    for tt in HOPS_UMAY:
         sfx.add(tt, A.boing(420, 820), 0.2, pan=0.15)
-    for tt in HOPS_PAMUK:
+    for tt in HOPS_ZIPZIP:
         sfx.add(tt, A.boing(300, 640), 0.2, pan=-0.15)
     sfx.add(RED_FLOWER[3], A.pop(), 0.35)
     sfx.add(BLUE_FLOWER[3], A.pop(), 0.35)
@@ -585,7 +585,7 @@ def build_audio(path):
         sfx.add(HEARTS_T[0] + j * 0.55, A.glock(hz(["C6", "D6", "E6", "G6", "A6", "G6", "C7"][j]), 1.0), 0.10)
     sfx.add(END_CARD + 0.1, A.sparkle(base=A.n("C6")), 0.28)
     # ayak sesleri (koşu)
-    for who, gain, pitch in (("ela", 0.10, 1.0), ("pamuk", 0.06, 1.6)):
+    for who, gain, pitch in (("umay", 0.10, 1.0), ("zipzip", 0.06, 1.6)):
         gait_at(who, 0)
         ts, g, ph = GAIT[who]
         steps = np.floor(ph / math.pi)
@@ -602,7 +602,7 @@ def build_audio(path):
         p_ = os.path.join(VO_DIR, f"{cid}.wav")
         if os.path.exists(p_):
             v = A.load_wav(p_)
-            vo.add(start, v, 0.9, pan={"ela": 0.08, "pamuk": -0.08}.get(who, 0.0))
+            vo.add(start, v, 0.9, pan={"umay": 0.08, "zipzip": -0.08}.get(who, 0.0))
             spans.append((start, start + len(v) / A.SR))
     duck = A.duck_curve(DURATION, spans, depth=0.4)[: len(music.buf), None]
     fade = np.ones(len(music.buf), np.float32)

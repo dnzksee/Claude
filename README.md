@@ -1,18 +1,15 @@
-# Ela ile Pamuk 🎨🐶
+# Umay ile Zıpzıp 🎨🐶
 
-2–5 yaş için Türkçe animasyon dizisi: dört yaşındaki **Ela** ve en iyi arkadaşı köpek **Pamuk**.
+2–5 yaş için Türkçe animasyon dizisi: dört yaşındaki **Umay** ve en iyi arkadaşı köpek **Zıpzıp**.
 
-## Örnek kesit: "Renkli Kelebek" (76 sn), dört farklı teknikte
+## Örnek kesit: "Renkli Kelebek" (76 sn)
 
-| Dosya | Teknik |
+**Seçilen teknik: Kâğıt kesme** (katmanlı kâğıt, yumuşak gölgeler, stop-motion titreşimi)
+
+| Dosya | Açıklama |
 |---|---|
-| `renders/ela_pamuk_renkli_kelebek_SULUBOYA.mp4` | **Suluboya** (önerilen ana teknik) |
-| `renders/ela_pamuk_renkli_kelebek_KAGIT_KESME.mp4` | Kâğıt kesme / stop-motion |
-| `renders/ela_pamuk_renkli_kelebek_YUMUSAK_3B.mp4` | Yumuşak 3B / oyuncak görünümü |
-| `renders/ela_pamuk_renkli_kelebek_KECE.mp4` | **Keçe el işi**: dikişli keçe parçaları, stop-motion |
-| `renders/ela_pamuk_KARSILASTIRMA_3_teknik.mp4` | Üç teknik aynı anda, yan yana |
-
-Dördü de aynı senaryo, kamera ve oyunculukla üretildi. Böylece yalnızca **teknik** karşılaştırılmış olur.
+| `renders/umay_zipzip_renkli_kelebek_KAGIT_KESME.mp4` | Güncel örnek: Umay ile Zıpzıp |
+| `renders/eski_denemeler/` | Teknik seçimi için yapılan ilk denemeler (suluboya, kâğıt kesme, yumuşak 3B, keçe; eski isimlerle) |
 
 ## Belgeler
 - `docs/01_dizi_kitabi.md`: karakterler, renk paleti, pedagojik ilkeler, teknik karşılaştırması
@@ -26,7 +23,7 @@ Tamamen kodla üretilen bir 2B animasyon stüdyosu:
 studio/
   engine/core.py        yumuşatma eğrileri, anahtar kare izleri, döşenebilir gürültü
   engine/styles.py      çizim teknikleri: Suluboya, Kâğıt Kesme, Yumuşak 3B, Keçe + son işlem
-  engine/characters.py  Ela, Pamuk, kelebek, çiçekler (iskelet tabanlı, pozlanabilir)
+  engine/characters.py  Umay, Zıpzıp, kelebek, çiçekler (iskelet tabanlı, pozlanabilir)
   engine/world.py       6 katmanlı paralaks dünya (gökyüzü, bulut, tepeler, ev, çayır, ön plan)
   engine/audio.py       özgün müzik ve efekt sentezi (kalimba, müzik kutusu, ksilofon…)
   ep01_renkli_kelebek.py  bölüm senaryosu: kamera, oyunculuk, diyalog, müzik zamanlaması
@@ -37,11 +34,11 @@ studio/
 ```bash
 pip install pycairo opencv-python-headless numpy
 cd studio
-python3 ep01_renkli_kelebek.py --style suluboya     # veya: kagit | yumusak3b | kece
+python3 ep01_renkli_kelebek.py --style kagit        # diğerleri: suluboya | yumusak3b | kece
 python3 ep01_renkli_kelebek.py --style suluboya --still 22 48   # yalnızca kare önizleme
 python3 ep01_renkli_kelebek.py --style kagit --scale 0.5        # hızlı, düşük çözünürlüklü taslak
 ```
 Yazı tipleri (`assets/fonts`, SIL OFL lisanslı) sisteme kurulu olmalı: `cp assets/fonts/*.ttf ~/.fonts && fc-cache -f`.
 
 ### Seslendirme
-`assets/vo/` içindeki sesler **geçici** (yapay zekâ TTS) seslerdir. Yayın için profesyonel seslendirme önerilir: Ela için 6–9 yaş arası bir çocuk ya da çocuk sesi yapabilen bir sanatçı, sıcak bir anlatıcı. Yeni kayıtları aynı dosya adlarıyla `assets/vo/` içine koymanız yeterli; dudak senkronu ve müzik kısma otomatik güncellenir.
+`assets/vo/` içindeki sesler **geçici** (yapay zekâ TTS) seslerdir. Yayın için profesyonel seslendirme önerilir: Umay için 6–9 yaş arası bir çocuk ya da çocuk sesi yapabilen bir sanatçı, sıcak bir anlatıcı. Yeni kayıtları aynı dosya adlarıyla `assets/vo/` içine koymanız yeterli; dudak senkronu ve müzik kısma otomatik güncellenir.

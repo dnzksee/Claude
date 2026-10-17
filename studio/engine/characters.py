@@ -1,4 +1,4 @@
-"""Karakterler: Ela (4 yaşında kız), Pamuk (köpek), kelebek, çiçekler, ışıltılar.
+"""Karakterler: Umay (4 yaşında kız), Zıpzıp (köpek), kelebek, çiçekler, ışıltılar.
 Hepsi Painter.part / stroke diliyle çizilir; böylece her teknikte aynı model kullanılır."""
 import math
 
@@ -16,7 +16,7 @@ PAL = {
     "eye": hexrgb("#2B1D1A"),
     "mouth": hexrgb("#9C2F36"),
     "tongue": hexrgb("#F2878A"),
-    "dog": hexrgb("#F8EAD6"),        # krem-beyaz Pamuk
+    "dog": hexrgb("#F8EAD6"),        # krem-beyaz Zıpzıp
     "dog_d": hexrgb("#E6D2B6"),
     "dog_muzzle": hexrgb("#FFFDF8"),
     "caramel": hexrgb("#D9955A"),    # karamel kulak ve göz lekesi
@@ -33,7 +33,7 @@ PAL = {
 
 
 # ---------------------------------------------------------------- POZLAR
-def ela_arm_pose(name, t):
+def umay_arm_pose(name, t):
     """Kol açıları: (sol omuz, sol dirsek, sağ omuz, sağ dirsek). Açı aşağıdan dışa doğru."""
     if name == "idle":
         b = math.sin(t * 2.1) * 0.03
@@ -58,8 +58,8 @@ def blend_pose(a, b, u):
     return tuple(lerp(x, y, u) for x, y in zip(a, b))
 
 
-# ---------------------------------------------------------------- ELA
-def draw_ela(p, x, y, s, st):
+# ---------------------------------------------------------------- UMAY
+def draw_umay(p, x, y, s, st):
     """st: facing, phase, gait(0 dur, 1 yürü, 2 koş), arms(4'lü), look, eye_dx, eye_dy,
     blink, mouth, smile, happy, brow, tilt, jump, lean"""
     ctx = p.ctx
@@ -91,8 +91,8 @@ def draw_ela(p, x, y, s, st):
         hx, hy = side * 15, -98
         ax_, ay_ = hx + math.sin(a) * 70, hy + math.cos(a) * 70 - lf
         p.part(lambda c, hx=hx, hy=hy, ax_=ax_, ay_=ay_: capsule(c, hx, hy, ax_, ay_, 9.5, 9), PAL["skin"],
-               seed=f"ela_leg{side}")
-        p.part(lambda c, ax_=ax_, ay_=ay_: ellipse(c, ax_ + 7, ay_ + 8, 17, 10), PAL["shoe"], seed=f"ela_shoe{side}")
+               seed=f"umay_leg{side}")
+        p.part(lambda c, ax_=ax_, ay_=ay_: ellipse(c, ax_ + 7, ay_ + 8, 17, 10), PAL["shoe"], seed=f"umay_shoe{side}")
     ctx.restore()
 
     ctx.save()
@@ -107,20 +107,20 @@ def draw_ela(p, x, y, s, st):
     ctx.rotate(tilt)
     ctx.translate(0, 196)
     sway = math.sin(ph - 0.8) * 0.18 * walk_amt + math.sin(t * 1.7) * 0.03 + tilt * 0.6
-    p.part(lambda c: blob(c, look * 4, -262, 80, n=9, wobble=0.05, seed=3, sx=1.02, sy=0.98), PAL["hair"], seed="ela_bhair")
+    p.part(lambda c: blob(c, look * 4, -262, 80, n=9, wobble=0.05, seed=3, sx=1.02, sy=0.98), PAL["hair"], seed="umay_bhair")
     for side in (-1, 1):
         ctx.save()
         ctx.translate(side * 74, -268)
         ctx.rotate(sway + side * 0.15 * (jump > 1))
-        p.part(lambda c: blob(c, side * 20, 14, 31, n=8, wobble=0.1, seed=side + 5), PAL["hair"], seed=f"ela_pig{side}")
+        p.part(lambda c: blob(c, side * 20, 14, 31, n=8, wobble=0.1, seed=side + 5), PAL["hair"], seed=f"umay_pig{side}")
         p.part(lambda c: (ellipse(c, side * 4, -8, 15, 9, 0.6 * side), ellipse(c, side * 4, -8, 15, 9, -0.6 * side + math.pi)),
-               PAL["ribbon"], seed=f"ela_bow{side}")
-        p.part(lambda c: circle(c, side * 4, -8, 6), PAL["ribbon"], seed=f"ela_bowk{side}")
+               PAL["ribbon"], seed=f"umay_bow{side}")
+        p.part(lambda c: circle(c, side * 4, -8, 6), PAL["ribbon"], seed=f"umay_bowk{side}")
         ctx.restore()
     ctx.restore()
 
     # --- boyun + elbise
-    p.part(lambda c: capsule(c, 0, -205, 0, -180, 10), PAL["skin"], seed="ela_neck", line=False)
+    p.part(lambda c: capsule(c, 0, -205, 0, -180, 10), PAL["skin"], seed="umay_neck", line=False)
     sw = math.sin(ph + 1.2) * 5 * walk_amt + math.sin(t * 1.3) * 1.5
 
     def dress(c):
@@ -133,8 +133,8 @@ def draw_ela(p, x, y, s, st):
         c.curve_to(10, -186, -10, -186, -22, -192)
         c.close_path()
 
-    p.part(dress, PAL["dress"], seed="ela_dress")
-    p.part(lambda c: (ellipse(c, -12, -187, 14, 8, 0.25), ellipse(c, 12, -187, 14, 8, -0.25)), PAL["dress_l"], seed="ela_collar")
+    p.part(dress, PAL["dress"], seed="umay_dress")
+    p.part(lambda c: (ellipse(c, -12, -187, 14, 8, 0.25), ellipse(c, 12, -187, 14, 8, -0.25)), PAL["dress_l"], seed="umay_collar")
 
     def heart(c, hx=24, hy=-128, r=8):
         c.move_to(hx, hy + r * 1.1)
@@ -142,10 +142,10 @@ def draw_ela(p, x, y, s, st):
         c.curve_to(hx + r * 0.9, hy - r * 1.3, hx + r * 1.6, hy, hx, hy + r * 1.1)
         c.close_path()
 
-    p.part(heart, PAL["ribbon"], seed="ela_heart", lw=0.6)
+    p.part(heart, PAL["ribbon"], seed="umay_heart", lw=0.6)
 
     # --- kollar
-    arms = st.get("arms", ela_arm_pose("idle", t))
+    arms = st.get("arms", umay_arm_pose("idle", t))
     if walk_amt > 0:
         sw_a = math.sin(ph) * lerp(0.28, 0.45, run_amt) * walk_amt
         arms = (arms[0] + sw_a, arms[1] + 0.5 * run_amt, arms[2] - sw_a, arms[3] + 0.5 * run_amt)
@@ -156,8 +156,8 @@ def draw_ela(p, x, y, s, st):
         fa = sa + ea
         hx, hy = ex + side * math.sin(fa) * 38, ey + math.cos(fa) * 38
         p.part(lambda c, a=(sx_, sy_, ex, ey), b=(ex, ey, hx, hy): (capsule(c, *a, 9.5, 9), capsule(c, *b, 9, 8.5), circle(c, b[2], b[3], 11.5)),
-               PAL["skin"], seed=f"ela_arm{side}")
-        p.part(lambda c, sx_=sx_, sy_=sy_: ellipse(c, sx_, sy_ + 2, 16, 14), PAL["dress"], seed=f"ela_sleeve{side}")
+               PAL["skin"], seed=f"umay_arm{side}")
+        p.part(lambda c, sx_=sx_, sy_=sy_: ellipse(c, sx_, sy_ + 2, 16, 14), PAL["dress"], seed=f"umay_sleeve{side}")
         hands[side] = ctx.user_to_device(hx, hy)
 
     # --- baş
@@ -165,11 +165,11 @@ def draw_ela(p, x, y, s, st):
     ctx.translate(0, -196)
     ctx.rotate(tilt)
     ctx.translate(0, 196)
-    p.part(lambda c: ellipse(c, look * 3, -262, 71, 67), PAL["skin"], seed="ela_head")
+    p.part(lambda c: ellipse(c, look * 3, -262, 71, 67), PAL["skin"], seed="umay_head")
     lx = look * 15
     for side in (-1, 1):
         p.part(lambda c, side=side: ellipse(c, side * 45 + look * 9, -226, 13, 9), PAL["cheek"],
-               alpha=0.55, line=False, seed=f"ela_cheek{side}")
+               alpha=0.55, line=False, seed=f"umay_cheek{side}")
     # gözler
     blink = st.get("blink", 0.0)
     happy = st.get("happy", 0.0)
@@ -184,9 +184,9 @@ def draw_ela(p, x, y, s, st):
                      PAL["eye"], width=4.0)
         else:
             ry = 14.5 * (1 - blink)
-            p.part(lambda c, ex=ex, ey=ey, ry=ry: ellipse(c, ex, ey, 10.5, ry), PAL["eye"], line=False, seed=f"ela_eye{side}")
+            p.part(lambda c, ex=ex, ey=ey, ry=ry: ellipse(c, ex, ey, 10.5, ry), PAL["eye"], line=False, seed=f"umay_eye{side}")
             p.part(lambda c, ex=ex, ey=ey: (circle(c, ex + 3.5, ey - 5.5, 4.2), circle(c, ex - 3.5, ey + 5, 2.0)),
-                   PAL["white"], line=False, seed=f"ela_hl{side}", wet=0.3)
+                   PAL["white"], line=False, seed=f"umay_hl{side}", wet=0.3)
         br = st.get("brow", 0.0)
         p.stroke(lambda c, ex=ex, ey=ey, br=br, side=side: (c.move_to(ex - 9, ey - 21 - br * 7 + side * br * 2),
                                                            c.curve_to(ex - 4, ey - 26 - br * 8, ex + 4, ey - 26 - br * 8, ex + 9, ey - 21 - br * 7 - side * br * 2)),
@@ -207,8 +207,8 @@ def draw_ela(p, x, y, s, st):
             c.curve_to(mx_ + 6, -215, mx_ - 6, -215, mx_ - 13, -217)
             c.close_path()
 
-        p.part(mouth, PAL["mouth"], seed="ela_mouth", lw=0.7)
-        p.part(lambda c: ellipse(c, mx_, -217 + hh * 0.72, 7, hh * 0.22 + 1), PAL["tongue"], line=False, seed="ela_tongue")
+        p.part(mouth, PAL["mouth"], seed="umay_mouth", lw=0.7)
+        p.part(lambda c: ellipse(c, mx_, -217 + hh * 0.72, 7, hh * 0.22 + 1), PAL["tongue"], line=False, seed="umay_tongue")
     else:
         p.stroke(lambda c: (c.move_to(mx_ - 12, -218), c.curve_to(mx_ - 6, -218 + 9 * sm, mx_ + 6, -218 + 9 * sm, mx_ + 12, -218)),
                  PAL["mouth"], width=3.8)
@@ -227,8 +227,8 @@ def draw_ela(p, x, y, s, st):
             c.curve_to(xa + 7, yf + 20, xb - 9, yf + 18, xb, yf - 2 + (8 if i == 3 else 0))
         c.close_path()
 
-    p.part(bangs, PAL["hair"], seed="ela_bangs")
-    p.part(lambda c: ellipse(c, bx - 28, -312, 16, 6, -0.4), lighten_c(PAL["hair"], 0.35), alpha=0.6, line=False, seed="ela_hairhl")
+    p.part(bangs, PAL["hair"], seed="umay_bangs")
+    p.part(lambda c: ellipse(c, bx - 28, -312, 16, 6, -0.4), lighten_c(PAL["hair"], 0.35), alpha=0.6, line=False, seed="umay_hairhl")
     ctx.restore()
     ctx.restore()
     ctx.restore()
@@ -243,8 +243,8 @@ def darken_c(c, k):
     return tuple(v * (1 - k) for v in c)
 
 
-# ---------------------------------------------------------------- PAMUK
-def draw_pamuk(p, x, y, s, st):
+# ---------------------------------------------------------------- ZIPZIP
+def draw_zipzip(p, x, y, s, st):
     """st: facing, phase, gait, tilt, mouth, wag, blink, happy, cross, sneeze, jump, look_up"""
     ctx = p.ctx
     t = p.t

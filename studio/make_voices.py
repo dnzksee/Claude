@@ -14,8 +14,8 @@ import tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ep01_renkli_kelebek import CUES, VO_DIR
 
-# konuşana göre ses perdesi: Ela çocuk sesi, Pamuk sevimli/yüksek, anlatıcı doğal
-PITCH = {"anlatici": 1.0, "ela": 1.38, "pamuk": 1.28}
+# konuşana göre ses perdesi: Umay çocuk sesi, Zıpzıp sevimli/yüksek, anlatıcı doğal
+PITCH = {"anlatici": 1.0, "umay": 1.38, "zipzip": 1.28}
 
 
 def main():

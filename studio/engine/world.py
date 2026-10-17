@@ -58,7 +58,7 @@ def tree(p, x, y, s, seed, col=None):
 
 
 def house(p, x, y, s):
-    """Ela'nın evi: krem duvar, kırmızı çatı, sarı ışıklı pencere."""
+    """Umay'ın evi: krem duvar, kırmızı çatı, sarı ışıklı pencere."""
     p.part(lambda c: rounded_rect(c, x - 70 * s, y - 110 * s, 140 * s, 110 * s, 8 * s), hexrgb("#FBEBD0"), seed="hw")
     p.part(lambda c: rounded_rect(c, x + 30 * s, y - 185 * s, 22 * s, 50 * s, 4 * s), hexrgb("#B8574A"), seed="hch")
 
