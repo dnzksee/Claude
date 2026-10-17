@@ -32,23 +32,29 @@ VO_DIR = os.path.join(ROOT, "assets", "vo")
 DURATION = 76.0
 
 # ============================================================== DİYALOG (seslendirme)
-# (kimlik, başlangıç sn, konuşan, metin, konuşma hızı)
+# (kimlik, başlangıç sn, konuşan, metin)
 CUES = [
-    ("n1", 5.6, "anlatici", "Günaydın! Bu, Umay.", 1.15),
-    ("n2", 9.4, "anlatici", "Bu da Umay'ın en iyi arkadaşı... Zıpzıp!", 1.15),
-    ("p1", 12.5, "zipzip", "Hav! Hav!", 1.0),
-    ("e1", 15.0, "umay", "Bak Zıpzıp! Bir kelebek!", 1.05),
-    ("n3", 19.6, "anlatici", "Kelebek ne renk?", 1.15),
-    ("n3b", 24.0, "anlatici", "Sarı! Evet, sarı!", 1.1),
-    ("e2", 27.6, "umay", "Hadi Zıpzıp! Kelebeği takip edelim!", 1.05),
-    ("n4", 35.6, "anlatici", "Bak! Kırmızı bir çiçek!", 1.1),
-    ("n5", 40.8, "anlatici", "Bir de... mavi çiçek!", 1.1),
-    ("n6", 47.0, "anlatici", "Kelebek nereye kondu?", 1.15),
-    ("n6b", 51.0, "anlatici", "Zıpzıp'ın burnuna!", 1.1),
-    ("p2", 53.5, "zipzip", "Hap... hapşuuu!", 1.0),
-    ("e4", 55.6, "umay", "Hi hi hi hi!", 1.0),
-    ("e3", 60.0, "umay", "Hoşça kal kelebek!", 1.05),
-    ("n7", 64.6, "anlatici", "Umay ile Zıpzıp... en iyi iki arkadaş!", 1.15),
+    ("n0", 0.9, "anlatici", "Umay ile Zıpzıp... Renkli Kelebek!"),
+    ("n1", 5.6, "anlatici", "Günaydın! Bu, Umay."),
+    ("n2", 9.3, "anlatici", "Bu da Umay'ın en iyi arkadaşı... Zıpzıp!"),
+    ("p1", 13.0, "zipzip", "Hav! Hav!"),
+    ("e1", 15.0, "umay", "Bak Zıpzıp! Bir kelebek!"),
+    ("n3", 19.6, "anlatici", "Kelebek ne renk?"),
+    ("n3b", 24.0, "anlatici", "Sarı! Evet, sarı!"),
+    ("e2", 27.5, "umay", "Hadi Zıpzıp! Kelebeği takip edelim!"),
+    ("n8", 31.3, "anlatici", "Umay ile Zıpzıp, kelebeğin peşinden koşuyor!"),
+    ("n4", 35.6, "anlatici", "Bak! Kırmızı bir çiçek!"),
+    ("n5", 40.8, "anlatici", "Bir de... mavi çiçek!"),
+    ("n9", 43.3, "anlatici", "Kelebek yoruldu... yavaşça iniyor."),
+    ("n6", 47.0, "anlatici", "Kelebek nereye kondu?"),
+    ("n6b", 51.0, "anlatici", "Zıpzıp'ın burnuna!"),
+    ("p2", 53.5, "zipzip", "Hap... hapşuuu!"),
+    ("e4", 55.6, "umay", "Hi hi hi hi!"),
+    ("n10", 57.1, "anlatici", "Hapşırık kelebeği uçurdu!"),
+    ("e3", 60.0, "umay", "Hoşça kal kelebek!"),
+    ("n7", 64.4, "anlatici", "Umay ile Zıpzıp... en iyi iki arkadaş!"),
+    ("e5", 70.9, "umay", "Hoşça kalın! Yine görüşelim!"),
+    ("p3", 73.6, "zipzip", "Hav hav!"),
 ]
 
 # ============================================================== KAMERA
@@ -76,7 +82,7 @@ UMAY_LOOK = Track([(0, 0.35), (7.9, 0.35), (8.3, 0.0), (9.6, 0.0), (10.1, -0.45)
                   (58.0, 0.55), (61.3, 0.55), (61.7, 0.45)])
 UMAY_FACING = [(0, 1), (61.75, -1)]
 HOPS_UMAY = [24.2, 27.85, 51.2]
-HOPS_ZIPZIP = [11.7, 24.3, 51.25, 62.45, 63.05]
+HOPS_ZIPZIP = [12.35, 24.3, 51.25, 62.45, 63.05]
 
 BUTTERFLY = Path2D([
     (13.4, 2150, 260), (15.0, 1600, 380), (16.6, 1260, 520), (29.4, 1260, 520), (31.0, 1500, 480),
@@ -153,7 +159,7 @@ ENV = {}
 
 
 def load_envelopes():
-    for cid, start, who, _, _ in CUES:
+    for cid, start, who, _ in CUES:
         path = os.path.join(VO_DIR, f"{cid}.wav")
         if not os.path.exists(path):
             continue
@@ -335,9 +341,10 @@ def render_end_card(style, t, frame):
     draw_title(p, clamp(u / 0.5), max(pop, 0.01), "Umay ile Zıpzıp", "Yakında yeni maceralarda!", y=250, sub_dy=130)
     draw_flower(p, 300, 1000, 1.3, (0.93, 0.30, 0.30), sway=math.sin(t * 1.5) * 0.3, seed="ecf1")
     draw_flower(p, 1620, 1000, 1.3, (0.36, 0.55, 0.95), sway=math.sin(t * 1.3 + 1) * 0.3, seed="ecf2")
-    draw_zipzip(p, 760, 960, 1.25, dict(wag=2.0, happy=1.0 if (t % 2.6) > 1.3 else 0.0, mouth=0.3, jump=hop(t, [71.0, 73.0], 40)))
+    draw_zipzip(p, 760, 960, 1.25, dict(wag=2.0, happy=1.0 if (t % 2.6) > 1.3 else 0.0, mouth=max(0.3, mouth("zipzip", t)),
+                                        jump=hop(t, [71.0, 73.5], 40)))
     draw_umay(p, 1150, 960, 1.25, dict(arms=umay_arm_pose("wave", t), look=0.0, blink=blink(t, "umay2"),
-                                      mouth=0.0, jump=hop(t, [71.5, 73.5], 30)))
+                                      mouth=mouth("umay", t), jump=hop(t, [70.6, 74.2], 30)))
     bx, by = 1180 + 200 * math.sin(t * 0.9), 560 + 60 * math.sin(t * 1.8)
     draw_butterfly(p, bx, by, 1.2, t * 13)
     cv.surface.flush()
@@ -501,68 +508,86 @@ def build_audio(path):
     ]
     hz = lambda name: A.midi_hz(A.n(name))
 
-    def theme_bar(t0, b, energy=0):
+    UKE_PROG = ["C", "G", "Am", "F", "C", "F", "G7", "C"]
+
+    def theme_bar(t0, b, energy=0, lead="kalimba"):
         ch = PROG[b % 8]
         root, tones = CHORDS[ch]
-        music.add(t0, A.pad([hz(x) for x in tones], BAR * 0.95, attack=0.4, release=0.6), 0.10)
-        for k, (bt, note, d) in enumerate(MELODY[b % 8]):
-            if energy:
-                music.add(t0 + bt * BEAT, A.xylo(hz(note)), 0.30, pan=0.15)
-                if d >= 1:
-                    music.add(t0 + (bt + 0.5) * BEAT, A.xylo(hz(note)), 0.16, pan=0.15)
+        music.add(t0, A.pad([hz(x) for x in tones], BAR * 0.95, attack=0.5, release=0.6), 0.06)
+        # ukulele ritmi: A . A Y . Y A Y  (A: aşağı, Y: yukarı)
+        for bt, down, g in ((0, 1, 0.20), (1, 1, 0.15), (1.5, 0, 0.10), (2.5, 0, 0.10), (3, 1, 0.15), (3.5, 0, 0.10)):
+            if energy == 0 and bt in (1.5, 2.5):
+                continue
+            music.add(t0 + bt * BEAT + 0.004, A.strum(UKE_PROG[b % 8], bool(down), 0.55 if energy else 0.8), g, pan=-0.25)
+        for bt, note, d in MELODY[b % 8]:
+            tt = t0 + bt * BEAT
+            if lead == "whistle":
+                music.add(tt, A.whistle(hz(note), d * BEAT * 0.92), 0.17, pan=0.1)
+                music.add(tt, A.glock(hz(note) * 2, 1.0), 0.035, pan=0.3)
+            elif energy:
+                music.add(tt, A.xylo(hz(note)), 0.24, pan=0.15)
+                music.add(tt, A.glock(hz(note) * 2, 0.8), 0.04, pan=0.3)
             else:
-                music.add(t0 + bt * BEAT, A.kalimba(hz(note)), 0.34, pan=0.1)
+                music.add(tt, A.kalimba(hz(note)), 0.28, pan=0.1)
+                music.add(tt, A.glock(hz(note) * 2, 1.0), 0.045, pan=0.3)
         if energy:
             for bt in range(4):
                 nn = A.n(root) + (12 if bt % 2 else 0)
-                music.add(t0 + bt * BEAT, A.bass(A.midi_hz(nn), 0.45, 0.2), 0.42, pan=-0.1)
+                music.add(t0 + bt * BEAT, A.bass(A.midi_hz(nn), 0.45, 0.2), 0.30, pan=-0.05)
+            for bt in (0, 2):
+                music.add(t0 + bt * BEAT, A.soft_kick(), 0.30)
+            for bt in (1, 3):
+                music.add(t0 + bt * BEAT, A.snap(), 0.16, pan=0.2)
             for e in range(8):
-                music.add(t0 + e * BEAT / 2, A.shaker(), 0.5 if e % 2 else 0.25, pan=0.35)
+                music.add(t0 + e * BEAT / 2, A.shaker(), 0.30 if e % 2 else 0.15, pan=0.35)
         else:
-            music.add(t0, A.bass(hz(root), 1.0, 0.4), 0.38, pan=-0.1)
-            music.add(t0 + 2 * BEAT, A.bass(A.midi_hz(A.n(root) + 7), 1.0, 0.4), 0.30, pan=-0.1)
-            for e in (1, 3):
-                music.add(t0 + e * BEAT, A.shaker(), 0.18, pan=0.35)
+            music.add(t0, A.bass(hz(root), 1.0, 0.4), 0.30, pan=-0.05)
+            music.add(t0 + 2 * BEAT, A.bass(A.midi_hz(A.n(root) + 7), 1.0, 0.4), 0.24, pan=-0.05)
+            for bt in (1, 3):
+                music.add(t0 + bt * BEAT, A.snap(), 0.07, pan=0.2)
 
     # giriş
-    music.add(0.0, A.pad([hz("C4"), hz("E4"), hz("G4")], 2.6), 0.16)
-    music.add(2.6, A.pad([hz("A3"), hz("C4"), hz("F4")], 2.6), 0.16)
+    music.add(0.0, A.pad([hz("C4"), hz("E4"), hz("G4")], 2.6), 0.10)
+    music.add(2.6, A.pad([hz("A3"), hz("C4"), hz("F4")], 2.6), 0.10)
     for k, nn in enumerate(["C5", "E5", "G5", "C6", "A4", "C5", "F5", "A5"]):
-        music.add(0.3 + k * 0.62, A.kalimba(hz(nn), 1.6), 0.26)
+        music.add(0.3 + k * 0.62, A.kalimba(hz(nn), 1.6), 0.22)
+    music.add(0.3, A.strum("C", True, 1.6), 0.14, pan=-0.25)
+    music.add(2.78, A.strum("F", True, 1.6), 0.14, pan=-0.25)
     # tema A
     for b in range(6):
         theme_bar(5.4 + b * BAR, b)
     # interaktif soru (müzik kutusu, sakin)
-    music.add(19.8, A.pad([hz("C4"), hz("E4"), hz("G4"), hz("B4")], 4.0, attack=0.8), 0.12)
+    music.add(19.8, A.pad([hz("C4"), hz("E4"), hz("G4"), hz("B4")], 4.0, attack=0.8), 0.08)
     for tt, nn in ((21.2, "E5"), (21.8, "G5"), (22.4, "A5"), (23.2, "G5")):
-        music.add(tt, A.glock(hz(nn)), 0.16)
+        music.add(tt, A.glock(hz(nn)), 0.12)
     for b in range(2):
         theme_bar(24.6 + b * BAR, 4 + b)
     for k, nn in enumerate(["G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"]):
-        music.add(29.4 + k * 0.15, A.xylo(hz(nn)), 0.25)
+        music.add(29.4 + k * 0.15, A.xylo(hz(nn)), 0.2)
     # kovalamaca
     for b in range(6):
         theme_bar(30.6 + b * BAR, b, energy=1)
     # parmak ucu (gerilim ama sevimli)
     tip = ["A3", "C4", "E4", "C4", "F3", "A3", "C4", "A3"]
-    music.add(45.0, A.pad([hz("A3"), hz("C4"), hz("E4")], 4.6), 0.10)
-    music.add(49.6, A.pad([hz("F3"), hz("A3"), hz("C4")], 3.6), 0.10)
+    music.add(45.0, A.pad([hz("A3"), hz("C4"), hz("E4")], 4.6), 0.07)
+    music.add(49.6, A.pad([hz("F3"), hz("A3"), hz("C4")], 3.6), 0.07)
     for k in range(14):
         tt = 45.0 + k * BEAT
         if 47.0 <= tt < 48.8:
             continue
-        music.add(tt, A.bass(hz(tip[k % 8]) * 2, 0.18, 0.06), 0.22, pan=(-0.3 if k % 2 else 0.3))
+        music.add(tt, A.pluck(hz(tip[k % 8]) * 2, 0.25, 1.4), 0.32, pan=(-0.3 if k % 2 else 0.3))
     for tt, nn in ((49.0, "E5"), (49.6, "G5"), (50.2, "A5")):
-        music.add(tt, A.glock(hz(nn)), 0.14)
-    music.add(52.6, A.pad([hz("G3"), hz("B3"), hz("D4"), hz("F4")], 1.6, attack=1.2, release=0.4), 0.14)
-    # tema dönüşü
+        music.add(tt, A.glock(hz(nn)), 0.11)
+    music.add(52.6, A.pad([hz("G3"), hz("B3"), hz("D4"), hz("F4")], 1.6, attack=1.2, release=0.4), 0.09)
+    # tema dönüşü: ıslıkla neşeli tekrar
     for b in range(5):
-        theme_bar(55.2 + b * BAR, b)
+        theme_bar(55.2 + b * BAR, b, lead="whistle" if b >= 2 else "kalimba")
     theme_bar(67.2, 6)
     theme_bar(67.2 + BAR, 7)
-    music.add(72.0, A.pad([hz("C4"), hz("E4"), hz("G4"), hz("C5")], 3.0, attack=0.3, release=1.0), 0.16)
-    music.add(72.0, A.bass(hz("C3"), 2.5, 1.0), 0.35)
-    music.add(72.0, A.kalimba(hz("C6"), 3.0), 0.3)
+    music.add(72.0, A.pad([hz("C4"), hz("E4"), hz("G4"), hz("C5")], 3.0, attack=0.3, release=1.0), 0.10)
+    music.add(72.0, A.bass(hz("C3"), 2.5, 1.0), 0.28)
+    music.add(72.0, A.strum("C", True, 2.5, spread=0.03), 0.22, pan=-0.25)
+    music.add(72.05, A.kalimba(hz("C6"), 3.0), 0.24)
 
     # efektler
     for tt in (0.5, 2.2, 3.9, 6.8, 9.0, 57.5, 59.0, 65.5):
@@ -598,17 +623,19 @@ def build_audio(path):
 
     # seslendirme
     spans = []
-    for cid, start, who, _, _ in CUES:
+    for cid, start, who, _ in CUES:
         p_ = os.path.join(VO_DIR, f"{cid}.wav")
         if os.path.exists(p_):
             v = A.load_wav(p_)
             vo.add(start, v, 0.9, pan={"umay": 0.08, "zipzip": -0.08}.get(who, 0.0))
             spans.append((start, start + len(v) / A.SR))
-    duck = A.duck_curve(DURATION, spans, depth=0.4)[: len(music.buf), None]
+    duck = A.duck_curve(DURATION, spans, depth=0.32)[: len(music.buf), None]
+    music.buf = A.lowpass(A.reverb(music.buf, 1.8, 0.24), 8500)
+    sfx.buf = A.reverb(sfx.buf, 1.2, 0.12)
     fade = np.ones(len(music.buf), np.float32)
     t = np.arange(len(fade)) / A.SR
     fade *= np.clip((DURATION - 0.3 - t) / 1.8, 0, 1)
-    mix = (music.buf * duck * 0.7 + sfx.buf + vo.buf) * fade[:, None]
+    mix = (music.buf * duck * 0.8 + sfx.buf * 0.9 + vo.buf * 1.1) * fade[:, None]
     mix = A.soft_limit(mix[: int(DURATION * A.SR)])
     A.write_wav(path, mix)
     return path

@@ -202,3 +202,84 @@ def soft_limit(x, ceiling=0.89):
     peak = np.max(np.abs(x)) + 1e-9
     x = x / peak * 1.05
     return np.tanh(x * 1.2) / np.tanh(1.2) * ceiling
+
+
+# ---------------------------------------------------------------- v2: sıcak, eğlenceli ama yumuşak tınılar
+_PLUCK = {}
+
+
+def pluck(f, dur=0.9, bright=1.0):
+    """Ukulele benzeri telli çalgı (toplamsal sentez, önbellekli)."""
+    key = (round(f, 2), dur, bright)
+    if key not in _PLUCK:
+        t = _t(dur)
+        s = np.zeros_like(t)
+        for k in range(1, 12):
+            if f * k > 11000:
+                break
+            s += (1 / k ** 1.3) * np.sin(2 * np.pi * f * k * t + k * 0.7) * np.exp(-t * (2.4 + 1.2 * k * bright))
+        s *= np.clip(t / 0.0025, 0, 1)
+        r = int(0.03 * SR)
+        s[-r:] *= np.linspace(1, 0, r)
+        _PLUCK[key] = (s * 0.45).astype(np.float32)
+    return _PLUCK[key]
+
+
+UKE = {"C": ["G4", "C4", "E4", "C5"], "G": ["G4", "D4", "G4", "B4"], "Am": ["A4", "C4", "E4", "A4"],
+       "F": ["A4", "C4", "F4", "A4"], "G7": ["G4", "D4", "F4", "B4"]}
+
+
+def strum(chord, down=True, dur=0.75, spread=0.011):
+    names = UKE[chord] if down else UKE[chord][::-1]
+    out = np.zeros(int((dur + spread * 5) * SR), np.float32)
+    for i, nm in enumerate(names):
+        s = pluck(midi_hz(n(nm)), dur, 0.85 if down else 1.15)
+        o = int(i * spread * SR)
+        out[o:o + len(s)] += s * (1.0 - 0.07 * i)
+    return out
+
+
+def whistle(f, dur):
+    """Neşeli ıslık melodisi: hafif vibratolu sinüs."""
+    t = _t(dur + 0.12)
+    vib = 1 + 0.006 * np.sin(2 * np.pi * 5.3 * t) * np.clip((t - 0.12) / 0.2, 0, 1)
+    ph = 2 * np.pi * np.cumsum(f * vib) / SR
+    s = np.sin(ph) + 0.08 * np.sin(2 * ph)
+    e = np.clip(t / 0.035, 0, 1) * np.clip((dur + 0.12 - t) / 0.1, 0, 1)
+    breath = np.random.default_rng(int(f)).standard_normal(len(t)).astype(np.float32)
+    breath = np.convolve(breath, np.ones(6) / 6, "same") * 0.015
+    return ((s + breath) * e * 0.5).astype(np.float32)
+
+
+def snap(d=0.08):
+    t = _t(d)
+    x = np.random.default_rng(5).standard_normal(len(t)).astype(np.float32)
+    x = x - np.convolve(x, np.ones(8) / 8, "same")
+    return x * np.exp(-t / 0.012) * 0.5
+
+
+def soft_kick(d=0.25):
+    t = _t(d)
+    f = 48 + 50 * np.exp(-t / 0.03)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    return (np.sin(ph) * np.exp(-t / 0.09) * np.clip(t / 0.003, 0, 1)).astype(np.float32) * 0.8
+
+
+def reverb(stereo, seconds=1.7, wet=0.22, seed=11):
+    """Sıcak oda yankısı (sentetik dürtü yanıtı ile evrişim)."""
+    from scipy.signal import fftconvolve
+    t = _t(seconds)
+    out = stereo * (1 - wet * 0.5)
+    for ch in range(2):
+        ir = np.random.default_rng(seed + ch).standard_normal(len(t)).astype(np.float32)
+        ir = np.convolve(ir, np.ones(12) / 12, "same")  # koyu (yumuşak) yankı
+        ir *= np.exp(-t * 6.9 / seconds) * np.clip(t / 0.01, 0, 1)
+        ir /= np.sqrt(np.sum(ir ** 2)) + 1e-9
+        out[:, ch] += fftconvolve(stereo[:, ch], ir)[: len(stereo)].astype(np.float32) * wet
+    return out
+
+
+def lowpass(stereo, fc=9000, order=2):
+    from scipy.signal import butter, sosfilt
+    sos = butter(order, fc / (SR / 2), output="sos")
+    return sosfilt(sos, stereo, axis=0).astype(np.float32)

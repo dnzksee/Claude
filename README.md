@@ -8,7 +8,8 @@
 
 | Dosya | Açıklama |
 |---|---|
-| `renders/umay_zipzip_renkli_kelebek_KAGIT_KESME.mp4` | Güncel örnek: Umay ile Zıpzıp |
+| `renders/umay_zipzip_renkli_kelebek_KAGIT_KESME.mp4` | Güncel örnek: Umay ile Zıpzıp (yeni müzik ve anlatım) |
+| `renders/umay_zipzip_renkli_kelebek_SES.mp3` | Yalnızca ses: müzik, efektler ve seslendirme |
 | `renders/eski_denemeler/` | Teknik seçimi için yapılan ilk denemeler (suluboya, kâğıt kesme, yumuşak 3B, keçe; eski isimlerle) |
 
 ## Belgeler
@@ -41,4 +42,7 @@ python3 ep01_renkli_kelebek.py --style kagit --scale 0.5        # hızlı, düş
 Yazı tipleri (`assets/fonts`, SIL OFL lisanslı) sisteme kurulu olmalı: `cp assets/fonts/*.ttf ~/.fonts && fc-cache -f`.
 
 ### Seslendirme
-`assets/vo/` içindeki sesler **geçici** (yapay zekâ TTS) seslerdir. Yayın için profesyonel seslendirme önerilir: Umay için 6–9 yaş arası bir çocuk ya da çocuk sesi yapabilen bir sanatçı, sıcak bir anlatıcı. Yeni kayıtları aynı dosya adlarıyla `assets/vo/` içine koymanız yeterli; dudak senkronu ve müzik kısma otomatik güncellenir.
+`assets/vo/` içindeki sesler **geçici** seslerdir. Microsoft nöral Türkçe ses "Emel" kullanıldı; anlatıcı, Umay ve Zıpzıp aynı sesten farklı perde ve hızla ayrıldı (`studio/make_voices.py`). Yayın için iki yol var: aynı sesi Azure Speech'ten ticari lisansla almak ya da profesyonel seslendirme sanatçılarıyla kayıt yapmak. Yeni kayıtları aynı dosya adlarıyla `assets/vo/` içine koymanız yeterli; dudak senkronu ve müzik kısma otomatik güncellenir.
+
+### Müzik
+Tamamen özgün ve telifsiz; kodla sentezlenir (`studio/engine/audio.py`). İçinde ukulele ritmi, kalimba, müzik kutusu, ksilofon ve ıslık melodisi var. Yumuşak bir oda yankısı eklenir, sert tizler süzülür ve konuşma sırasında müzik otomatik kısılır.
