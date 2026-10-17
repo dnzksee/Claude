@@ -5,6 +5,7 @@ Gemini zaman damgası vermediği için cümle sınırları sessizlik tespitiyle 
 """
 import asyncio
 import base64
+import difflib
 import json
 import os
 import re
@@ -135,8 +136,10 @@ def baslangic_dogrula(mp3, metin, saniye=12):
     # sayılar rakamla ya da yazıyla dökülebildiği için karşılaştırma dışı
     sayisiz = lambda ks: [k for k in ks if not k.isdigit()]
     duyulan, beklenen = sayisiz(_sade(yazi))[:3], sayisiz(_sade(metin))[:12]
-    # duyulan ilk kelimeler metnin başında geçmeli (talimat okunduysa geçmez)
-    tamam = len(duyulan) > 0 and all(k in beklenen for k in duyulan)
+    # duyulan ilk kelimeler metnin başında geçmeli (talimat okunduysa geçmez); yazıya dökmedeki
+    # küçük farklara (Romen/Roman) tolerans için benzerlik oranıyla karşılaştırılır
+    benzer = lambda k: any(difflib.SequenceMatcher(None, k, b).ratio() >= 0.75 for b in beklenen)
+    tamam = len(duyulan) > 0 and sum(map(benzer, duyulan)) >= max(1, len(duyulan) - 1)
     if not tamam:
         print(f"  ses doğrulaması başarısız. Duyulan: {yazi[:80]!r}", flush=True)
     return tamam
