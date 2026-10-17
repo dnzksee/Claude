@@ -71,14 +71,15 @@
 
 ---
 
-## 4. Teknik seçimi — üç örnek
+## 4. Teknik seçimi — dört örnek
 
-| | Suluboya | Kâğıt Kesme | Yumuşak 3B |
-|---|---|---|---|
-| His | Masal kitabı, sakin, sanatsal | El yapımı, dokunsal, stop-motion | Parlak, oyuncak gibi, modern |
-| Ebeveyn algısı | "Kaliteli, sakin içerik" | "Yaratıcı, Montessori havası" | "Popüler YouTube çizgisi" |
-| 2–3 yaş dikkat çekiciliği | Orta-yüksek | Yüksek (gölgeler derinlik verir) | En yüksek (parlak, kontrastlı) |
-| Ayırt edicilik (pazarda) | **Çok yüksek** — az rakip | Yüksek | Düşük — çok rakip |
-| Üretim maliyeti (bu altyapıda) | Yüksek işlem süresi | Düşük | Düşük |
+| | Suluboya | Kâğıt Kesme | Yumuşak 3B | Keçe El İşi |
+|---|---|---|---|---|
+| His | Masal kitabı, sakin, sanatsal | El yapımı, dokunsal, stop-motion | Parlak, oyuncak gibi, modern | Sıcacık, yumuşak, "anne eli değmiş" oyuncak |
+| Ebeveyn algısı | "Kaliteli, sakin içerik" | "Yaratıcı, Montessori havası" | "Popüler YouTube çizgisi" | "Güvenli, sevimli, el emeği" |
+| 2–3 yaş dikkat çekiciliği | Orta-yüksek | Yüksek (gölgeler derinlik verir) | En yüksek (parlak, kontrastlı) | Yüksek (dikişler ve tüylü doku göze takılır) |
+| Ayırt edicilik (pazarda) | **Çok yüksek** — az rakip | Yüksek | Düşük — çok rakip | **Çok yüksek** — Türkçe içerikte neredeyse yok |
+| Üretim maliyeti (bu altyapıda) | Yüksek işlem süresi | Düşük | Düşük | Yüksek işlem süresi |
+| Ürün potansiyeli | Kitap | Boyama/etkinlik | Oyuncak | **Peluş ve keçe oyuncak, el işi seti** |
 
 **Yönetmen önerisi:** Ana dizi **suluboya**. Hem ebeveynlerin "ekran süresi kaliteli olsun" beklentisine hem de pazarda ayrışmaya en iyi cevap veren teknik bu. Şarkı bölümleri için **kâğıt kesme** iyi bir ikinci dil olur; ritmik "stop-motion" titreşimi müzikle iyi gider.

@@ -5,7 +5,7 @@ Yönetmen / senarist / tasarımcı notları docs/ klasöründedir. Bu dosya böl
 
 Kullanım:
     python3 ep01_renkli_kelebek.py --style suluboya   [--start 0 --end 76] [--workers 4] [--scale 1.0]
-    stiller: suluboya | kagit | yumusak3b
+    stiller: suluboya | kagit | yumusak3b | kece
 """
 import argparse
 import math
@@ -345,7 +345,9 @@ def render_end_card(style, t, frame):
 
 
 def render_frame(i, style, layers):
-    t = i / FPS
+    t = tc = i / FPS
+    if style == "kece":  # stop-motion: oyuncular saniyede 12 poz, kamera akıcı
+        t = math.floor(t * 12) / 12
     if t >= END_CARD:
         rgb = np.empty((H, W, 3), np.float32)
         rgb[:] = PAPER[::-1]
@@ -355,7 +357,7 @@ def render_frame(i, style, layers):
             rgb = rgb * (1 - ia) + PAPER[::-1][None, None, :] * ia
         return (post_process(style, rgb) * 255 + 0.5).astype(np.uint8)
 
-    cam = cam_at(t)
+    cam = cam_at(tc)
     cx, cy, z = cam
     rgb = np.empty((H, W, 3), np.float32)
     rgb[:] = PAPER[::-1]

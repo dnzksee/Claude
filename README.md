@@ -2,16 +2,17 @@
 
 2–5 yaş için Türkçe animasyon dizisi: dört yaşındaki **Ela** ve en iyi arkadaşı köpek **Pamuk**.
 
-## Örnek kesit: "Renkli Kelebek" (76 sn), üç farklı teknikte
+## Örnek kesit: "Renkli Kelebek" (76 sn), dört farklı teknikte
 
 | Dosya | Teknik |
 |---|---|
 | `renders/ela_pamuk_renkli_kelebek_SULUBOYA.mp4` | **Suluboya** (önerilen ana teknik) |
 | `renders/ela_pamuk_renkli_kelebek_KAGIT_KESME.mp4` | Kâğıt kesme / stop-motion |
 | `renders/ela_pamuk_renkli_kelebek_YUMUSAK_3B.mp4` | Yumuşak 3B / oyuncak görünümü |
+| `renders/ela_pamuk_renkli_kelebek_KECE.mp4` | **Keçe el işi**: dikişli keçe parçaları, stop-motion |
 | `renders/ela_pamuk_KARSILASTIRMA_3_teknik.mp4` | Üç teknik aynı anda, yan yana |
 
-Üçü de aynı senaryo, kamera ve oyunculukla üretildi. Böylece yalnızca **teknik** karşılaştırılmış olur.
+Dördü de aynı senaryo, kamera ve oyunculukla üretildi. Böylece yalnızca **teknik** karşılaştırılmış olur.
 
 ## Belgeler
 - `docs/01_dizi_kitabi.md`: karakterler, renk paleti, pedagojik ilkeler, teknik karşılaştırması
@@ -24,7 +25,7 @@ Tamamen kodla üretilen bir 2B animasyon stüdyosu:
 ```
 studio/
   engine/core.py        yumuşatma eğrileri, anahtar kare izleri, döşenebilir gürültü
-  engine/styles.py      çizim teknikleri: Suluboya, Kâğıt Kesme, Yumuşak 3B + son işlem
+  engine/styles.py      çizim teknikleri: Suluboya, Kâğıt Kesme, Yumuşak 3B, Keçe + son işlem
   engine/characters.py  Ela, Pamuk, kelebek, çiçekler (iskelet tabanlı, pozlanabilir)
   engine/world.py       6 katmanlı paralaks dünya (gökyüzü, bulut, tepeler, ev, çayır, ön plan)
   engine/audio.py       özgün müzik ve efekt sentezi (kalimba, müzik kutusu, ksilofon…)
@@ -36,7 +37,7 @@ studio/
 ```bash
 pip install pycairo opencv-python-headless numpy
 cd studio
-python3 ep01_renkli_kelebek.py --style suluboya     # veya: kagit | yumusak3b
+python3 ep01_renkli_kelebek.py --style suluboya     # veya: kagit | yumusak3b | kece
 python3 ep01_renkli_kelebek.py --style suluboya --still 22 48   # yalnızca kare önizleme
 python3 ep01_renkli_kelebek.py --style kagit --scale 0.5        # hızlı, düşük çözünürlüklü taslak
 ```

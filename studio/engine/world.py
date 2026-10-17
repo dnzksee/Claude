@@ -132,7 +132,7 @@ def paint_layer(name, par, style):
     lw_, lh = layer_size(par)
     cv = Canvas(lw_, lh)
     p = PAINTERS[style](cv, t=0.0, scale=1.0, frame=0)
-    if style == "kagit":
+    if style in ("kagit", "kece"):
         p.jitter = False
     ctx = p.ctx
     ctx.translate(MX, MY)
