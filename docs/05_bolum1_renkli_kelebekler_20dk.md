@@ -270,7 +270,7 @@ Toplam **7 dosya**. Anlatıcı her bölüm için ayrı kaydedilir, çünkü tek 
 
 Style instructions:
 ```
-Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a clear pause between each line.
+Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a long, two-second silent pause between each line. Read ALL 7 lines, in order, without skipping any line.
 ```
 Metin:
 ```
@@ -287,7 +287,7 @@ Sen de bize yardım eder misin? Hadi gel!
 
 Style instructions:
 ```
-Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a clear pause between each line.
+Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a long, two-second silent pause between each line. Read ALL 23 lines, in order, without skipping any line.
 ```
 Metin:
 ```
@@ -320,7 +320,7 @@ Sen de etrafına bak. Bir mavi şey bulabilir misin?
 
 Style instructions:
 ```
-Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a clear pause between each line.
+Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a long, two-second silent pause between each line. Read ALL 24 lines, in order, without skipping any line.
 ```
 Metin:
 ```
@@ -354,7 +354,7 @@ Sen de bir kırmızı şey bulabilir misin?
 
 Style instructions:
 ```
-Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a clear pause between each line.
+Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a long, two-second silent pause between each line. Read ALL 23 lines, in order, without skipping any line.
 ```
 Metin:
 ```
@@ -387,7 +387,7 @@ Sen de bir sarı şey bulabilir misin?
 
 Style instructions:
 ```
-Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a clear pause between each line.
+Say in a sweet, warm, smiling preschool cartoon storyteller voice, lively, playful and expressive. Leave a long, two-second silent pause between each line. Read ALL 9 lines, in order, without skipping any line.
 ```
 Metin:
 ```
@@ -406,7 +406,7 @@ Umay ile Zıpzıp... en iyi iki arkadaş!
 
 Style instructions:
 ```
-Say slowly and sweetly, like a cute three-year-old toddler girl in a cartoon: sing-song, soft and breathy, a tiny bit lispy, full of wonder, with little giggles. Leave a clear pause between each line.
+Say slowly and sweetly, like a cute three-year-old toddler girl in a cartoon: sing-song, soft and breathy, a tiny bit lispy, full of wonder, with little giggles. Leave a long, two-second silent pause between each line. Read ALL 30 lines, in order, without skipping any line.
 ```
 Metin:
 ```
@@ -446,7 +446,7 @@ Hoşça kalın! Yine görüşelim!
 
 Style instructions:
 ```
-Make the sounds of a tiny, cute, playful cartoon puppy, high and happy. Leave a clear pause between each line.
+Make the sounds of a tiny, cute, playful cartoon puppy, high and happy. Leave a long, two-second silent pause between each line. Read ALL 14 lines, in order, without skipping any line.
 ```
 Metin:
 ```

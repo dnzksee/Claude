@@ -277,6 +277,8 @@ def belge():
     for i, (ad, who, bols) in enumerate(DOSYALAR, 1):
         voice, style = SESLER[who]
         lines = [t for _, _, t, _ in satirlar(who, bols)]
+        style = style.replace("Leave a clear pause between each line.",
+                              f"Leave a long, two-second silent pause between each line. Read ALL {len(lines)} lines, in order, without skipping any line.")
         out += [f"## {i}) `{ad}`: {AD[who]} · Ses: **{voice}** · {len(lines)} cümle", "",
                 "Style instructions:", "```", style, "```", "Metin:", "```", *lines, "```", ""]
     out.insert(6, f"**Toplam:** {total} cümle (anlatıcı {sum(1 for _ in satirlar(A))}, Umay {sum(1 for _ in satirlar(U))}, "
