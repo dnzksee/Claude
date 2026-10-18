@@ -285,7 +285,7 @@ def draw_title(p, alpha, pop, title, subtitle, y=330, sub_dy=135, size=150):
     ctx.save()
     ctx.translate(W / 2, y)
     ctx.scale(pop, pop)
-    ctx.select_font_face("Fredoka", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    ctx.select_font_face("Baloo 2", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
     for text, sz, col, dy in ((title, size, PAL["dress"], 0), (subtitle, size * 0.46, hexrgb("#4E8FD6"), sub_dy)):
         if not text:
             continue

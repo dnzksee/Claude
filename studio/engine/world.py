@@ -124,12 +124,14 @@ LAYERS = [  # ad, paralaks
 ]
 
 
-def layer_size(par):
-    return int(W + SPAN * par + 2 * MX), 1750
+def layer_size(par, span=SPAN):
+    return int(W + span * par + 2 * MX), 1750
 
 
-def paint_layer(name, par, style):
-    lw_, lh = layer_size(par)
+def paint_layer(name, par, style, span=SPAN, sun=True, house_on_hill=True, trees_at=(120, 2380, 4300)):
+    """span: dünyanın uzunluğu; sun/house_on_hill: ilk bölümdeki gökyüzü güneşi ve tepe evi (uzun bölümde ayrı çizilir)."""
+    k = span / 3600.0
+    lw_, lh = layer_size(par, span)
     cv = Canvas(lw_, lh)
     p = PAINTERS[style](cv, t=0.0, scale=1.0, frame=0)
     if style in ("kagit", "kece"):
@@ -141,15 +143,17 @@ def paint_layer(name, par, style):
         top, hor = hexrgb("#8EC5EC"), hexrgb("#FFF1DA")
         p.part(lambda c: c.rectangle(-MX, -MY, lw_, lh), None, grad=(top, hor, 0, MY + 900), line=False, wet=1.6, flat=True, seed="sky")
         sx, sy = 1500, 175
-        p.glow(sx, sy, 300, hexrgb("#FFF3C4"), 0.9)
-        p.part(lambda c: circle(c, sx, sy, 78), hexrgb("#FFD45C"), seed="sun", lw=0.6)
-        if style == "kagit":
+        if sun:
+            p.glow(sx, sy, 300, hexrgb("#FFF3C4"), 0.9)
+            p.part(lambda c: circle(c, sx, sy, 78), hexrgb("#FFD45C"), seed="sun", lw=0.6)
+        if sun and style == "kagit":
             for i in range(12):
                 a = i * math.pi / 6
                 p.part(lambda c, a=a: ellipse(c, sx + math.cos(a) * 118, sy + math.sin(a) * 118, 22, 9, a), hexrgb("#FFC94A"), seed=f"ray{i}")
     elif name == "clouds":
-        for i in range(9):
-            cx = -100 + i * (lw_ / 8.5) + hash01(i, "cx") * 120
+        nc = int(9 * k) + 1
+        for i in range(nc):
+            cx = -100 + i * (lw_ / (nc - 0.5)) + hash01(i, "cx") * 120
             cy = 90 + hash01(i, "cy") * 230
             cloud(p, cx, cy, 0.8 + 0.6 * hash01(i, "cs"), i)
     elif name == "far":
@@ -157,9 +161,10 @@ def paint_layer(name, par, style):
         p.part(lambda c: hills(c, -MX, x1, 700, 110, 7, step=260), hexrgb("#8FBF9C"), seed="far2", line=False, flat=True, wet=1.3)
     elif name == "mid":
         p.part(lambda c: hills(c, -MX, x1, 770, 120, 11, step=420), hexrgb("#8CC66A"), seed="mid1", flat=True, lw=0.6)
-        house(p, 420, 690, 0.85)
-        fence(p, 540, 760, 712, 0.6)
-        for i in range(10):
+        if house_on_hill:
+            house(p, 420, 690, 0.85)
+            fence(p, 540, 760, 712, 0.6)
+        for i in range(int(10 * k) + 1):
             tx = 900 + i * 330 + hash01(i, "tx") * 160
             tree(p, tx, 700 + hash01(i, "ty") * 40, 0.55 + 0.25 * hash01(i, "ts"), 100 + i,
                  col=hexrgb("#4F9A4C") if i % 2 else hexrgb("#6AAE54"))
@@ -179,18 +184,17 @@ def paint_layer(name, par, style):
             c.close_path()
 
         p.part(road, hexrgb("#F2DFB0"), seed="road", lw=0.5, wet=1.2)
-        tree(p, 120, 800, 1.25, 7, col=hexrgb("#57A04B"))
-        tree(p, 2380, 805, 1.1, 8, col=hexrgb("#62A851"))
-        tree(p, 4300, 805, 1.2, 9, col=hexrgb("#57A04B"))
+        for j, tx in enumerate(trees_at):
+            tree(p, tx, 800 + 3 * (j % 2), 1.1 + 0.1 * ((j + 1) % 2), 7 + j, col=hexrgb("#57A04B") if j % 2 == 0 else hexrgb("#62A851"))
         cols = [hexrgb("#F2665C"), hexrgb("#FFFFFF"), hexrgb("#7FA8F0"), hexrgb("#F8A6C8"), hexrgb("#FFD24D")]
         rng = np.random.default_rng(5)
-        for i in range(260):
+        for i in range(int(260 * k)):
             fx = -MX + rng.random() * (lw_)
             fy = 812 + rng.random() * 430
             if 840 < fy < 930:
                 continue
             tiny_flower(p, fx, fy, 0.6 + 0.6 * (fy - 800) / 450, cols[i % len(cols)], 1000 + i)
-        for i in range(70):
+        for i in range(int(70 * k)):
             gx = -MX + rng.random() * lw_
             gy = 800 + rng.random() * 40
             grass_tuft(p, gx, gy, 0.35, 2000 + i, col=hexrgb("#73B95A"))
@@ -210,18 +214,18 @@ def paint_layer(name, par, style):
     return cv.arr.copy()
 
 
-def build_layers(style, cache_dir=None):
+def build_layers(style, cache_dir=None, tag="", **kw):
     out = []
     for name, par in LAYERS:
         img = None
         path = None
         if cache_dir:
             import os
-            path = os.path.join(cache_dir, f"layer_{style}_{name}.png")
+            path = os.path.join(cache_dir, f"layer_{style}{tag}_{name}.png")
             if os.path.exists(path):
                 img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if img is None:
-            img = paint_layer(name, par, style)
+            img = paint_layer(name, par, style, **kw)
             if path:
                 cv2.imwrite(path, img)
         out.append({"name": name, "p": par, "img": img})

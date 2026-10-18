@@ -69,7 +69,7 @@ def draw_umay(p, x, y, s, st):
     gait = st.get("gait", 0.0)
     walk_amt = clamp(gait)
     run_amt = clamp(gait - 1)
-    stride = lerp(150, 210, run_amt)          # bir tam döngüde alınan yol (gait tablosuyla aynı)
+    stride = lerp(st.get("stride_w", 150), 210, run_amt)   # bir tam döngüde alınan yol (gait tablosuyla aynı)
     lift = lerp(13, 24, run_amt) * walk_amt
     bob = -abs(math.sin(ph)) * lerp(4, 9, run_amt) * walk_amt
     breathe = math.sin(t * 2.2) * 1.2 * (1 - walk_amt)
@@ -205,7 +205,10 @@ def draw_umay(p, x, y, s, st):
     edx, edy = st.get("eye_dx", 0.0) * f, st.get("eye_dy", 0.0)
     for side in (-1, 1):
         ex, ey = side * 25 + lx + edx * 3.0, -248 + edy * 3.0
-        if happy > 0.5:
+        if st.get("sour", 0) > 0.5:
+            p.stroke(lambda c, ex=ex, ey=ey, side=side: (c.move_to(ex - 9 * side, ey - 7), c.line_to(ex + 7 * side, ey), c.line_to(ex - 9 * side, ey + 7)),
+                     PAL["eye"], width=4.5)
+        elif happy > 0.5:
             p.stroke(lambda c, ex=ex, ey=ey: (c.move_to(ex - 10, ey + 3), c.curve_to(ex - 5, ey - 9, ex + 5, ey - 9, ex + 10, ey + 3)),
                      PAL["eye"], width=4.5)
         elif blink > 0.75:
@@ -227,7 +230,10 @@ def draw_umay(p, x, y, s, st):
     mo = st.get("mouth", 0.0)
     sm = st.get("smile", 1.0)
     mx_ = lx * 0.95
-    if mo > 0.07:
+    if st.get("sour", 0) > 0.5:
+        p.stroke(lambda c: (c.move_to(mx_ - 12, -214), c.line_to(mx_ - 6, -219), c.line_to(mx_, -214), c.line_to(mx_ + 6, -219), c.line_to(mx_ + 12, -214)),
+                 PAL["mouth"], width=4.0)
+    elif mo > 0.07:
         hh = 6 + 18 * mo
 
         def mouth(c):
@@ -367,9 +373,10 @@ def draw_zipzip(p, x, y, s, st):
             p.part(lambda c, ex=ex, ey=ey2, rx=rx, ry=ry: ellipse(c, ex, ey, rx, ry * (1 - blink)), PAL["eye"], line=False, seed=f"pm_eye{nm}")
             p.part(lambda c, ex=ex, ey=ey2: circle(c, ex + 2.5, ey - 4, 3.2), PAL["white"], line=False, seed=f"pm_hl{nm}", wet=0.3)
     # burun
-    p.part(lambda c: blob(c, 113, -118, 11, n=6, wobble=0.05, seed=41, sx=1.1, sy=0.8), PAL["nose"], seed="pm_nose", lw=0.5)
+    p.part(lambda c: blob(c, 113, -118, 11, n=6, wobble=0.05, seed=41, sx=1.1, sy=0.8), st.get("nose_color", PAL["nose"]), seed="pm_nose", lw=0.5)
     p.part(lambda c: ellipse(c, 110, -122, 4, 2.5, -0.3), PAL["white"], alpha=0.8, line=False, seed="pm_nosehl", wet=0.2)
     nose_dev = ctx.user_to_device(114, -124)
+    collar_dev = ctx.user_to_device(30, -92)
     # ağız
     mo = st.get("mouth", 0.0)
     if mo > 0.07:
@@ -395,11 +402,11 @@ def draw_zipzip(p, x, y, s, st):
     ctx.restore()
     ctx.restore()
     ctx.restore()
-    return {"nose": nose_dev}
+    return {"nose": nose_dev, "collar": collar_dev}
 
 
 # ---------------------------------------------------------------- KELEBEK
-def draw_butterfly(p, x, y, s, flap, rot=0.0):
+def draw_butterfly(p, x, y, s, flap, rot=0.0, col=None, edge=None):
     ctx = p.ctx
     ctx.save()
     ctx.translate(x, y)
@@ -410,10 +417,10 @@ def draw_butterfly(p, x, y, s, flap, rot=0.0):
         ctx.save()
         ctx.scale(side * k, 1)
         p.part(lambda c: (c.move_to(2, -2), c.curve_to(10, -46, 52, -52, 50, -22), c.curve_to(48, -4, 22, 2, 2, -2), c.close_path()),
-               PAL["bf_wing"], seed=f"bf_uw{side}")
+               col or PAL["bf_wing"], seed=f"bf_uw{side}")
         p.part(lambda c: (c.move_to(2, 2), c.curve_to(30, 0, 40, 26, 26, 34), c.curve_to(14, 40, 4, 22, 2, 2), c.close_path()),
-               lighten_c(PAL["bf_edge"], 0.15), seed=f"bf_lw{side}")
-        p.part(lambda c: (circle(c, 38, -30, 7), circle(c, 24, 22, 5)), PAL["bf_edge"], line=False, seed=f"bf_sp{side}")
+               lighten_c(edge or PAL["bf_edge"], 0.15), seed=f"bf_lw{side}")
+        p.part(lambda c: (circle(c, 38, -30, 7), circle(c, 24, 22, 5)), edge or PAL["bf_edge"], line=False, seed=f"bf_sp{side}")
         ctx.restore()
     p.part(lambda c: capsule(c, 0, -14, 0, 20, 4.5, 3.5), PAL["bf_body"], seed="bf_body", lw=0.4)
     p.stroke(lambda c: (c.move_to(-1, -16), c.curve_to(-4, -28, -10, -34, -12, -36), c.move_to(1, -16), c.curve_to(4, -28, 10, -34, 12, -36)),
