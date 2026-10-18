@@ -99,9 +99,12 @@ class Birlik:
 
     katman = 2
 
-    def __init__(self, taraf, tip, x, y, g=220, d=46, aci=0, alfa=0.0, etiket=None):
-        self.taraf, self.tip, self.etiket = taraf, tip, etiket
+    def __init__(self, taraf, tip, x, y, g=220, d=46, aci=0, alfa=0.0, etiket=None, stil="figur", yon=1):
+        """stil: "figur" (küçük asker figürleri) | "blok" (eski dikdörtgen görünüm).
+        yon: duran figürlerin baktığı yatay yön (+1 sağ, -1 sol)."""
+        self.taraf, self.tip, self.etiket, self.stil, self.yon = taraf, tip, etiket, stil, yon
         self.iz = Iz({"x": x, "y": y, "g": g, "d": d, "aci": aci, "alfa": alfa, "titresim": 0})
+        self._slot_cache = None
 
     # kısa yollar ----------------------------------------------------
     def belir(self, t, sure=1.0):
@@ -127,9 +130,95 @@ class Birlik:
         d = self.iz.deger(t)
         return d["x"], d["y"]
 
+    def _slotlar(self, w, h):
+        """Birlik alanında figür yerleri (birlik yerel koordinatı), dağınık okçular için rastgele."""
+        anahtar = (round(w), round(h), self.tip)
+        if self._slot_cache and self._slot_cache[0] == anahtar:
+            return self._slot_cache[1]
+        rnd = random.Random(id(self) & 0xFFFF)
+        atli_mi = self.tip in ("suvari", "agir_suvari", "atli_okcu")
+        aralik_x, aralik_y = (36, 28) if atli_mi else (20, 18)
+        slotlar = []
+        if self.tip == "atli_okcu":
+            n = max(5, int(w * h / 1100))
+            for _ in range(n):
+                slotlar.append(((rnd.random() - 0.5) * w, (rnd.random() - 0.5) * h, rnd.random()))
+        else:
+            kol = max(2, int(w / aralik_x))
+            sira = max(1, int(h / aralik_y))
+            for j in range(sira):
+                for i in range(kol):
+                    x = -w / 2 + (i + 0.5 + (0.5 if j % 2 else 0)) * w / (kol + 0.5)
+                    y = -h / 2 + (j + 0.5) * h / sira + 6
+                    slotlar.append((x + rnd.uniform(-2, 2), y + rnd.uniform(-2, 2), rnd.random()))
+        self._slot_cache = (anahtar, slotlar)
+        return slotlar
+
+    def _figurlu_ciz(self, cr, t, d):
+        from .figurler import atli, piyade, toz, AT_RENKLERI
+        tr = TARAFLAR[self.taraf]
+        a = d["alfa"]
+        once = self.iz.deger(t - 0.2)
+        vx, vy = (d["x"] - once["x"]) / 0.2, (d["y"] - once["y"]) / 0.2
+        hiz = min(1.0, math.hypot(vx, vy) / 40)
+        savas = d["titresim"]
+        yon = (1 if vx > 0 else -1) if abs(vx) > 8 else self.yon
+        w, h = d["g"], d["d"]
+        aci = math.radians(d["aci"])
+        ca, sa = math.cos(aci), math.sin(aci)
+        cx, cy = d["x"], d["y"]
+        # zemin: birliğin kapladığı alan (taraf renginde hafif leke)
+        cr.save()
+        cr.translate(cx, cy)
+        cr.rotate(aci)
+        _yuvarlak_dikdortgen(cr, -w / 2 - 6, -h / 2 - 4, w + 12, h + 10, 14)
+        cr.set_source_rgba(*tr["renk"], 0.22 * a)
+        cr.fill_preserve()
+        cr.set_source_rgba(*tr["renk"], 0.55 * a)
+        cr.set_line_width(2)
+        cr.set_dash([6, 5])
+        cr.stroke()
+        cr.set_dash([])
+        cr.restore()
+        atli_mi = self.tip in ("suvari", "agir_suvari", "atli_okcu")
+        olcek = 1.2 if atli_mi else 1.15
+        figurler = []
+        for (sx, sy, faz0) in self._slotlar(w, h):
+            if self.tip == "atli_okcu":  # okçular kendi içinde de dolaşır
+                sx += math.sin(t * 0.9 + faz0 * 6) * 6
+                sy += math.cos(t * 0.7 + faz0 * 5) * 4
+            x = cx + sx * ca - sy * sa
+            y = cy + sx * sa + sy * ca
+            if savas > 0.01:
+                x += math.sin(t * 23 + faz0 * 40) * 3 * savas
+                y += math.cos(t * 19 + faz0 * 30) * 2 * savas
+            figurler.append((y, x, faz0))
+        figurler.sort()
+        h_eff = max(hiz, 0.6 * savas, 0.35 if self.tip == "atli_okcu" else 0)
+        for i, (y, x, faz0) in enumerate(figurler):
+            faz = t * (2.4 if atli_mi else 1.6) + faz0
+            if atli_mi:
+                if hiz > 0.4 and i % 3 == 0:
+                    toz(cr, x - yon * 8, y, 0.9, t + faz0, a * 0.7, tohum=i)
+                atli(cr, x, y, olcek, self.taraf, faz, h_eff, yon, a, okcu=self.tip == "atli_okcu",
+                     at_renk=AT_RENKLERI[int(faz0 * 4) % 4])
+            else:
+                piyade(cr, x, y, olcek, self.taraf, faz, h_eff, yon, a, okcu=self.tip == "okcu")
+        if savas > 0.05:  # çarpışma kıvılcımları
+            for k in range(6):
+                u = (t * 2.3 + k * 0.17) % 1.0
+                px = cx + math.sin(k * 7.3 + int(t * 2.3 + k * 0.17) * 3.1) * w * 0.45
+                py = cy - h / 2 - 4 + math.cos(k * 3.1) * 6
+                cr.arc(px, py - 10 * u, 2.5 * (1 - u) + 0.5, 0, 2 * math.pi)
+                cr.set_source_rgba(1, 0.85, 0.4, (1 - u) * savas * a)
+                cr.fill()
+
     def ciz(self, cr, t):
         d = self.iz.deger(t)
         if d["alfa"] <= 0.01:
+            return
+        if self.stil == "figur":
+            self._figurlu_ciz(cr, t, d)
             return
         tr = TARAFLAR[self.taraf]
         r, g_, b = tr["renk"]
@@ -564,8 +653,10 @@ class Sahne:
 
     GECIS = 0.8
 
-    def __init__(self, t0, t1, arka_plan):
-        self.t0, self.t1, self.arka_plan = t0, t1, arka_plan
+    def __init__(self, t0, t1, arka_plan, harita=None, nefes=True):
+        """harita: cografya.Harita (verilirse otomatik katman şehir adlarını burada vurgular).
+        nefes: kamera hiç tamamen durmasın diye çok yavaş sürekli kayma/yakınlaşma."""
+        self.t0, self.t1, self.arka_plan, self.harita, self.nefes = t0, t1, arka_plan, harita, nefes
         self.ogeler = []
         self.kamera = Iz({"x": DUNYA_G / 2, "y": DUNYA_Y / 2, "zoom": 1.0})
 
@@ -582,7 +673,12 @@ class Sahne:
         self.kamera.ekle(t, ozl)
 
     def kare(self, cr, t):
-        k = self.kamera.deger(t)
+        k = dict(self.kamera.deger(t))
+        if self.nefes:
+            u = t - self.t0
+            k["zoom"] *= 1.0 + 0.025 * (1 - math.cos(u * 0.21))
+            k["x"] += 14 * math.sin(u * 0.17)
+            k["y"] += 9 * math.sin(u * 0.13 + 1.0)
         z = k["zoom"]
         yari_g, yari_y = G / 2 / z, Y / 2 / z
         kx = min(max(k["x"], yari_g), DUNYA_G - yari_g) if z >= 1 else DUNYA_G / 2
@@ -613,8 +709,8 @@ class Video:
         self.karartma = Iz({"a": 1.0})  # 1 = tamamen siyah
         self._varsayilan = self.sahne(0, 1e9, arka_plan) if arka_plan is not None else None
 
-    def sahne(self, t0, t1, arka_plan):
-        s = Sahne(t0, t1, arka_plan)
+    def sahne(self, t0, t1, arka_plan, harita=None, nefes=True):
+        s = Sahne(t0, t1, arka_plan, harita, nefes)
         self.sahneler.append(s)
         return s
 

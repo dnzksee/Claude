@@ -58,10 +58,15 @@ class KarakterKarti:
 
     katman = 5
 
-    def __init__(self, ad, unvan, yillar, taraf, t0, t1, maddeler=(), monogram=None):
+    def __init__(self, ad, unvan, yillar, taraf, t0, t1, maddeler=(), monogram=None, gorsel=None, kirp=None,
+                 dondur=0):
         self.ad, self.unvan, self.yillar, self.taraf = ad, unvan, yillar, taraf
         self.t0, self.t1, self.maddeler = t0, t1, maddeler
         self.monogram = monogram or "".join(p[0] for p in ad.split()[:2]).upper()
+        self.yuzey = None
+        if gorsel:
+            from .katmanlar import gorsel_yukle
+            self.yuzey = gorsel_yukle(gorsel, kirp, 900, dondur)
 
     def ciz(self, cr, t):
         a = _alfa(t, self.t0, self.t1)
@@ -96,9 +101,19 @@ class KarakterKarti:
             cr.arc(math.cos(ang) * (R + 8), math.sin(ang) * (R + 8), 3.2 if i % 3 else 5, 0, 2 * math.pi)
             cr.set_source_rgba(*tr["vurgu"], 0.9 * a)
             cr.fill()
-        mb = 190 if len(self.monogram) <= 2 else 130
-        _yazi(cr, self.monogram, 0, mb * 0.33, mb, aile="Caladea", renk=tr["vurgu"], alfa=a,
-              kontur=((0, 0, 0), 6, 0.35))
+        if self.yuzey is not None:
+            from .katmanlar import _gorsel_ciz
+            cr.save()
+            cr.arc(0, 0, R - 6, 0, 2 * math.pi)
+            cr.clip()
+            yak = 1.0 + 0.08 * yumusat((t - self.t0) / max(self.t1 - self.t0, 1))
+            cr.scale(yak, yak)
+            _gorsel_ciz(cr, self.yuzey, -R, -R, 2 * R, 2 * R, a)
+            cr.restore()
+        else:
+            mb = 190 if len(self.monogram) <= 2 else 130
+            _yazi(cr, self.monogram, 0, mb * 0.33, mb, aile="Caladea", renk=tr["vurgu"], alfa=a,
+                  kontur=((0, 0, 0), 6, 0.35))
         cr.restore()
 
         # metin bloğu

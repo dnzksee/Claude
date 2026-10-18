@@ -20,6 +20,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from motor.sahne import Video, AltYazi  # noqa: E402
+from motor.zamanlama import Zaman, sessizlikler, cumle_kelimeleri  # noqa: E402
 from motor.seslendirme import (gemini_seslendir, edge_seslendir, cumlelere_bol, baslangic_dogrula,  # noqa: E402
                                GEMINI_MODEL, SURUM)
 
@@ -176,15 +177,18 @@ def main():
                                                  [len(cumlelere_bol(b["metin"])) for b in parcalar_b])):
             parca_sonuc[b["id"]] = sonuc
 
-    T, altyazilar, ses_parcalari = {}, [], []
+    T, altyazilar, ses_parcalari = Zaman(), [], []
     t = GIRIS_PAYI
     for grup in gruplar:
         for b in grup:
             pmp3, d, palt = parca_sonuc[b["id"]]
+            sess = sessizlikler(pmp3) if pmp3 else []
             if pmp3:
                 ses_parcalari.append((t, pmp3))
             ek = b.get("ek_sure", 0)  # anlatım bittikten sonra animasyonun sürmesi için
             T[b["id"]] = (t, t + d + ek)
+            T.kelimeler[b["id"]] = [(t + kt, k) for c0, c1, m in palt
+                                    for kt, k in cumle_kelimeleri(c0, c1, m, sess)]
             altyazilar += [(t + x0, t + x1, m) for x0, x1, m in _cumle_bol(palt)]
             t += d + ek + PARCA_BOSLUK
         t += BOSLUK
