@@ -37,11 +37,11 @@ def umay_arm_pose(name, t):
     """Kol açıları: (sol omuz, sol dirsek, sağ omuz, sağ dirsek). Açı aşağıdan dışa doğru."""
     if name == "idle":
         b = math.sin(t * 2.1) * 0.03
-        return (0.16 + b, 0.15, 0.16 + b, 0.15)
+        return (0.15 + b, -0.14, 0.15 + b, -0.14)
     if name == "wave":
-        return (0.16, 0.15, 2.55, 0.35 + 0.5 * math.sin(t * 9.0))
+        return (0.15, -0.14, 2.55, 0.35 + 0.45 * math.sin(t * 7.0))
     if name == "point":
-        return (0.2, 0.2, 2.05 + 0.04 * math.sin(t * 3), 0.05)
+        return (0.15, -0.14, 2.05 + 0.04 * math.sin(t * 3), 0.05)
     if name == "cheer":
         w = math.sin(t * 7.0) * 0.12
         return (2.55 + w, 0.25, 2.55 - w, 0.25)
@@ -50,8 +50,8 @@ def umay_arm_pose(name, t):
     if name == "hug":
         return (0.55, -1.6, 1.35, 0.55)
     if name == "think":
-        return (0.2, 0.15, 0.55, -2.4)
-    return (0.16, 0.15, 0.16, 0.15)
+        return (0.15, -0.14, 0.55, -2.4)
+    return (0.15, -0.14, 0.15, -0.14)
 
 
 def blend_pose(a, b, u):
@@ -69,30 +69,48 @@ def draw_umay(p, x, y, s, st):
     gait = st.get("gait", 0.0)
     walk_amt = clamp(gait)
     run_amt = clamp(gait - 1)
-    amp = lerp(0.42, 0.78, run_amt) * walk_amt
-    lift = lerp(9, 20, run_amt) * walk_amt
-    bob = -abs(math.cos(ph)) * lerp(5, 11, run_amt) * walk_amt
+    stride = lerp(150, 210, run_amt)          # bir tam döngüde alınan yol (gait tablosuyla aynı)
+    lift = lerp(13, 24, run_amt) * walk_amt
+    bob = -abs(math.sin(ph)) * lerp(4, 9, run_amt) * walk_amt
     breathe = math.sin(t * 2.2) * 1.2 * (1 - walk_amt)
     jump = st.get("jump", 0.0)
     look = st.get("look", 0.0)
     tilt = st.get("tilt", 0.0)
-    lean = st.get("lean", 0.0) + 0.07 * run_amt
+    lean = st.get("lean", 0.0) + 0.06 * run_amt
 
     ctx.save()
     ctx.translate(x, y)
     ctx.scale(s * f, s)
 
-    # --- bacaklar (gövdenin arkasında)
+    # --- bacaklar: basan ayak yerde sabit kalır, adım atan ayak kavisle öne gelir; diz öne bükülür
     ctx.save()
     ctx.translate(0, -jump)
-    for side, sign in ((-1, 1), (1, -1)):
-        a = math.sin(ph) * amp * sign
-        lf = max(0.0, math.cos(ph) * sign) * lift
-        hx, hy = side * 15, -98
-        ax_, ay_ = hx + math.sin(a) * 70, hy + math.cos(a) * 70 - lf
-        p.part(lambda c, hx=hx, hy=hy, ax_=ax_, ay_=ay_: capsule(c, hx, hy, ax_, ay_, 9.5, 9), PAL["skin"],
-               seed=f"umay_leg{side}")
-        p.part(lambda c, ax_=ax_, ay_=ay_: ellipse(c, ax_ + 7, ay_ + 8, 17, 10), PAL["shoe"], seed=f"umay_shoe{side}")
+    L1 = L2 = 41.0
+    for side, off, shade in ((-1, math.pi, 0.07), (1, 0.0, 0.0)):   # önce uzak bacak (arkada, biraz koyu)
+        u = ((ph + off) % (2 * math.pi)) / (2 * math.pi)
+        q = stride / 4
+        if u < 0.5:                       # basma: ayak geriye kayar (gövde ilerler)
+            fx, lf, toe = q * (1 - 4 * u), 0.0, 0.0
+        else:                             # adım: ayak havada öne gelir
+            v = (u - 0.5) * 2
+            fx = -q + 2 * q * (v * v * (3 - 2 * v))
+            lf = math.sin(math.pi * v) * lift
+            toe = -0.3 * math.sin(math.pi * v)
+        fx *= walk_amt
+        hx, hy = side * 4.0, -96.0 + bob * 0.6
+        axx, ayy = fx + side * 3.0, -16.0 - lf
+        dx, dy = axx - hx, ayy - hy
+        d = min(math.hypot(dx, dy), L1 + L2 - 0.5)
+        hh = math.sqrt(max(L1 * L1 - (d / 2) ** 2, 0.0))
+        nx_, ny_ = -dy / max(d, 1e-6), dx / max(d, 1e-6)
+        if nx_ < 0:
+            nx_, ny_ = -nx_, -ny_
+        kx, ky = hx + dx / 2 + nx_ * hh, hy + dy / 2 + ny_ * hh
+        skin = darken_c(PAL["skin"], shade)
+        p.part(lambda c, a=(hx, hy, kx, ky), b=(kx, ky, axx, ayy): (capsule(c, *a, 10, 9.5), capsule(c, *b, 9.5, 9)),
+               skin, seed=f"umay_leg{side}")
+        p.part(lambda c, axx=axx, ayy=ayy, toe=toe: ellipse(c, axx + 8, ayy + 7, 17, 10, toe), darken_c(PAL["shoe"], shade),
+               seed=f"umay_shoe{side}")
     ctx.restore()
 
     ctx.save()
@@ -106,7 +124,7 @@ def draw_umay(p, x, y, s, st):
     ctx.translate(0, -196)
     ctx.rotate(tilt)
     ctx.translate(0, 196)
-    sway = math.sin(ph - 0.8) * 0.18 * walk_amt + math.sin(t * 1.7) * 0.03 + tilt * 0.6
+    sway = math.sin(ph * 2 - 0.8) * 0.07 * walk_amt + math.sin(t * 1.7) * 0.03 + tilt * 0.6
     p.part(lambda c: blob(c, look * 4, -262, 80, n=9, wobble=0.05, seed=3, sx=1.02, sy=0.98), PAL["hair"], seed="umay_bhair")
     for side in (-1, 1):
         ctx.save()
@@ -121,7 +139,7 @@ def draw_umay(p, x, y, s, st):
 
     # --- boyun + elbise
     p.part(lambda c: capsule(c, 0, -205, 0, -180, 10), PAL["skin"], seed="umay_neck", line=False)
-    sw = math.sin(ph + 1.2) * 5 * walk_amt + math.sin(t * 1.3) * 1.5
+    sw = math.sin(ph * 2 + 1.2) * 2.5 * walk_amt + math.sin(t * 1.3) * 1.2
 
     def dress(c):
         c.move_to(-22, -192)
@@ -147,8 +165,19 @@ def draw_umay(p, x, y, s, st):
     # --- kollar
     arms = st.get("arms", umay_arm_pose("idle", t))
     if walk_amt > 0:
-        sw_a = math.sin(ph) * lerp(0.28, 0.45, run_amt) * walk_amt
-        arms = (arms[0] + sw_a, arms[1] + 0.5 * run_amt, arms[2] - sw_a, arms[3] + 0.5 * run_amt)
+        # kollar bacaklara ters salınır: öne giden kolun dirseği bükülür (derinlik hissi), geri giden düzleşir.
+        # Koşarken dirsekler bükük, eller göğüs hizasında sırayla pompalar.
+        k = walk_amt
+        sn = math.sin(ph)
+        sw_w = 0.10 * sn
+        el_w = 0.22 * max(0.0, sn), 0.22 * max(0.0, -sn)        # (sol, sağ) dirsek bükümü (içe)
+        run_l = (0.55 - 0.18 * sn, -2.35 - 0.25 * sn)
+        run_r = (0.55 + 0.18 * sn, -2.35 + 0.25 * sn)
+        walk_l = (arms[0] + sw_w, arms[1] - el_w[0])
+        walk_r = (arms[2] - sw_w, arms[3] - el_w[1])
+        rl = blend_pose(walk_l, run_l, run_amt)
+        rr = blend_pose(walk_r, run_r, run_amt)
+        arms = blend_pose(arms, (rl[0], rl[1], rr[0], rr[1]), k)
     hands = {}
     for side, (sa, ea) in ((-1, arms[0:2]), (1, arms[2:4])):
         sx_, sy_ = side * 33, -176
