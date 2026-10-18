@@ -17,6 +17,7 @@
 - `docs/02_bolum_formati_25_30_dk.md`: 25–30 dakikalık bölüm iskeleti ve ilk sezon hikâye fikirleri
 - `docs/03_ornek_kesit_cekim_listesi.md`: çekim listesi, animasyon notları, 6:30'a genişletme planı
 - `docs/04_seslendirme_rehberi.md`: gerçek ses kaydı için yönergeli metin (kim, nasıl, hangi duyguyla)
+- `docs/05_bolum1_renkli_kelebekler_20dk.md`: **1. bölümün 20 dakikalık tam senaryosu ve AI Studio seslendirme paketi**
 
 ## Üretim altyapısı (`studio/`)
 Tamamen kodla üretilen bir 2B animasyon stüdyosu:
