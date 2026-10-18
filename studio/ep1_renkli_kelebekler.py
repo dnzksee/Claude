@@ -343,6 +343,8 @@ class State:
         for i, t in enumerate(ts):
             cam[i] = self._cam_target(pl, t, ux[i], self.zx[i])
         self.cam = _spring(cam, w=2.0)
+        # dünyanın sol kenarının dışını gösterme
+        self.cam[:, 0] = np.maximum(self.cam[:, 0], W / (2 * self.cam[:, 2]) - world.MX + 20)
         # kelebek
         bf = np.empty((n, 2))
         for i, t in enumerate(ts):
