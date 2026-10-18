@@ -63,6 +63,10 @@ def main():
             print(f"BEKLEYEN {proje}")
             continue
         print(f"--- {proje}", flush=True)
+        liste = os.path.join(yol, "gorseller.txt")
+        if os.path.exists(liste):  # eksik kamu malı görselleri bir kez dene (engelliyse hemen geç)
+            subprocess.call([sys.executable, os.path.join(KOK, "araclar", "commons_indir.py"), liste, "--hizli"],
+                            cwd=KOK)
         kod = subprocess.call([sys.executable, os.path.join(KOK, "uret.py"), yol, "--motor", "gemini",
                                "--ses", ses], cwd=KOK)
         if kod == 0:

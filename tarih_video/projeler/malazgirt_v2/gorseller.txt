@@ -1,0 +1,12 @@
+# Bu projenin kullandığı kamu malı görseller (anahtar=Commons dosya adı)
+malazgirt_minyatur1=File:131 Bataille de Malazgirt.jpg
+malazgirt_minyatur2=File:Bataille de Malazgirt (1071) - Français 236.jpg
+alparslan_romen=File:BnF Fr232 fol323 Alp Arslan Romanus.jpg
+basileios2=File:Basileios II, BNM, MS. gr. 17 Fol. 3r.jpg
+tugrul=File:Seljuk Sultan Tugrul Bey sitting on his throne. Topkapı Sarayı Müzesi 1653-3 (304 B).jpg
+clermont=File:Passages d'outremer Fr5594, fol. 19r, Concile de Clermont.jpg
+evdokia=File:135 - Eudokia Makrembolitissa (Mutinensis - color).png
+mihail7=File:137 - Michael VII Doukas (Mutinensis - color).png
+meliksah=File:Seljuk Sultan Malik Shah at his court Jāmiʿ al-Tawārikh, Tabriz, 1317. Topkapı Sarayı Library (Hazine 1654) Malik Shah portrait.jpg
+aleksios=File:Alexios1komnenos.jpg
+konstantin10=File:Constantine X and Eudokia in St. Demetrius' reliquary (detail).jpg
