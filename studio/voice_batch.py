@@ -165,33 +165,46 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", help="AI Studio'dan indirilen dosyaların klasörü (verilmezse Gemini API ile üretilir)")
     ap.add_argument("--only", nargs="*", help="yalnızca bu dosya adları (ör. anlatici_2_mavi)")
+    ap.add_argument("--chunk", type=int, default=0, help="uzun metni bu kadar satırlık parçalara böl (dakikalık sınırlar için)")
+    ap.add_argument("--style", default=None, help="stil yönergesini değiştir (ör. 3.1 modeli yaş ifadesi kabul etmiyor)")
+    ap.add_argument("--model", default=None, help="Gemini ses modeli (varsayılan gemini-2.5-flash-preview-tts)")
     a = ap.parse_args()
+    if a.model:
+        globals()["MODEL"] = a.model
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(RAW, exist_ok=True)
     for ad, who, bols in DOSYALAR:
         if a.only and ad not in a.only:
             continue
-        lines = list(satirlar(who, bols))
-        if a.src:
-            cand = [f for f in glob.glob(os.path.join(a.src, ad + ".*"))]
-            if not cand:
-                print(f"- {ad}: dosya yok, atlandı")
-                continue
-            raw = cand[0]
-        else:
-            raw = os.path.join(RAW, ad + ".wav")
-            if not os.path.exists(raw):
-                voice, style = SESLER[who]
-                style = style.replace("Leave a clear pause between each line.",
-                                      "Leave a long, two-second silent pause between each line.")
-                text = "\n".join(f"{t}" for _, _, t, _ in lines)
-                print(f"* {ad}: {len(lines)} cümle Gemini'ye okutuluyor ({voice})", flush=True)
-                gemini(f"{style} Read ALL {len(lines)} lines below, in order, without skipping any line:\n\n{text}", voice, raw)
-                time.sleep(10)
-        x, fs = load(raw)
-        segs, shortest = split(x, fs, [t for _, _, t, _ in lines])
-        for (cid, _, _, _), seg in zip(lines, segs):
-            write(os.path.join(OUT, f"{cid}.wav"), seg, fs, who)
+        all_lines = list(satirlar(who, bols))
+        size = a.chunk if (a.chunk and not a.src) else len(all_lines)
+        for ci in range(0, len(all_lines), size):
+            lines = all_lines[ci:ci + size]
+            part = ad if size == len(all_lines) else f"{ad}_p{ci // size + 1}"
+            if a.src:
+                cand = [f for f in glob.glob(os.path.join(a.src, ad + ".*"))]
+                if not cand:
+                    print(f"- {ad}: dosya yok, atlandı")
+                    break
+                raw = cand[0]
+            else:
+                raw = os.path.join(RAW, part + ".wav")
+                if not os.path.exists(raw):
+                    voice, style = SESLER[who]
+                    if a.style:
+                        style = a.style + " Leave a clear pause between each line."
+                    style = style.replace("Leave a clear pause between each line.",
+                                          "Leave a long, two-second silent pause between each line.")
+                    text = "\n".join(f"{t}" for _, _, t, _ in lines)
+                    print(f"* {part}: {len(lines)} cümle Gemini'ye okutuluyor ({voice})", flush=True)
+                    gemini(f"{style} Read ALL {len(lines)} lines below, in order, without skipping any line:\n\n{text}", voice, raw)
+                    time.sleep(65 if size < len(all_lines) else 10)
+            x, fs = load(raw)
+            segs, shortest = split(x, fs, [t for _, _, t, _ in lines])
+            for (cid, _, _, _), seg in zip(lines, segs):
+                write(os.path.join(OUT, f"{cid}.wav"), seg, fs, who)
+            print(f"✓ {part}: {len(lines)} cümleye bölündü (en kısa ayraç {shortest:.2f} sn, toplam {len(x) / fs:.1f} sn)", flush=True)
+        continue
         print(f"✓ {ad}: {len(lines)} cümleye bölündü (en kısa ayraç {shortest:.2f} sn, toplam {len(x) / fs:.1f} sn)", flush=True)
 
 
