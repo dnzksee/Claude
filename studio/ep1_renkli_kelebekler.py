@@ -37,7 +37,7 @@ SPAN = 11900
 WALK_V = 135.0          # Umay'ın yürüyüş hızı (px/sn): 3 yaşına uygun, sakin
 STRIDE_W = 140.0        # yürüyüş adım döngüsü (px); karakter çiziminde de aynısı kullanılır
 GAP = 0.55              # cümleler arası boşluk
-DANCE_LEN = 48.0        # her renk sonundaki dans arası (tekerleme 2 kez)
+DANCE_LEN = 30.0        # her renk sonundaki dans arası (tekerleme bir kez daha)
 SONG_LEN = 6.0          # açılış şarkısı
 RECAP_PER = 20.0        # finalde her renk için "hatırlayalım"
 FINAL_DANCE = 24.0      # gökkuşağı dansı
@@ -214,7 +214,7 @@ class Plan:
                         d0 = t + 0.6
                         if ch:  # renk dansı: tekerleme 3 kez, müzikle
                             self.segs.append((d0, d0 + DANCE_LEN, "dance", code))
-                            self._replay_block(d0, tek_all[ch], ch, 2, ch)
+                            self._replay_block(d0, tek_all[ch], ch, 1, ch)
                             t = d0 + DANCE_LEN + 0.6
                         else:   # final: gökkuşağı dansı
                             self.segs.append((d0, d0 + FINAL_DANCE, "dance", code))
