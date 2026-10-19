@@ -49,7 +49,9 @@ def gemini(prompt, voice, out):
             break
         except (urllib.error.HTTPError, urllib.error.URLError, KeyError, TimeoutError) as e:
             print("   tekrar deneniyor:", str(e)[:80], flush=True)
-            if attempt == 5:
+            # boş yanıt (ses yok) ya da günlük kota: en fazla bir kez daha dene, kotayı boşa harcama
+            empty = isinstance(e, KeyError) or (isinstance(e, urllib.error.HTTPError) and e.code == 429 and attempt >= 1)
+            if attempt == 5 or (empty and attempt >= 1):
                 raise
             time.sleep(25 * (attempt + 1))
     pcm = base64.b64decode(part["data"])
