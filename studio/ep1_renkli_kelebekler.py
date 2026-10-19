@@ -101,12 +101,43 @@ def vo_path(cid):
     return os.path.join(VO_DIR, f"{cid}.wav")
 
 
-def vo_len(cid, text):
+LOCK_PATH = os.path.join(ROOT, "build", "ep1_slots.json")
+LOCK = None
+# sesi henüz gelmemiş satırlar için cömert sabit süreler (görüntü bunlarla render edilir; ses sonra yerleşir)
+PENDING = {"zipzip": lambda cid, txt: 2.9 if "hapşu" in txt else (1.9 if txt.count("Hav") >= 3 else 1.5),
+           "final": lambda cid, txt: 0.9 + 0.085 * len(txt) + 0.6 * txt.count("?")}
+
+
+def _pending(cid, who, txt):
+    if who == Z:
+        return PENDING["zipzip"](cid, txt)
+    if who == A and cid.startswith("F"):
+        return PENDING["final"](cid, txt)
+    return None
+
+
+def vo_len(cid, text, who=None):
+    global LOCK
+    if LOCK is None:
+        import json
+        LOCK = json.load(open(LOCK_PATH)) if os.path.exists(LOCK_PATH) else {}
+    if cid in LOCK:
+        return LOCK[cid]
+    pend = _pending(cid, who, text) if who else None
+    if pend is not None:
+        return pend
     p = vo_path(cid)
     if os.path.exists(p):
         with wave.open(p) as w:
             return w.getnframes() / w.getframerate()
     return 0.4 + 0.075 * len(text)
+
+
+def save_lock(pl):
+    import json
+    slots = {ln["cid"]: round(ln["t1"] - ln["t0"], 3) for ln in pl.lines}
+    os.makedirs(os.path.dirname(LOCK_PATH), exist_ok=True)
+    json.dump(slots, open(LOCK_PATH, "w"), indent=0)
 
 
 def color_of(text):
@@ -138,7 +169,7 @@ class Plan:
         tt = t + 2.4
         for rep in range(reps):
             for c2, w2, x2, _ in lines:
-                dd = vo_len(c2, x2)
+                dd = vo_len(c2, x2, w2)
                 self.replays.append(dict(cid=c2, who=w2, txt=x2, t0=tt, t1=tt + dd, ch=ch, color=color_of(x2), label=label))
                 tt += max(dd + 1.0, 4.8)
             tt += 2.4
@@ -171,7 +202,7 @@ class Plan:
                     self.segs.append((0.0, sc["pre"] - 1.0, "dance", code))
                 t += sc.get("pre", 1.2)
                 for cid, who, txt, wait in lines:
-                    d = vo_len(cid, txt)
+                    d = vo_len(cid, txt, who)
                     self.lines.append(dict(cid=cid, who=who, txt=txt, t0=t, t1=t + d, wait=wait, scene=code, ch=ch,
                                            color=color_of(txt)))
                     self.T[cid] = (t, t + d)
@@ -1135,6 +1166,10 @@ def build_audio(path):
         p_ = vo_path(ln["cid"])
         if os.path.exists(p_):
             v = Au.load_wav(p_)
+            slot = ln["t1"] - ln["t0"] + GAP * 0.8
+            if len(v) / Au.SR > slot:  # yuvadan uzunsa hafifçe hızlandır (en fazla %20), sonra kes
+                k = min(len(v) / Au.SR / slot, 1.2)
+                v = np.interp(np.arange(0, len(v), k), np.arange(len(v)), v).astype(np.float32)[: int(slot * Au.SR)]
             vo.add(ln["t0"], v, 0.9, pan={U: 0.08, Z: -0.08}.get(ln["who"], 0.0))
             spans.append((ln["t0"], ln["t0"] + len(v) / Au.SR))
     duck = Au.duck_curve(dur, spans, depth=0.32)[: len(music.buf), None]
@@ -1189,6 +1224,7 @@ def main():
     ap.add_argument("--workers", type=int, default=os.cpu_count())
     ap.add_argument("--out", default=os.path.join(ROOT, "renders", "umay_zipzip_bolum1_renkli_kelebekler.mp4"))
     ap.add_argument("--audio-only", action="store_true")
+    ap.add_argument("--mux-only", action="store_true", help="görüntüyü yeniden render etmeden sesi yeniden kur ve ekle")
     a = ap.parse_args()
     pl = plan()
     if a.plan:
@@ -1203,6 +1239,13 @@ def main():
     if a.audio_only:
         print(build_audio(os.path.join(work, "ep1_mix.wav")))
         return
+    silent = os.path.join(work, "ep1_silent.mp4")
+    if a.mux_only:
+        wav = build_audio(os.path.join(work, "ep1_mix.wav"))
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-map", "0:v", "-map", "1:a", "-c:v", "copy",
+                        "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest", a.out], check=True)
+        print(a.out)
+        return
     if a.still:
         for s in a.still:
             p_ = os.path.join(work, f"ep1_still_{s:07.1f}.png")
@@ -1210,6 +1253,8 @@ def main():
             print(p_)
         return
     _SCALE = a.scale
+    if a.start == 0 and a.end is None and a.scale == 1.0:
+        save_lock(pl)   # bu render'ın zamanlaması sabitlenir; sonradan gelen sesler aynı yuvalara oturur
     end = a.end if a.end is not None else pl.duration
     f0, f1 = int(a.start * FPS), int(end * FPS)
     n = max(1, a.workers * 6)
@@ -1223,7 +1268,6 @@ def main():
     lst = os.path.join(work, "ep1_concat.txt")
     with open(lst, "w") as fh:
         fh.writelines(f"file '{s}'\n" for s in segs)
-    silent = os.path.join(work, "ep1_silent.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", silent], check=True)
     for s in segs:
         os.remove(s)
@@ -1231,7 +1275,6 @@ def main():
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-ss", str(a.start), "-t", str(end - a.start), "-i", wav,
                     "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
                     "-shortest", a.out], check=True)
-    os.remove(silent)
     print(a.out)
 
 
