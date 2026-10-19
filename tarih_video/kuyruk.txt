@@ -1,2 +1,1 @@
 # Sırayla üretilecek projeler (projeler/ altındaki klasör adları)
-malazgirt_v2
