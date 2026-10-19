@@ -38,7 +38,7 @@ WALK_V = 135.0          # Umay'ın yürüyüş hızı (px/sn): 3 yaşına uygun,
 STRIDE_W = 140.0        # yürüyüş adım döngüsü (px); karakter çiziminde de aynısı kullanılır
 GAP = 0.55              # cümleler arası boşluk
 DANCE_LEN = 48.0        # her renk sonundaki dans arası (tekerleme 2 kez)
-SONG_LEN = 30.0         # açılış şarkısı
+SONG_LEN = 6.0          # açılış şarkısı
 RECAP_PER = 20.0        # finalde her renk için "hatırlayalım"
 FINAL_DANCE = 24.0      # gökkuşağı dansı
 TARGET = 0              # hedef süre (sn); 0 = doldurma yok (sessiz beklemeler çocukları sıkıyordu)
@@ -424,7 +424,7 @@ class State:
             return (ux + 60, GROUND_Y - 250, 2.0)
         dx, cy, z = spec
         if SC[sc["code"]].get("song"):
-            u = smooth((t - 6.0) / (SONG_LEN - 8.0))
+            u = smooth((t - 0.5) / max(SONG_LEN - 1.0, 1.0))
             return (sc["x"] + 160, lerp(150, 520, u), 1.0)
         if pl.seg_at(t, "dance") or pl.seg_at(t, "recap"):
             return (ux + 60, 560, 1.0)
@@ -785,8 +785,9 @@ def draw_overlay(p, pl, t):
         pop = ease_out_back(clamp((t - t0 + 0.1) / 0.45)) * (1 + 0.04 * math.sin(t * 10.5) * bool(dance))
         P.draw_word(p, P.WORD[key], P.COL[key], a, max(pop, 0.01), W / 2, 175, size=170)
     # başlık (açılış şarkısı boyunca) + etrafında uçan üç kelebek
-    if t < SONG_LEN:
-        a = window(t, 0.8, SONG_LEN - 3.0, 0.8)
+    t_end = pl.T["A02"][1] + 0.8 if "A02" in pl.T else SONG_LEN
+    if t < t_end + 1.0:
+        a = window(t, 0.6, t_end, 0.6)
         if a > 0:
             from ep01_renkli_kelebek import draw_title
             title_panel(p, a, 330)
