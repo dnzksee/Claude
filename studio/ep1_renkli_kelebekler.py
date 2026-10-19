@@ -34,14 +34,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VO_DIR = os.path.join(ROOT, "assets", "vo_ep1")
 STYLE = "kagit"
 SPAN = 11900
-WALK_V = 112.0          # Umay'ın yürüyüş hızı (px/sn): 3 yaşına uygun, sakin
-STRIDE_W = 130.0        # yürüyüş adım döngüsü (px); karakter çiziminde de aynısı kullanılır
+WALK_V = 135.0          # Umay'ın yürüyüş hızı (px/sn): 3 yaşına uygun, sakin
+STRIDE_W = 140.0        # yürüyüş adım döngüsü (px); karakter çiziminde de aynısı kullanılır
 GAP = 0.55              # cümleler arası boşluk
-DANCE_LEN = 72.0        # her renk sonundaki dans arası (tekerleme 3 kez)
-SONG_LEN = 40.0         # açılış şarkısı
-RECAP_PER = 24.0        # finalde her renk için "hatırlayalım"
-FINAL_DANCE = 30.0      # gökkuşağı dansı
-TARGET = 20 * 60 + 30   # hedef süre (sn); eksik kalırsa oyun süreleri eşit dağıtılarak uzatılır
+DANCE_LEN = 48.0        # her renk sonundaki dans arası (tekerleme 2 kez)
+SONG_LEN = 30.0         # açılış şarkısı
+RECAP_PER = 20.0        # finalde her renk için "hatırlayalım"
+FINAL_DANCE = 24.0      # gökkuşağı dansı
+TARGET = 0              # hedef süre (sn); 0 = doldurma yok (sessiz beklemeler çocukları sıkıyordu)
 
 BF_COL = {"mavi": (P.COL["mavi"], P.COL["mavi_l"]), "kirmizi": (P.COL["kirmizi"], P.COL["kirmizi_l"]),
           "sari": (P.COL["sari"], P.COL["turuncu"])}
@@ -123,10 +123,10 @@ def vo_len(cid, text, who=None):
         LOCK = json.load(open(LOCK_PATH)) if os.path.exists(LOCK_PATH) else {}
     if cid in LOCK:
         return LOCK[cid]
-    pend = _pending(cid, who, text) if who else None
-    if pend is not None:
-        return pend
     p = vo_path(cid)
+    pend = _pending(cid, who, text) if who else None
+    if pend is not None and not os.path.exists(p):
+        return pend
     if os.path.exists(p):
         with wave.open(p) as w:
             return w.getnframes() / w.getframerate()
@@ -214,7 +214,7 @@ class Plan:
                         d0 = t + 0.6
                         if ch:  # renk dansı: tekerleme 3 kez, müzikle
                             self.segs.append((d0, d0 + DANCE_LEN, "dance", code))
-                            self._replay_block(d0, tek_all[ch], ch, 3, ch)
+                            self._replay_block(d0, tek_all[ch], ch, 2, ch)
                             t = d0 + DANCE_LEN + 0.6
                         else:   # final: gökkuşağı dansı
                             self.segs.append((d0, d0 + FINAL_DANCE, "dance", code))
