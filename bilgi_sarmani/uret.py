@@ -1,0 +1,255 @@
+"""Bilgi Sarmanı — 2B çizgi film belgesel (explainer) üretimi.
+
+Kullanım:
+    python3 uret.py konular/hizli_yavas.py                  # seslendir + müzik + efekt + video
+    python3 uret.py konular/hizli_yavas.py --motor sessiz   # seslendirme olmadan taslak (süre tahmini)
+    python3 uret.py konular/hizli_yavas.py --onizleme 5,32,70 --sadece-kareler
+
+Akış: metin -> cümle cümle seslendirme (Gemini, kanal anlatıcısı) -> her cümle kendi zamanına
+yerleştirilir -> sahneler bu zamanlara göre kurulur -> müzik (konuşma altında kısılır) +
+efektler + seslendirme miksajı -> 1280×720, 24 fps MP4 + SRT altyazı.
+"""
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+import re
+import sys
+
+import numpy as np
+
+KOK = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, KOK)
+
+from motor import ses as S  # noqa: E402
+from motor.gecisler import SURELER, SESLER  # noqa: E402
+from motor.kartlar import AcilisKarti, KapanisKarti, BolumEtiketi, Altyazi  # noqa: E402
+from motor.video import Sahne, Video  # noqa: E402
+
+
+def _tarih_seslendirme():
+    """Seslendirme kodu tarih kanalıyla ortaktır (aynı Gemini ayarları, doğrulama, önbellek sürümü)."""
+    yol = os.path.join(os.path.dirname(KOK), "tarih_video", "motor", "seslendirme.py")
+    spec = importlib.util.spec_from_file_location("ortak_seslendirme", yol)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def anlatici_sesi():
+    """Kanalın anlatıcı sesi: ses.txt (Bilgi Sarmanı'nda Gemini 'Kore')."""
+    yol = os.path.join(KOK, "ses.txt")
+    with open(yol, encoding="utf-8") as f:
+        return [s.strip() for s in f if s.strip() and not s.startswith("#")][0]
+
+
+def konu_yukle(yol):
+    spec = importlib.util.spec_from_file_location("konu", yol)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+# ---------------------------------------------------------------- seslendirme
+def seslendir(birimler, motor, ses, klasor, azami=2800):
+    """birimler: [[cümle, ...], ...] (açılış, sahneler, kapanış). Her cümlenin ses parçasını döndürür:
+    [[np.array, ...], ...]. Cümleler paketlenip tek istekte okunur (aynı ses, daha az kota),
+    sonra sessizliklerden cümle cümle kesilir."""
+    os.makedirs(klasor, exist_ok=True)
+    tum = [(bi, ci, c) for bi, b in enumerate(birimler) for ci, c in enumerate(b)]
+    if motor == "sessiz":
+        return [[np.zeros(int(S.SR * max(1.2, len(c) * 0.068))) for c in b] for b in birimler]
+    ortak = _tarih_seslendirme()
+    paketler, p = [], []
+    for bi, b in enumerate(birimler):  # paketler birim sınırlarında bölünür
+        uz = sum(len(c) + 1 for _, _, c in p)
+        if p and uz + sum(len(c) + 1 for c in b) > azami:
+            paketler.append(p)
+            p = []
+        p += [(bi, ci, c) for ci, c in enumerate(b)]
+    if p:
+        paketler.append(p)
+    sonuc = [[None] * len(b) for b in birimler]
+    for paket in paketler:
+        metin = " ".join(c for _, _, c in paket)
+        anahtar = hashlib.sha1(f"{motor}|{ses}|{ortak.SURUM}|{ortak.GEMINI_MODEL}|{metin}".encode()).hexdigest()[:12]
+        mp3 = os.path.join(klasor, f"vo_{anahtar}.mp3")
+        js = mp3[:-4] + ".json"
+        if not (os.path.exists(mp3) and os.path.exists(js)):
+            print(f"  seslendiriliyor ({len(metin)} karakter, {len(paket)} cümle)...", flush=True)
+            if motor == "gemini":
+                for deneme in range(3):
+                    zam = ortak.gemini_seslendir(metin, mp3, ses)
+                    if ortak.baslangic_dogrula(mp3, metin) is not False:
+                        break
+                    print("  ses metinle uyuşmadı, yeniden deneniyor", flush=True)
+            else:
+                zam = ortak.edge_seslendir(metin, mp3, ses)
+            with open(js, "w", encoding="utf-8") as f:
+                json.dump(zam, f, ensure_ascii=False)
+        with open(js, encoding="utf-8") as f:
+            zam = json.load(f)
+        if len(zam) != len(paket):
+            zam = ortak.cumle_zamanla(mp3, metin)
+        if len(zam) != len(paket):
+            raise RuntimeError(f"cümle sayısı tutmadı ({len(zam)} / {len(paket)}): cümleleri . ! ? ile bitirin")
+        dalga = S.ses_oku(mp3)
+        for (bi, ci, _), (t0, t1, _) in zip(paket, zam):
+            a, b = max(0, int((t0 - 0.04) * S.SR)), min(len(dalga), int((t1 + 0.1) * S.SR))
+            parca = dalga[a:b].copy()
+            n = min(len(parca) // 4, int(0.02 * S.SR))
+            if n:
+                parca[:n] *= np.linspace(0, 1, n)
+                parca[-n:] *= np.linspace(1, 0, n)
+            sonuc[bi][ci] = parca
+    return sonuc
+
+
+# ---------------------------------------------------------------- zaman çizelgesi
+BOSLUK = 0.32        # aynı sahnedeki cümleler arası
+ONCE = {"acilis": 1.9, "sahne": 1.25, "kapanis": 0.9}
+SONRA = {"acilis": 0.9, "sahne": 1.1, "kapanis": 3.2}
+
+
+def yerlestir(birimler, parcalar, turler):
+    """Her birimin [t0, t1] aralığı ve cümle zamanları; bir de tek parça seslendirme dizisi."""
+    t = 0.0
+    araliklar, cumle_zaman, konusmalar = [], [], []
+    yerlesim = []
+    for b, pp, tur in zip(birimler, parcalar, turler):
+        bas = t
+        t += ONCE[tur]
+        cz = []
+        for c, p in zip(b, pp):
+            sure = len(p) / S.SR
+            cz.append((t, t + sure, c))
+            yerlesim.append((t, p))
+            konusmalar.append((t, t + sure))
+            t += sure + BOSLUK
+        t += SONRA[tur] - BOSLUK
+        araliklar.append((bas, t))
+        cumle_zaman.append(cz)
+    vo = np.zeros(int((t + 1) * S.SR))
+    for t0, p in yerlesim:
+        a = int(t0 * S.SR)
+        vo[a:a + len(p)] += p
+    return araliklar, cumle_zaman, konusmalar, vo
+
+
+def altyazi_satirlari(cumle_zaman, azami=78):
+    """Uzun cümleleri virgül/noktalı virgülden bölüp süreyi karakter oranıyla paylaştırır."""
+    satirlar = []
+    for cz in cumle_zaman:
+        for t0, t1, c in cz:
+            parcalar = [c]
+            if len(c) > azami:
+                parcalar = [p.strip() for p in re.split(r"(?<=[,;:])\s+", c) if p.strip()]
+                birlesik, s = [], ""
+                for p in parcalar:
+                    if s and len(s) + len(p) + 1 > azami:
+                        birlesik.append(s)
+                        s = p
+                    else:
+                        s = (s + " " + p).strip()
+                if s:
+                    birlesik.append(s)
+                parcalar = birlesik
+            toplam = sum(len(p) for p in parcalar)
+            t = t0
+            for p in parcalar:
+                d = (t1 - t0) * len(p) / toplam
+                satirlar.append((t, t + d + (0.25 if p is parcalar[-1] else 0), p))
+                t += d
+    return satirlar
+
+
+def _srt(t):
+    ms = int(round(t * 1000))
+    return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
+
+
+# ---------------------------------------------------------------- ana akış
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("konu", help="konular/<ad>.py")
+    ap.add_argument("--motor", choices=["gemini", "edge", "sessiz"], default=None,
+                    help="varsayılan: GEMINI_API_KEY varsa gemini, yoksa edge")
+    ap.add_argument("--ses", default=None, help="varsayılan: ses.txt (kanal anlatıcısı)")
+    ap.add_argument("--onizleme", default="", help="virgülle saniyeler: PNG kare")
+    ap.add_argument("--sadece-kareler", action="store_true")
+    a = ap.parse_args()
+
+    konu = konu_yukle(a.konu)
+    ad = os.path.splitext(os.path.basename(a.konu))[0]
+    cikti = os.path.join(KOK, "cikti", ad)
+    os.makedirs(cikti, exist_ok=True)
+    motor = a.motor or ("gemini" if os.environ.get("GEMINI_API_KEY") else "edge")
+    ses = a.ses or (anlatici_sesi() if motor == "gemini" else "tr-TR-EmelNeural")
+    print(f"Konu: {konu.BASLIK} | seslendirme: {motor} / {ses}")
+
+    birimler = [konu.ACILIS] + [sh["metin"] for sh in konu.SAHNELER] + [konu.KAPANIS]
+    turler = ["acilis"] + ["sahne"] * len(konu.SAHNELER) + ["kapanis"]
+    parcalar = seslendir(birimler, motor, ses, os.path.join(cikti, "ses"))
+    araliklar, cz, konusmalar, vo = yerlestir(birimler, parcalar, turler)
+
+    tasarimlar = getattr(konu, "KARAKTERLER", {})
+    video = Video(fps=24)
+    # açılış kartı
+    t0, t1 = araliklar[0]
+    ac = video.ekle(Sahne(0, "", "duz", t0, t1, cz[0], gecis="kes", zemin=False, bulanik=1,
+                          arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
+    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3))
+    ac.sfx("swoosh_yukari", 0.3)
+    ac.sfx("pop", 0.75)
+    if hasattr(konu, "acilis"):
+        konu.acilis(ac)
+    # içerik sahneleri
+    for i, sh in enumerate(konu.SAHNELER):
+        t0, t1 = araliklar[i + 1]
+        s = video.ekle(Sahne(i + 1, sh["baslik"], sh.get("arkaplan", "oda"), t0, t1, cz[i + 1],
+                             gecis=sh.get("gecis", "whip"), arkaplan_p=sh.get("arkaplan_p"), tasarimlar=tasarimlar))
+        s.ekle(BolumEtiketi(i + 1, sh["baslik"], t0 + 0.15, t1 + 0.6))
+        s.sfx("tik", t0 + 0.2, 0.7)
+        sh["kurgu"](s)
+    # kapanış kartı
+    t0, t1 = araliklar[-1]
+    kp = video.ekle(Sahne(len(konu.SAHNELER) + 1, "", "duz", t0, t1, cz[-1], gecis=getattr(konu, "KAPANIS_GECIS", "iris"),
+                          zemin=False, bulanik=1,
+                          arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
+    kp.ekle(KapanisKarti(getattr(konu, "KAPANIS_YAZI", konu.BASLIK), "ABONE OL", t0 + 0.3, t1))
+    kp.sfx("ding", t0 + 1.6, 0.6)
+
+    satirlar = altyazi_satirlari(cz)
+    video.ust.append(Altyazi(satirlar))
+    with open(os.path.join(cikti, "altyazi.srt"), "w", encoding="utf-8") as f:
+        for k, (t0, t1, m) in enumerate(satirlar, 1):
+            f.write(f"{k}\n{_srt(t0)} --> {_srt(t1)}\n{m}\n\n")
+    with open(os.path.join(cikti, "zamanlama.json"), "w", encoding="utf-8") as f:
+        json.dump({"sahneler": araliklar, "cumleler": cz}, f, ensure_ascii=False, indent=1)
+    print(f"Toplam süre: {video.sure / 60:.1f} dk ({len(satirlar)} altyazı satırı)")
+
+    if a.onizleme or a.sadece_kareler:
+        zamanlar = [float(x) for x in a.onizleme.split(",") if x] or \
+                   [(s.t0 + s.t1) / 2 for s in video.sahneler]
+        for k, zt in enumerate(zamanlar):
+            video.kare(zt).write_to_png(os.path.join(cikti, f"onizleme_{k:02d}_{zt:06.1f}.png"))
+        print(f"{len(zamanlar)} kare kaydedildi -> {cikti}")
+        if a.sadece_kareler:
+            return
+
+    efektler = []
+    for s in video.sahneler:
+        efektler += s.tum_sesler()
+    for sinir, tur, d in video.gecis_anlari():
+        if SESLER.get(tur):
+            efektler.append((max(0, sinir - d / 2 - 0.05), SESLER[tur], 0.9))
+    wav = os.path.join(cikti, "ses_miks.wav")
+    S.miksaj(video.sure, vo, konusmalar, efektler, muzik_seviye=getattr(konu, "MUZIK_SEVIYE", 0.3), cikis_wav=wav)
+    mp4 = os.path.join(cikti, f"{ad}.mp4")
+    video.kaydet(mp4, wav)
+    print(f"Bitti: {mp4}")
+
+
+if __name__ == "__main__":
+    main()

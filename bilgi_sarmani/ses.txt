@@ -1,0 +1,2 @@
+# Bilgi Sarmanı anlatıcısı (Gemini TTS sesi). Tarih kanalı ayrı: tarih_video/ses.txt (Iapetus).
+Kore
