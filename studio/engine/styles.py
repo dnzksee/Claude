@@ -419,7 +419,74 @@ class FeltPainter(WatercolorPainter):
         ctx.restore()
 
 
-PAINTERS = {"suluboya": WatercolorPainter, "kagit": PaperPainter, "yumusak3b": SoftPainter, "kece": FeltPainter}
+# ===================================================================== BATI ÇİZGİ FİLMİ (cel)
+OUTLINE = (0.07, 0.06, 0.08)
+
+
+class CartoonPainter(Painter):
+    """Temiz siyah kontur + düz renk + tek tonluk cel gölge (sağ alt) ve küçük parlama (sol üst).
+    Kontur, dolgunun altına iki kat kalın çizilir: üst üste binen alt-yolların iç çizgileri dolguyla örtülür."""
+
+    style = "cizgi"
+    jitter = False
+
+    def part(self, path_fn, color, line=True, alpha=1.0, seed=None, grad=None, lw=1.0, wet=1.0, flat=False):
+        self._seed(seed)
+        ctx = self.ctx
+        dpath, (x0, y0, x1, y1) = _device_path(ctx, path_fn)
+        w, h = x1 - x0, y1 - y0
+        if w < 0.5 or h < 0.5:
+            return
+        s = self.scale
+        m = min(w, h)
+        ctx.save()
+        ctx.identity_matrix()
+        ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+        ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+        if line and lw > 0 and alpha > 0.6 and m > 4:
+            ow = min(3.4 * lw * s, 0.16 * m + 1.0)
+            ctx.append_path(dpath)
+            ctx.set_source_rgba(*OUTLINE, alpha)
+            ctx.set_line_width(2 * ow)
+            ctx.stroke()
+        ctx.append_path(dpath)
+        if grad is not None:
+            g = cairo.LinearGradient(0, grad[2], 0, grad[3])
+            g.add_color_stop_rgba(0, *grad[0], alpha)
+            g.add_color_stop_rgba(1, *grad[1], alpha)
+            ctx.set_source(g)
+        else:
+            ctx.set_source_rgba(*color, alpha)
+        ctx.fill()
+        if not flat and grad is None and color is not None and m > 12 and alpha > 0.6:
+            # cel gölge: şeklin kendisinden, sol üste kaydırılmış kopyası çıkarılır
+            d = min(max(0.13 * m, 2.0), 22.0 * s)
+            ctx.append_path(dpath)
+            ctx.clip()
+            ctx.append_path(dpath)
+            ctx.set_source_rgba(*darken(color, 0.22), alpha)
+            ctx.fill()
+            ctx.translate(-d, -d * 0.9)
+            ctx.append_path(dpath)
+            ctx.set_source_rgba(*color, alpha)
+            ctx.fill()
+            ctx.identity_matrix()
+            if m > 30:
+                # küçük parlama
+                ctx.translate(x0 + w * 0.28, y0 + h * 0.24)
+                ctx.scale(w * 0.10, h * 0.06)
+                ctx.arc(0, 0, 1, 0, 2 * math.pi)
+                ctx.identity_matrix()
+                ctx.set_source_rgba(1, 1, 1, 0.35 * alpha)
+                ctx.fill()
+        ctx.restore()
+
+    def stroke(self, path_fn, color=INK, width=3.0, alpha=1.0):
+        super().stroke(path_fn, OUTLINE if color == INK else color, width * 1.15, alpha)
+
+
+PAINTERS = {"suluboya": WatercolorPainter, "kagit": PaperPainter, "yumusak3b": SoftPainter, "kece": FeltPainter,
+            "cizgi": CartoonPainter}
 
 
 # ===================================================================== son işlem (post)

@@ -33,6 +33,7 @@ from senaryo_renkli_kelebekler import BOLUMLER, A, U, Z
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VO_DIR = os.path.join(ROOT, "assets", "vo_ep1")
 STYLE = "kagit"
+DOF = {"clouds": 1.6, "far": 4.5, "mid": 2.4}   # çizgi film stilinde katman bulanıklığı (px)
 SPAN = 11900
 WALK_V = 135.0          # Umay'ın yürüyüş hızı (px/sn): 3 yaşına uygun, sakin
 STRIDE_W = 140.0        # yürüyüş adım döngüsü (px); karakter çiziminde de aynısı kullanılır
@@ -826,7 +827,9 @@ def render_frame(i, layers):
             continue
         drift = t * 9 if L["name"] == "clouds" else 0.0
         M, _ = world.layer_matrix(L["p"], cam, drift)
-        composite(rgb, cv2.warpAffine(L["img"], M, (W, H), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE))
+        # bulutlar kenardan uzatılmaz (uzatılırsa gökyüzünde beyaz bir şerit çıkar)
+        border = cv2.BORDER_CONSTANT if L["name"] == "clouds" else cv2.BORDER_REPLICATE
+        composite(rgb, cv2.warpAffine(L["img"], M, (W, H), flags=cv2.INTER_LINEAR, borderMode=border))
     if z > 1.05:
         rgb = cv2.GaussianBlur(rgb, (0, 0), (z - 1) * 2.0)
 
@@ -1214,14 +1217,21 @@ def setup():
     trees = tuple(x for x in range(120, SPAN + 1500, 2300) if all(abs(x - q) > 500 for q in (HOUSE_X, TREE_BIRD, APPLE_TREE[0], SUNFLOWER[0], RAINBOW[0], STRAW[0])))
     _LAYERS = world.build_layers(STYLE, cache_dir=os.path.join(ROOT, "build"), tag="_ep1b", span=SPAN, sun=False,
                                  house_on_hill=False, trees_at=trees, sky=SKY)
+    if STYLE == "cizgi":
+        # alan derinliği: uzak katmanlar bulanık, yol/çimen ve karakterler net
+        for L in _LAYERS:
+            sig = DOF.get(L["name"], 0)
+            if sig:
+                L["img"] = cv2.GaussianBlur(L["img"], (0, 0), sig)
     return pl
 
 
 def main():
-    global _SCALE
+    global _SCALE, STYLE
     ap = argparse.ArgumentParser()
     ap.add_argument("--plan", action="store_true")
     ap.add_argument("--still", type=float, nargs="*")
+    ap.add_argument("--style", default=STYLE, help="çizim tekniği: kagit (kâğıt kesme) ya da cizgi (Batı çizgi filmi)")
     ap.add_argument("--start", type=float, default=0.0)
     ap.add_argument("--end", type=float, default=None)
     ap.add_argument("--scale", type=float, default=1.0)
@@ -1230,6 +1240,7 @@ def main():
     ap.add_argument("--audio-only", action="store_true")
     ap.add_argument("--mux-only", action="store_true", help="görüntüyü yeniden render etmeden sesi yeniden kur ve ekle")
     a = ap.parse_args()
+    STYLE = a.style
     pl = plan()
     if a.plan:
         for s in pl.scenes:
