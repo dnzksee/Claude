@@ -87,8 +87,8 @@ def _tam_dogrula(ortak, mp3, metin):
     if not duyulan:
         print("  uyarı: tam doğrulama yapılamadı", flush=True)
         return None
-    a, b = " ".join(ortak._sade(duyulan)), " ".join(ortak._sade(metin))
-    benzerlik = difflib.SequenceMatcher(None, a, b).ratio()
+    # kelime düzeyinde (karakter düzeyinde uzun metinlerde difflib'in otomatik "junk" sezgisi yanıltıyor)
+    benzerlik = difflib.SequenceMatcher(None, ortak._sade(duyulan), ortak._sade(metin), autojunk=False).ratio()
     if benzerlik < 0.8:
         print(f"  ses metinle uyuşmuyor (benzerlik {benzerlik:.2f}): {duyulan[:100]!r}...", flush=True)
         return False
