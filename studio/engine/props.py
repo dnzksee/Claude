@@ -1,4 +1,4 @@
-"""1. bölüm (Renkli Kelebekler) için sahne nesneleri: ev, dere, kuş, top, elma ağacı, uğur böceği, çilek,
+"""1. bölüm (Renkli Kelebekler) için sahne nesneleri: ev, dere, göl, kuş, top, elma ağacı, uğur böceği, çilek,
 ayçiçeği, civciv, piknik/limon, gökkuşağı ve ekran yazıları. Hepsi Painter.part diliyle çizilir."""
 import math
 
@@ -80,6 +80,64 @@ def stream(p, x0, x1, y, t, w=80):
         rx = x0 + (x1 - x0) * u
         ry = y + (hash01(k) - 0.5) * w * 0.5
         p.part(lambda c, rx=rx, ry=ry: ellipse(c, rx, ry, 22, 4), COL["beyaz"], alpha=0.75, seed=f"st_r{k}", line=False)
+
+
+def lake(p, cx, cy, rx, ry, t):
+    """Masmavi küçük göl: çimenli kıyı, kumlu kenar, derinleşen su, gökyüzü yansıması, nilüferler, sazlar."""
+    def shore(c, k, wob=0.04):
+        c.new_sub_path()
+        n = 40
+        for i in range(n + 1):
+            a = 2 * math.pi * i / n
+            r = 1 + wob * math.sin(3 * a + 0.7) + wob * 0.6 * math.sin(5 * a + 2.1)
+            (c.move_to if i == 0 else c.line_to)(cx + math.cos(a) * rx * k * r, cy + math.sin(a) * ry * k * r)
+        c.close_path()
+
+    p.part(lambda c: shore(c, 1.10), hexrgb("#7CC062"), seed="lk_grass", lw=0.6)
+    p.part(lambda c: shore(c, 1.03), hexrgb("#E9D3A0"), seed="lk_sand", lw=0.5)
+    p.part(lambda c: shore(c, 0.96), None, grad=(hexrgb("#5FA8F0"), hexrgb("#2F6FD0"), cy - ry, cy + ry),
+           seed="lk_water", lw=0.6)
+    p.part(lambda c: ellipse(c, cx - rx * 0.12, cy - ry * 0.12, rx * 0.62, ry * 0.42), hexrgb("#9FD0FA"), alpha=0.55,
+           seed="lk_sky", line=False, flat=True)
+    # parıltılar ve halkalar
+    for k in range(6):
+        u = (t * 0.25 + k / 6) % 1.0
+        hx = cx + (hash01(k, "lx") - 0.5) * rx * 1.2
+        hy = cy + (hash01(k, "ly") - 0.5) * ry * 0.9
+        a = math.sin(math.pi * u)
+        p.part(lambda c, hx=hx, hy=hy, u=u: ellipse(c, hx, hy, 14 + 30 * u, 3 + 6 * u), COL["beyaz"], alpha=0.55 * a,
+               seed=f"lk_r{k}", line=False)
+    # nilüfer yaprakları
+    for k, (dx, dy, r) in enumerate([(0.42, 0.18, 26), (0.55, -0.22, 20), (-0.5, 0.25, 22)]):
+        lx, ly = cx + dx * rx, cy + dy * ry + 2 * math.sin(t * 1.1 + k)
+
+        def pad(c, lx=lx, ly=ly, r=r):
+            c.new_sub_path()
+            c.move_to(lx, ly)
+            c.arc(lx, ly, r, 0.35, 2 * math.pi - 0.1)
+            c.close_path()
+
+        p.ctx.save()
+        p.ctx.translate(lx, ly)
+        p.ctx.scale(1, 0.42)
+        p.ctx.translate(-lx, -ly)
+        p.part(pad, hexrgb("#4E9E45"), seed=f"lk_pad{k}", lw=0.5)
+        p.ctx.restore()
+    # sazlar (iki yanda)
+    for side, bx in ((-1, cx - rx * 0.98), (1, cx + rx * 0.97)):
+        for j in range(4):
+            sx = bx + side * j * 14
+            h = 70 + 22 * hash01(side, j)
+            sw = 4 * math.sin(t * 1.3 + j + side)
+            p.part(lambda c, sx=sx, h=h, sw=sw: capsule(c, sx, cy, sx + sw, cy - h, 3.5, 2), hexrgb("#4F9A44"),
+                   seed=f"lk_reed{side}{j}", lw=0.4)
+            if j % 2 == 0:
+                p.part(lambda c, sx=sx, h=h, sw=sw: capsule(c, sx + sw, cy - h + 6, sx + sw, cy - h + 30, 6, 6), COL["kahve"],
+                       seed=f"lk_cat{side}{j}", lw=0.4)
+    # kıyı taşları
+    for k, (dx, r) in enumerate([(-0.75, 16), (-0.62, 11), (0.7, 14), (0.15, 12)]):
+        sx, sy = cx + dx * rx, cy + ry * 0.98 * math.sqrt(max(0.0, 1 - dx * dx))
+        p.part(lambda c, sx=sx, sy=sy, r=r: ellipse(c, sx, sy, r, r * 0.6), hexrgb("#B7AFA4"), seed=f"lk_st{k}", lw=0.5)
 
 
 def splash(p, x, y, u, seed=0):

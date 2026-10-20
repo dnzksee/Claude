@@ -65,9 +65,9 @@
 - `M16` **Anlatıcı:** Zıpzıp çiçekleri kokluyor.
 
 ### Sahne M4 · 4:10–5:00
-*Şırıl şırıl akan bir dere. Zıpzıp patisini suya sokar, su sıçrar.*
+*Masmavi küçük bir göl. Zıpzıp patisini suya sokar, su sıçrar.*
 
-- `M17` **Anlatıcı:** Şırıl şırıl... Bu bir dere.
+- `M17` **Anlatıcı:** Bak, bir göl! Ne güzel bir göl.
 - `M18` **Anlatıcı:** Su ne renk?  ⏸ *3 sn bekle*
 - `M19` **Anlatıcı:** Mavi!
 - `M20` **Zıpzıp:** Hav!
@@ -301,7 +301,7 @@ Mavi! Gökyüzü de mavi!
 Kelebek nereye kondu? Mavi çiçeklere!
 Hadi sayalım! Bir... iki... üç!
 Zıpzıp çiçekleri kokluyor.
-Şırıl şırıl... Bu bir dere.
+Bak, bir göl! Ne güzel bir göl.
 Su ne renk?
 Mavi!
 Ağaçta kim var? Bir kuş!

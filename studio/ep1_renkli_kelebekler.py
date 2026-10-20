@@ -51,6 +51,9 @@ REN = {"mavi": "mavi", "kırmızı": "kirmizi", "sarı": "sari"}
 HOUSE_X = 300
 FLOWERS = [(2250, 848), (2335, 852), (2420, 848)]
 STREAM = (3000, 3620, 965)
+LAKE = (3330, 990, 380, 78)   # göl: merkez x, y, yarıçaplar
+SKY = ("#3F96E6", "#BFE2F8")    # masmavi gökyüzü (üst, ufuk)
+FLOWER_MID = hexrgb("#2A5FC2")  # mavi çiçeğin ortası da mavi (koyu ton)
 TREE_BIRD = 4060
 BIRD = (4000, 560)
 BUSH = (4860, 875)
@@ -388,7 +391,7 @@ class State:
         T = pl.T
         if t < pl.scenes[1]["t0"] + 1.0:
             base = max(ux - 175, HOUSE_X - 10) if ux > HOUSE_X + 40 else HOUSE_X - 10
-        # dere: Zıpzıp kıyıya gider, patisini suya sokar
+        # göl: Zıpzıp kıyıya gider, patisini suya sokar
         if "M18" in T and T["M17"][0] - 0.5 < t < T["M21"][1] + 2.5:
             return STREAM[0] + 90
         # top: koşar, alır, getirir
@@ -527,7 +530,7 @@ def draw_world_props(p, pl, t, cx, z):
                 if k == i:
                     p.glow(fx, fy - 140, 70, P.COL["sari_l"], 0.8)
                     pop = 1.18
-            draw_flower(p, fx, fy, 1.1, P.COL["mavi"], center=P.COL["sari"], sway=math.sin(t * 1.5 + i) * 0.3, pop=pop, seed=f"bf{i}")
+            draw_flower(p, fx, fy, 1.1, P.COL["mavi"], center=FLOWER_MID, sway=math.sin(t * 1.5 + i) * 0.3, pop=pop, seed=f"bf{i}")
     if vis(TREE_BIRD, 400):
         world.tree(p, TREE_BIRD, GROUND_Y - 70, 1.45, 77, col=hexrgb("#5DA34F"))
         P.branch(p, TREE_BIRD - 150, 575, TREE_BIRD + 10, 568)
@@ -545,7 +548,7 @@ def draw_world_props(p, pl, t, cx, z):
     if vis(SUNFLOWER[0], 400):
         P.sunflower(p, SUNFLOWER[0], SUNFLOWER[1], 1.0, t)
     if vis(STREAM[0], 800):
-        P.stream(p, STREAM[0], STREAM[1], STREAM[2], t)
+        P.lake(p, *LAKE, t)
 
 
 def draw_front_props(p, pl, t, cx, z, anchors):
@@ -578,7 +581,7 @@ def draw_front_props(p, pl, t, cx, z, anchors):
         P.picnic(p, PICNIC[0], PICNIC[1], 1.0, lemons=1 if held else 2)
     if vis(STREAM[0], 800) and "M20" in T:
         u = (t - T["M20"][0]) / 0.9
-        P.splash(p, STREAM[0] + 230, STREAM[2] - 30, u)
+        P.splash(p, STREAM[0] + 200, LAKE[1] - 40, u)
 
 
 def exit_time(pl):
@@ -1007,7 +1010,7 @@ def draw_dance_items(p, pl, t, dseg, ux, ch, sub=None):
         y = 600 - math.sin(ang) * 230 - abs(math.sin(t * math.pi / 0.6 + k)) * 26
         s = ease_out_back(app) * 0.95
         if it == "flower":
-            draw_flower(p, x, y + 110, 0.8 * s, P.COL["mavi"], center=P.COL["sari"], seed="df")
+            draw_flower(p, x, y + 110, 0.8 * s, P.COL["mavi"], center=FLOWER_MID, seed="df")
         elif it == "drop":
             p.part(lambda c: (c.move_to(x, y - 50 * s), c.curve_to(x + 40 * s, y, x + 34 * s, y + 40 * s, x, y + 40 * s),
                               c.curve_to(x - 34 * s, y + 40 * s, x - 40 * s, y, x, y - 50 * s), c.close_path()), P.COL["mavi"], seed="dd")
@@ -1209,8 +1212,8 @@ def setup():
     pl = plan()
     STATE = State(pl)
     trees = tuple(x for x in range(120, SPAN + 1500, 2300) if all(abs(x - q) > 500 for q in (HOUSE_X, TREE_BIRD, APPLE_TREE[0], SUNFLOWER[0], RAINBOW[0], STRAW[0])))
-    _LAYERS = world.build_layers(STYLE, cache_dir=os.path.join(ROOT, "build"), tag="_ep1", span=SPAN, sun=False,
-                                 house_on_hill=False, trees_at=trees)
+    _LAYERS = world.build_layers(STYLE, cache_dir=os.path.join(ROOT, "build"), tag="_ep1b", span=SPAN, sun=False,
+                                 house_on_hill=False, trees_at=trees, sky=SKY)
     return pl
 
 

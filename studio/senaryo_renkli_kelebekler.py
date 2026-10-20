@@ -61,8 +61,8 @@ BOLUMLER = [
                 ("M15", Z, "Hıh hıh!", 0),
                 ("M16", A, "Zıpzıp çiçekleri kokluyor.", 0),
             ]),
-            ("M4", "4:10–5:00", "Şırıl şırıl akan bir dere. Zıpzıp patisini suya sokar, su sıçrar.", [
-                ("M17", A, "Şırıl şırıl... Bu bir dere.", 0),
+            ("M4", "4:10–5:00", "Masmavi küçük bir göl. Zıpzıp patisini suya sokar, su sıçrar.", [
+                ("M17", A, "Bak, bir göl! Ne güzel bir göl.", 0),
                 ("M18", A, "Su ne renk?", 3),
                 ("M19", A, "Mavi!", 0),
                 ("M20", Z, "Hav!", 0),

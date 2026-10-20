@@ -128,8 +128,10 @@ def layer_size(par, span=SPAN):
     return int(W + span * par + 2 * MX), 1750
 
 
-def paint_layer(name, par, style, span=SPAN, sun=True, house_on_hill=True, trees_at=(120, 2380, 4300)):
-    """span: dünyanın uzunluğu; sun/house_on_hill: ilk bölümdeki gökyüzü güneşi ve tepe evi (uzun bölümde ayrı çizilir)."""
+def paint_layer(name, par, style, span=SPAN, sun=True, house_on_hill=True, trees_at=(120, 2380, 4300),
+                sky=("#8EC5EC", "#FFF1DA")):
+    """span: dünyanın uzunluğu; sun/house_on_hill: ilk bölümdeki gökyüzü güneşi ve tepe evi (uzun bölümde ayrı çizilir);
+    sky: gökyüzü degradesi (üst, ufuk)."""
     k = span / 3600.0
     lw_, lh = layer_size(par, span)
     cv = Canvas(lw_, lh)
@@ -140,7 +142,7 @@ def paint_layer(name, par, style, span=SPAN, sun=True, house_on_hill=True, trees
     ctx.translate(MX, MY)
     x1 = lw_ - MX
     if name == "sky":
-        top, hor = hexrgb("#8EC5EC"), hexrgb("#FFF1DA")
+        top, hor = hexrgb(sky[0]), hexrgb(sky[1])
         p.part(lambda c: c.rectangle(-MX, -MY, lw_, lh), None, grad=(top, hor, 0, MY + 900), line=False, wet=1.6, flat=True, seed="sky")
         sx, sy = 1500, 175
         if sun:
