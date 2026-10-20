@@ -52,57 +52,91 @@ def konu_yukle(yol):
 
 
 # ---------------------------------------------------------------- seslendirme
-def seslendir(birimler, motor, ses, klasor, azami=2800):
+def _tam_dogrula(ortak, mp3, metin):
+    """Sesin tamamını yazıya döktürüp metinle karşılaştırır. Gemini bazen okumayı yarıda kesip
+    baştan yeniden başlıyor ya da cümle atlıyor; bu, süre ve benzerlik kontrolüyle yakalanır.
+    True/False; doğrulama servisine ulaşılamazsa None."""
+    import base64
+    import difflib
+    import urllib.request
+    from motor.hizalama import hece, ses_suresi
+    sure = ses_suresi(mp3)
+    oran = sure / hece(metin)
+    if not 0.11 < oran < 0.27:  # Kore ≈ 0.17-0.2 sn/hece; tekrar okumada çok uzar
+        print(f"  süre şüpheli: {sure:.1f} sn, hece başına {oran:.3f} sn", flush=True)
+        return False
+    kes = mp3 + ".dogrula.mp3"
+    import subprocess
+    subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-ac", "1", "-ar", "16000", kes])
+    govde = json.dumps({"contents": [{"parts": [
+        {"inline_data": {"mime_type": "audio/mp3", "data": base64.b64encode(open(kes, "rb").read()).decode()}},
+        {"text": "Bu Türkçe ses kaydını kelimesi kelimesine yazıya dök. Sayıları yazıyla yaz. Sadece metni yaz."}]}]}).encode()
+    os.remove(kes)
+    duyulan = None
+    for model in ortak.DOGRULAMA_MODELLERI:
+        try:
+            istek = urllib.request.Request(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model.strip()}:generateContent",
+                govde, {"Content-Type": "application/json", "x-goog-api-key": os.environ["GEMINI_API_KEY"]})
+            with urllib.request.urlopen(istek, timeout=180) as y:
+                duyulan = " ".join(p.get("text", "") for p in json.load(y)["candidates"][0]["content"]["parts"])
+            if duyulan.strip():
+                break
+        except Exception:
+            continue
+    if not duyulan:
+        print("  uyarı: tam doğrulama yapılamadı", flush=True)
+        return None
+    a, b = " ".join(ortak._sade(duyulan)), " ".join(ortak._sade(metin))
+    benzerlik = difflib.SequenceMatcher(None, a, b).ratio()
+    if benzerlik < 0.8:
+        print(f"  ses metinle uyuşmuyor (benzerlik {benzerlik:.2f}): {duyulan[:100]!r}...", flush=True)
+        return False
+    return True
+
+
+def seslendir(birimler, motor, ses, klasor):
     """birimler: [[cümle, ...], ...] (açılış, sahneler, kapanış). Her cümlenin ses parçasını döndürür:
-    [[np.array, ...], ...]. Cümleler paketlenip tek istekte okunur (aynı ses, daha az kota),
-    sonra sessizliklerden cümle cümle kesilir."""
+    [[np.array, ...], ...]. Her birim (sahne) tek istekte okunur: sahne içinde ses tınısı ve
+    tonlama bütün kalır, uzun metinlerde görülen "baştan yeniden okuma" hatası olasılığı azalır.
+    Ses sonra sessizliklerden cümle cümle kesilir (motor/hizalama.py)."""
+    from motor.hizalama import hizala
     os.makedirs(klasor, exist_ok=True)
-    tum = [(bi, ci, c) for bi, b in enumerate(birimler) for ci, c in enumerate(b)]
     if motor == "sessiz":
         return [[np.zeros(int(S.SR * max(1.2, len(c) * 0.068))) for c in b] for b in birimler]
     ortak = _tarih_seslendirme()
-    paketler, p = [], []
-    for bi, b in enumerate(birimler):  # paketler birim sınırlarında bölünür
-        uz = sum(len(c) + 1 for _, _, c in p)
-        if p and uz + sum(len(c) + 1 for c in b) > azami:
-            paketler.append(p)
-            p = []
-        p += [(bi, ci, c) for ci, c in enumerate(b)]
-    if p:
-        paketler.append(p)
-    sonuc = [[None] * len(b) for b in birimler]
-    for paket in paketler:
-        metin = " ".join(c for _, _, c in paket)
+    sonuc = []
+    for b in birimler:
+        metin = " ".join(b)
         anahtar = hashlib.sha1(f"{motor}|{ses}|{ortak.SURUM}|{ortak.GEMINI_MODEL}|{metin}".encode()).hexdigest()[:12]
         mp3 = os.path.join(klasor, f"vo_{anahtar}.mp3")
-        js = mp3[:-4] + ".json"
-        if not (os.path.exists(mp3) and os.path.exists(js)):
-            print(f"  seslendiriliyor ({len(metin)} karakter, {len(paket)} cümle)...", flush=True)
-            if motor == "gemini":
-                for deneme in range(3):
-                    zam = ortak.gemini_seslendir(metin, mp3, ses)
-                    if ortak.baslangic_dogrula(mp3, metin) is not False:
-                        break
-                    print("  ses metinle uyuşmadı, yeniden deneniyor", flush=True)
+        if not os.path.exists(mp3):
+            print(f"  seslendiriliyor ({len(metin)} karakter, {len(b)} cümle)...", flush=True)
+            gecici = mp3 + ".tmp.mp3"
+            for deneme in range(3):
+                if motor == "gemini":
+                    ortak.gemini_seslendir(metin, gecici, ses)
+                    if _tam_dogrula(ortak, gecici, metin) is False:
+                        print("  yeniden deneniyor", flush=True)
+                        continue
+                else:
+                    ortak.edge_seslendir(metin, gecici, ses)
+                break
             else:
-                zam = ortak.edge_seslendir(metin, mp3, ses)
-            with open(js, "w", encoding="utf-8") as f:
-                json.dump(zam, f, ensure_ascii=False)
-        with open(js, encoding="utf-8") as f:
-            zam = json.load(f)
-        if len(zam) != len(paket):
-            zam = ortak.cumle_zamanla(mp3, metin)
-        if len(zam) != len(paket):
-            raise RuntimeError(f"cümle sayısı tutmadı ({len(zam)} / {len(paket)}): cümleleri . ! ? ile bitirin")
+                raise RuntimeError("seslendirme 3 denemede de doğrulanamadı")
+            os.replace(gecici, mp3)
+        zam = hizala(mp3, b)
         dalga = S.ses_oku(mp3)
-        for (bi, ci, _), (t0, t1, _) in zip(paket, zam):
-            a, b = max(0, int((t0 - 0.04) * S.SR)), min(len(dalga), int((t1 + 0.1) * S.SR))
-            parca = dalga[a:b].copy()
+        parcalar = []
+        for t0, t1, _ in zam:
+            a, z = max(0, int((t0 - 0.04) * S.SR)), min(len(dalga), int((t1 + 0.1) * S.SR))
+            parca = dalga[a:z].copy()
             n = min(len(parca) // 4, int(0.02 * S.SR))
             if n:
                 parca[:n] *= np.linspace(0, 1, n)
                 parca[-n:] *= np.linspace(1, 0, n)
-            sonuc[bi][ci] = parca
+            parcalar.append(parca)
+        sonuc.append(parcalar)
     return sonuc
 
 
