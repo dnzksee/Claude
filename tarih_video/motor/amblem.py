@@ -13,28 +13,69 @@ def _cizgi(cr, w):
     cr.set_line_join(cairo.LINE_JOIN_ROUND)
 
 
+def _kartal(cr, r):
+    """Selçuklu çift başlı kartalı: iki yana bakan başlar, açık kanatlar, yelpaze kuyruk."""
+    def P(x, y):
+        return x * r, y * r
+    # kuyruk
+    cr.move_to(*P(-0.11, 0.28))
+    for x, y in ((-0.26, 0.7), (-0.09, 0.6), (0, 0.72), (0.09, 0.6), (0.26, 0.7), (0.11, 0.28)):
+        cr.line_to(*P(x, y))
+    cr.close_path()
+    cr.fill()
+    # gövde
+    cr.save()
+    cr.translate(*P(0, 0.04))
+    cr.scale(r * 0.17, r * 0.31)
+    cr.arc(0, 0, 1, 0, 2 * math.pi)
+    cr.restore()
+    cr.fill()
+    for yon in (-1, 1):
+        cr.save()
+        cr.scale(yon, 1)
+        # kanat: omuzdan yukarı açılan, ucu tüy tüy inen kanat
+        cr.move_to(*P(0.12, -0.08))
+        cr.curve_to(*P(0.3, -0.22), *P(0.48, -0.42), *P(0.62, -0.66))
+        for x, y in ((0.84, -0.4), (0.68, -0.36), (0.86, -0.16), (0.68, -0.12), (0.8, 0.08),
+                     (0.6, 0.06), (0.64, 0.24), (0.42, 0.14)):
+            cr.line_to(*P(x, y))
+        cr.curve_to(*P(0.3, 0.12), *P(0.18, 0.1), *P(0.12, 0.12))
+        cr.close_path()
+        cr.fill()
+        # boyun: gövdeden dışa kıvrılır
+        cr.move_to(*P(-0.02, -0.18))
+        cr.curve_to(*P(0.0, -0.34), *P(0.06, -0.44), *P(0.14, -0.5))
+        cr.line_to(*P(0.24, -0.42))
+        cr.curve_to(*P(0.16, -0.36), *P(0.12, -0.28), *P(0.12, -0.14))
+        cr.close_path()
+        cr.fill()
+        # baş
+        cr.arc(*P(0.2, -0.5), r * 0.105, 0, 2 * math.pi)
+        cr.fill()
+        # gaga (dışa bakar, aşağı kıvrık)
+        cr.move_to(*P(0.27, -0.56))
+        cr.curve_to(*P(0.38, -0.57), *P(0.43, -0.5), *P(0.4, -0.42))
+        cr.line_to(*P(0.28, -0.46))
+        cr.close_path()
+        cr.fill()
+        # bacak ve pençe
+        cr.set_line_width(r * 0.06)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.move_to(*P(0.07, 0.3))
+        cr.line_to(*P(0.17, 0.46))
+        for dx, dy in ((0.27, 0.46), (0.22, 0.56), (0.12, 0.55)):
+            cr.move_to(*P(0.17, 0.46))
+            cr.line_to(*P(dx, dy))
+        cr.stroke()
+        cr.restore()
+
+
 def sembol(cr, taraf, r, renk, a):
     """Yalnız iç sembol (zemin yok). renk: sembol rengi."""
     cr.save()
     cr.set_source_rgba(*renk, a)
-    if taraf == "selcuklu":  # yay ve ok
-        _cizgi(cr, r * 0.13)
-        cr.arc(r * 0.18, 0, r * 0.62, math.pi * 0.62, math.pi * 1.38)
-        cr.stroke()
-        _cizgi(cr, r * 0.05)
-        ux, uy = r * 0.18 + r * 0.62 * math.cos(math.pi * 0.62), r * 0.62 * math.sin(math.pi * 0.62)
-        cr.move_to(ux, uy)
-        cr.line_to(ux, -uy)
-        cr.stroke()
-        _cizgi(cr, r * 0.08)
-        cr.move_to(-r * 0.55, 0)
-        cr.line_to(r * 0.55, 0)
-        cr.stroke()
-        cr.move_to(r * 0.72, 0)
-        cr.line_to(r * 0.42, -r * 0.18)
-        cr.line_to(r * 0.42, r * 0.18)
-        cr.close_path()
-        cr.fill()
+    if taraf == "selcuklu":  # çift başlı kartal
+        _kartal(cr, r)
     elif taraf in ("bizans", "hacli"):  # haç (Bizans: uçları genişleyen, Haçlı: düz)
         w = r * 0.2
         if taraf == "hacli":
