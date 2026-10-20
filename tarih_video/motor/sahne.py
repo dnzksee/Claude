@@ -99,7 +99,7 @@ class Birlik:
 
     katman = 2
 
-    def __init__(self, taraf, tip, x, y, g=220, d=46, aci=0, alfa=0.0, etiket=None, stil="figur", yon=1):
+    def __init__(self, taraf, tip, x, y, g=220, d=46, aci=0, alfa=0.0, etiket=None, stil="blok", yon=1):
         """stil: "figur" (küçük asker figürleri) | "blok" (eski dikdörtgen görünüm).
         yon: duran figürlerin baktığı yatay yön (+1 sağ, -1 sol)."""
         self.taraf, self.tip, self.etiket, self.stil, self.yon = taraf, tip, etiket, stil, yon
@@ -126,8 +126,12 @@ class Birlik:
         self.iz.ekle(t1 + 0.3, {"titresim": 0}, sure=0.3)
         return self
 
+    def _ekran_deger(self, t):
+        """Çizimde kullanılan değerler (alt sınıflar mantıksal konumu ekrana dönüştürebilir)."""
+        return self.iz.deger(t)
+
     def merkez(self, t):
-        d = self.iz.deger(t)
+        d = self._ekran_deger(t)
         return d["x"], d["y"]
 
     def _slotlar(self, w, h):
@@ -214,7 +218,7 @@ class Birlik:
                 cr.fill()
 
     def ciz(self, cr, t):
-        d = self.iz.deger(t)
+        d = self._ekran_deger(t)
         if d["alfa"] <= 0.01:
             return
         if self.stil == "figur":
@@ -255,8 +259,11 @@ class Birlik:
         cr.set_source_rgba(1, 1, 1, 0.55 * a)
         cr.set_line_width(3)
         cr.stroke()
-        # tip işareti (kutu içinde)
-        self._isaret(cr, min(h * 0.62, 34), tr["vurgu"], a)
+        # taraf arması (her zaman dik durur)
+        from .amblem import kalkan
+        cr.rotate(-math.radians(d["aci"]))
+        rk = min(h * 0.42, w * 0.3, 26)
+        kalkan(cr, self.taraf, 0, -rk * 0.08, rk, (r, g_, b), tr["vurgu"], a)
         cr.restore()
 
     def _isaret(self, cr, s, vurgu, a):
@@ -377,7 +384,7 @@ class Komutan:
         if d["esir"] > 0.01:
             e = d["esir"]
             cr.save()
-            cr.translate(lw / 2 + 40, 40)
+            cr.translate(lw / 2 + 62, 40)
             cr.rotate(-0.18)
             cr.scale(1.6 - 0.6 * e, 1.6 - 0.6 * e)
             _yuvarlak_dikdortgen(cr, -70, -23, 140, 46, 6)

@@ -203,8 +203,18 @@ class PortreKarti:
             yak = 1.0 + 0.06 * (t - self.t0) / max(self.t1 - self.t0, 1)  # yavaş yakınlaşma
             cr.scale(yak, yak)
             _gorsel_ciz(cr, self.yuzey, -R, -R, 2 * R, 2 * R, a)
-        else:
-            _temsili_portre(cr, R, self.k.get("kultur", "bati"), tr["renk"], a)
+        else:  # görsel yoksa: arma + baş harfler (uydurma yüz çizilmez)
+            from .amblem import sembol
+            g = cairo.RadialGradient(0, -R * 0.3, R * 0.1, 0, 0, R * 1.1)
+            g.add_color_stop_rgba(0, *(min(1, c * 1.35) for c in tr["renk"]), a)
+            g.add_color_stop_rgba(1, *(c * 0.55 for c in tr["renk"]), a)
+            cr.set_source(g)
+            cr.paint()
+            sembol(cr, self.k.get("taraf", "notr"), R * 0.95, tr["vurgu"], a * 0.22)
+            harf = self.k.get("monogram") or "".join(p[0] for p in self.k["ad"].replace(".", "").split()
+                                                      if not set(p) <= set("IVX"))[:2].upper()
+            _yazi(cr, harf, 0, R * 0.3, R * (0.95 if len(harf) == 1 else 0.75), aile="Caladea",
+                  renk=tr["vurgu"], alfa=a)
         cr.restore()
         for rr, w in ((R + 10, 4), (R + 1, 2)):
             cr.arc(0, 0, rr, 0, 2 * math.pi)
@@ -491,7 +501,7 @@ def oto_katman(video, T, kisiler, koordinatlar=None, yil_bekleme=15.0, kisi_bekl
                 bulundu = True
                 if (ad not in haric_kisiler and t - son_kisi.get(ad, -1e9) > kisi_bekleme
                         and t > portre_mesgul):
-                    video.ekran(PortreKarti(kisi, t - 0.15, t + 4.6, kisi.get("konum", "sol")))
+                    video.ekran(PortreKarti(kisi, t - 0.15, t + 4.6, "sag" if kisi.get("taraf") == "selcuklu" else "sol"))
                     son_kisi[ad] = t
                     portre_mesgul = t + 4.8
                 break

@@ -243,27 +243,74 @@ class Kafile:
         return x, y, 0.0
 
     def ciz(self, cr, t, kamera_zoom=1.0):
+        """Ordu işareti: yol boyunca uzayan renkli iz, hız şeritleri ve başta taraf kalkanı."""
+        from .amblem import kalkan
         if self.yol_ok:
             self.yol_ok.ciz(cr, t)
         if t < self.t0 - 0.3 or t > self.t_son + 0.8:
             return
+        tr = TARAFLAR[self.taraf]
+        renk, vurgu = tr["renk"], tr["vurgu"]
         a = min(yumusat((t - self.t0 + 0.3) / 0.5), 1 - yumusat((t - self.t_son) / 0.8))
         u = yumusat((t - self.t0) / max(self.t1 - self.t0, 0.01))
-        hareket = 1.0 if self.t0 < t < self.t1 else 0.15
+        hareket = 1.0 if self.t0 < t < self.t1 else 0.0
         bas = u * self.mesafe[-1]
         s = 1.6 * self.olcek / max(kamera_zoom, 1) ** 0.6
-        sirali = []
-        for (dx, dy, faz0, rnk) in self.dizilis:
-            x, y, aci = self._nokta(bas + dx * s)
-            nx, ny = -math.sin(aci), math.cos(aci)
-            sirali.append((y + ny * dy * s, x + nx * dy * s, aci, faz0, rnk))
-        for i, (y, x, aci, faz0, rnk) in enumerate(sorted(sirali)):
-            yon = 1 if math.cos(aci) >= 0 else -1
-            faz = t * (2.4 if "atli" in self.tur else 1.6) + faz0
-            if hareket > 0.5 and "atli" in self.tur:
-                toz(cr, x - yon * 8 * s, y, s, t + faz0, a * 0.8, tohum=i)
-            if "atli" in self.tur:
-                atli(cr, x, y, s, self.taraf, faz, hareket, yon, a, okcu=self.tur == "atli_okcu", at_renk=rnk,
-                     sancak=self.sancak and i == len(sirali) - 1)
-            else:
-                piyade(cr, x, y, s, self.taraf, faz, hareket, yon, a, okcu=self.tur == "okcu")
+        buyukluk = 0.75 + 0.05 * min(self.adet, 12)
+        r = 17 * s * buyukluk
+        # iz: geride kalan yol, kuyruğa doğru incelir ve solar
+        if not self.yol_ok and bas > 2:
+            uz = min(bas, 420 * s)
+            adim = max(4.0, uz / 40)
+            n = int(uz / adim)
+            onceki = self._nokta(bas - uz)
+            for k in range(1, n + 1):
+                q = k / n
+                p = self._nokta(bas - uz + k * adim)
+                cr.move_to(onceki[0], onceki[1])
+                cr.line_to(p[0], p[1])
+                cr.set_line_cap(cairo.LINE_CAP_ROUND)
+                cr.set_line_width(r * (0.15 + 0.75 * q))
+                cr.set_source_rgba(*renk, a * 0.55 * q)
+                cr.stroke()
+                onceki = p
+        x, y, aci = self._nokta(bas)
+        ca, sa = math.cos(aci), math.sin(aci)
+        # hız şeritleri (ilerlerken kalkanın arkasında kayan üç ok başı)
+        if hareket > 0.5:
+            for k in range(3):
+                faz = (t * 1.8 + k / 3) % 1.0
+                geri = r * (1.3 + 1.6 * faz)
+                px, py = x - ca * geri, y - sa * geri
+                cr.save()
+                cr.translate(px, py)
+                cr.rotate(aci)
+                cr.move_to(-r * 0.35, -r * 0.45)
+                cr.line_to(r * 0.1, 0)
+                cr.line_to(-r * 0.35, r * 0.45)
+                cr.set_line_width(max(1.5, r * 0.16))
+                cr.set_line_cap(cairo.LINE_CAP_ROUND)
+                cr.set_line_join(cairo.LINE_JOIN_ROUND)
+                cr.set_source_rgba(*vurgu, a * 0.8 * (1 - faz))
+                cr.stroke()
+                cr.restore()
+            # öndeki yön oku
+            cr.save()
+            cr.translate(x + ca * r * 1.25, y + sa * r * 1.25)
+            cr.rotate(aci)
+            cr.move_to(r * 0.45, 0)
+            cr.line_to(-r * 0.15, -r * 0.38)
+            cr.line_to(-r * 0.15, r * 0.38)
+            cr.close_path()
+            cr.set_source_rgba(*vurgu, a * 0.95)
+            cr.fill()
+            cr.restore()
+        # büyük ordular için arkada ikinci, küçük kalkan (kalabalık hissi)
+        if self.adet >= 8:
+            gx, gy, _ = self._nokta(bas - r * 2.2)
+            kalkan(cr, self.taraf, gx - sa * r * 0.9, gy + ca * r * 0.9, r * 0.6, renk, vurgu, a * 0.85)
+        if self.adet >= 11:
+            gx, gy, _ = self._nokta(bas - r * 2.2)
+            kalkan(cr, self.taraf, gx + sa * r * 0.9, gy - ca * r * 0.9, r * 0.6, renk, vurgu, a * 0.85)
+        sallan = math.sin(t * 7 + self.adet) * r * 0.06 * hareket
+        kalkan(cr, self.taraf, x, y + sallan, r, renk, vurgu, a)

@@ -288,9 +288,9 @@ BOLUMLER = [
 # ---------------------------------------------------------------- kişiler (otomatik portre)
 KISILER = {
     "Alparslan": dict(ad="Alparslan", unvan="Büyük Selçuklu Sultanı", yillar="1064 – 1072", taraf="selcuklu",
-                      gorsel="alparslan_romen", kirp=(0.34, 0.16, 0.657, 0.41), kultur="selcuklu"),
+                      kultur="selcuklu"),
     "Romen": dict(ad="Romen Diyojen", unvan="Bizans İmparatoru", yillar="1068 – 1071", taraf="bizans",
-                  gorsel="alparslan_romen", kirp=(0.66, 0.53, 1.0, 0.80), dondur=55, kultur="bizans"),
+                  kultur="bizans"),
     "Selçuk Bey": dict(ad="Selçuk Bey", unvan="Kınık Boyu Beyi", yillar="10. yüzyıl", taraf="selcuklu",
                        kultur="selcuklu"),
     "Tuğrul": dict(ad="Tuğrul Bey", unvan="Büyük Selçuklu Sultanı", yillar="1040 – 1063", taraf="selcuklu",
@@ -634,8 +634,8 @@ def kur(v, T):
     sc = v.sahne(*aralik("a1", "a3b"), KOYU)
     t = s["a1"]
     sc.ekle(KarakterKarti("Alparslan", "Büyük Selçuklu Sultanı", "Saltanatı: 1064 – 1072", "selcuklu", t + 0.3,
-                          e["a3b"] + 0.5, monogram="A", gorsel=KISILER["Alparslan"]["gorsel"],
-                          kirp=KISILER["Alparslan"]["kirp"], maddeler=[
+                          e["a3b"] + 0.5, monogram="A", gorsel=KISILER["Alparslan"].get("gorsel"),
+                          kirp=KISILER["Alparslan"].get("kirp"), maddeler=[
                               (K("a1", "Çağrı"), "Çağrı Bey'in oğlu, Tuğrul Bey'in yeğeni"),
                               (K("a2", "Alp,"), "Alp: yiğit · Arslan: aslan"),
                               (K("a2", "Horasan'ı"), "Horasan'ın yöneticisi, usta bir komutan"),
@@ -672,7 +672,7 @@ def kur(v, T):
     # ============================================================ 5 ROMEN
     sc = v.sahne(*aralik("r1", "r1"), KOYU)
     sc.ekle(KarakterKarti("Romen Diyojen", "Bizans İmparatoru", "Saltanatı: 1068 – 1071", "bizans", s["r1"] + 0.3,
-                          e["r1"] + 0.5, monogram="R", gorsel=KISILER["Romen"]["gorsel"], kirp=KISILER["Romen"]["kirp"], dondur=KISILER["Romen"]["dondur"],
+                          e["r1"] + 0.5, monogram="R", gorsel=KISILER["Romen"].get("gorsel"), kirp=KISILER["Romen"].get("kirp"), dondur=KISILER["Romen"].get("dondur"),
                           maddeler=[(K("r1", "Kapadokyalı"), "Kapadokyalı askeri bir aileden"),
                                     (K("r1", "cesaretiyle"), "Cesur ve deneyimli bir general"),
                                     (K("r1", "ölüme"), "Darbe suçlamasıyla idama mahkûm edildi")]))
@@ -805,25 +805,25 @@ def kur(v, T):
     sc.ekle(EtiketBalonu("Oğuz kökenli Türkler!", K("o4", "Oğuz"), e["o4"] + 0.3, x=1800 - 200, y=760,
                          renk=(1, 0.75, 0.6)))
     sc = v.sahne(*aralik("o5", "o7"), arka_plan_uret(zemin="bozkir", tohum=13))
-    hedef = sc.ekle(Birlik("bizans", "piyade", 1500, 560, 260, 120, yon=-1))
+    hedef = sc.ekle(Birlik("bizans", "piyade", 420, 560, 260, 120, aci=90, yon=1))
     hedef.belir(s["o5"] - 0.5)
     okcular = []
     for i in range(4):
-        o_ = sc.ekle(Birlik("selcuklu", "atli_okcu", 260, 260 + i * 190, 240, 110, yon=1))
+        o_ = sc.ekle(Birlik("selcuklu", "atli_okcu", 1660, 260 + i * 190, 240, 110, aci=-90, yon=-1))
         o_.belir(s["o5"] + i * 0.4)
         okcular.append(o_)
     t0 = K("o6", "Düşmana")
     for i, o_ in enumerate(okcular):  # yaklaş - ok at - uzaklaş döngüsü
-        o_.git(t0 - 0.5 + i * 0.3, t0 + 2 + i * 0.3, x=1050)
-        o_.git(t0 + 3.5 + i * 0.3, t0 + 6 + i * 0.3, x=420)
-        o_.git(t0 + 7 + i * 0.3, t0 + 9 + i * 0.3, x=1050)
-        o_.git(t0 + 10 + i * 0.3, t0 + 12 + i * 0.3, x=500)
+        o_.git(t0 - 0.5 + i * 0.3, t0 + 2 + i * 0.3, x=870)
+        o_.git(t0 + 3.5 + i * 0.3, t0 + 6 + i * 0.3, x=1500)
+        o_.git(t0 + 7 + i * 0.3, t0 + 9 + i * 0.3, x=870)
+        o_.git(t0 + 10 + i * 0.3, t0 + 12 + i * 0.3, x=1420)
         sc.ekle(OkYagmuru(o_, hedef, t0 + 1.5, t0 + 11, yogunluk=6, tohum=i))
     hedef.savas(t0 + 2, t0 + 11)
-    sc.ekle(EtiketBalonu("Yaklaş · ok at · uzaklaş", K("o6", "yağdırır"), K("o6", "Geri"), x=760, y=170))
-    sc.ekle(EtiketBalonu("Geri çekilirken bile ok!", K("o6", "Geri"), K("o6", "Bunların"), x=760, y=170,
+    sc.ekle(EtiketBalonu("Yaklaş · ok at · uzaklaş", K("o6", "yağdırır"), K("o6", "Geri"), x=1160, y=170))
+    sc.ekle(EtiketBalonu("Geri çekilirken bile ok!", K("o6", "Geri"), K("o6", "Bunların"), x=1160, y=170,
                          renk=(1, 0.75, 0.6)))
-    gulam = sc.ekle(Birlik("selcuklu", "agir_suvari", 260, 960, 380, 60, yon=1))
+    gulam = sc.ekle(Birlik("selcuklu", "agir_suvari", 1660, 990, 380, 60, yon=-1))
     gulam.belir(K("o6", "gulamlar") - 0.5)
     sc.ekle(EtiketBalonu("Gulamlar: sultanın muhafızları", K("o6", "gulamlar"), e["o6"] + 0.3, birlik=gulam,
                          ofset=(0, -70)))
@@ -839,27 +839,27 @@ def kur(v, T):
     sc.ekle(YilRozeti("24 Ağustos", s["p1"] + 0.2))
     kafile(sc, h, "bizans", ["Malazgirt", (42.45, 38.95)], K("p1", "yiyecek") - 0.5, 3, adet=5, tur="piyade",
            olcek=1.0, t_son=K("p1", "Romen") + 1, tohum=90)
-    kafile(sc, h, "selcuklu", [(42.2, 38.85), (42.42, 38.94)], K("p1", "karşılaştı") - 1, 2, adet=8, olcek=1.0,
+    kafile(sc, h, "selcuklu", [(42.85, 38.85), (42.6, 38.94)], K("p1", "karşılaştı") - 1, 2, adet=8, olcek=1.0,
            t_son=K("p1", "Romen") + 1, tohum=91)
     kafile(sc, h, "bizans", ["Malazgirt", (42.5, 38.92)], K("p1", "Vasilakis") - 0.5, 2.5, adet=7, olcek=1.0,
            t_son=K("p1", "esir") + 1, tohum=92)
-    for i, d in enumerate((-0.12, 0.12)):
-        kafile(sc, h, "selcuklu", [(42.5 + d * 3, 38.82), (42.5 + d, 38.9)], K("p1", "pusuya") - 0.5, 1.8, adet=6,
+    for i, (a_, b_) in enumerate((((42.9, 38.8), (42.6, 38.88)), ((42.95, 39.02), (42.62, 38.96)))):
+        kafile(sc, h, "selcuklu", [a_, b_], K("p1", "pusuya") - 0.5, 1.8, adet=6,
                olcek=1.0, t_son=e["p1"] + 1, tohum=93 + i)
     ikon(sc, h, "kilic", (42.5, 38.92), K("p1", "pusuya"), 3.5)
     balon(sc, h, "Vasilakis esir!", (42.5, 38.92), K("p1", "esir") - 0.3, e["p1"] + 0.3, renk=(1, 0.75, 0.6))
     kafile(sc, h, "bizans", ["Malazgirt", (42.62, 38.95), "Malazgirt"], s["p2"], 5, adet=8, olcek=1.0, tohum=95,
            t_son=s["p2"] + 6)
     ikon(sc, h, "kilic", (42.62, 38.95), K("p2", "kuşatılmaktan"), 3)
-    for i, x in enumerate((42.15, 42.85)):
-        kafile(sc, h, "selcuklu", [(42.5, 38.9), (x, 38.82)], K("p2", "tepelerde") - 1, 3, adet=7, olcek=1.0,
+    for i, (y0_, y1_) in enumerate(((38.9, 38.8), (38.98, 39.05))):
+        kafile(sc, h, "selcuklu", [(42.62, y0_), (42.92, y1_)], K("p2", "tepelerde") - 1, 3, adet=7, olcek=1.0,
                t_son=e["p2"] + 0.5, tohum=96 + i)
     balon(sc, h, "Sultanın ordusu!", "Malazgirt", K("p2", "sultanın"), e["p2"] + 0.3, renk=(1, 0.75, 0.6), dy=-90)
     sc.ekle(YilRozeti("25 Ağustos", s["p3"] + 0.2))
-    kafile(sc, h, "pecenek", [(42.6, 39.08), (42.45, 38.9), (42.3, 38.83)], K("p3", "Uz") - 0.5, 4, adet=7,
+    kafile(sc, h, "pecenek", [(42.38, 39.1), (42.6, 38.98), (42.85, 38.9)], K("p3", "Uz") - 0.5, 4, adet=7,
            olcek=1.0, t_son=e["p3"] + 0.5, tohum=98)
-    balon(sc, h, "Saf değiştirdiler", (42.4, 38.88), K("p3", "soydaşlarının"), e["p3"] + 0.3, renk=(1, 0.75, 0.6))
-    kafile(sc, h, "selcuklu", [(42.4, 38.82), "Malazgirt"], K("p4", "elçi") - 0.5, 3, adet=2, olcek=1.0,
+    balon(sc, h, "Saf değiştirdiler", (42.7, 38.92), K("p3", "soydaşlarının"), e["p3"] + 0.3, renk=(1, 0.75, 0.6))
+    kafile(sc, h, "selcuklu", [(42.85, 38.98), "Malazgirt"], K("p4", "elçi") - 0.5, 3, adet=2, olcek=1.0,
            t_son=K("p4", "reddetti") + 1.5, tohum=99)
     ikon(sc, h, "parsomen", "Malazgirt", K("p4", "barış"), 3)
     balon(sc, h, "Barış teklifi", "Malazgirt", K("p4", "barış"), K("p4", "reddetti"), dy=-90)
@@ -874,19 +874,33 @@ def kur(v, T):
 
     # ============================================================ 9 MUHAREBE (taktik)
     sc = v.sahne(*aralik("p7", "m12"), arka_plan_uret(
-        zemin="bozkir", tepeler=[(260, 170, 300, 0.9), (1660, 160, 320, 0.95), (960, 60, 260, 0.55),
-                                 (80, 620, 200, 0.4), (1850, 640, 220, 0.45)],
-        nehirler=[[(-20, 760), (90, 820), (160, 940), (120, 1100)]],
-        yollar=[[(230, 1000), (520, 960), (900, 1010), (1300, 990), (1940, 1030)]],
-        yerlesimler=[(250, 990, "Malazgirt")], etiketler=[(1380, 965, "Malazgirt Ovası", 40)], tohum=1071))
+        zemin="bozkir", tepeler=[(1220, 90, 300, 0.9), (1220, 990, 320, 0.95), (1800, 540, 260, 0.55),
+                                 (420, 40, 200, 0.4), (420, 1050, 220, 0.45)],
+        nehirler=[[(-20, 180), (70, 260), (40, 420), (-20, 520)]],
+        yollar=[[(140, 640), (420, 600), (800, 660), (1300, 620), (1940, 660)]],
+        yerlesimler=[(130, 700, "Malazgirt")], etiketler=[(960, 1030, "Malazgirt Ovası", 40)], tohum=1071))
     _taktik(sc, v, s, e, K)
 
     tablo("m12b", "m12b", "malazgirt_minyatur2", (0.5, 0.5, 1.0), (0.55, 0.6, 1.4),
           "Malazgirt Savaşı — 15. yüzyıl minyatürü, Fransız el yazması (kamu malı)")
 
     # ============================================================ 10 ESİR
-    tablo("e1", "e2", "alparslan_romen", (0.5, 0.45, 1.0), (0.5, 0.4, 1.45),
-          "Alparslan ve Romen Diyojen — 15. yüzyıl minyatürü (kamu malı)")
+    sc = v.sahne(*aralik("e1", "e2"), KOYU)
+    sc.kamera_ayarla(s["e1"] - 1, x=960, y=540, zoom=2.0)
+    alp_ = sc.ekle(Komutan("Alparslan", "selcuklu", x=1230, y=500, unvan="Sultan"))
+    alp_.belir(s["e1"])
+    rom_ = sc.ekle(Komutan("Romen Diyojen", "bizans", x=-260, y=520, unvan="İmparator"))
+    rom_.belir(K("e1", "imparator") - 0.4)
+    rom_.iz.ekle(K("e1", "huzuruna") + 1.6, {"x": 700}, sure=2.2)
+    rom_.esir(K("e1", "getirildi"))
+    sc.ekle(EtiketBalonu("Bu mu imparator?", K("e1", "inanmadı") - 0.8, K("e1", "Ancak"), x=1230, y=380))
+    sc.ekle(EtiketBalonu("Vasilakis onu tanıdı", K("e1", "Vasilakis") - 0.3, e["e1"] + 0.3, x=700, y=380,
+                         renk=(1, 0.75, 0.6)))
+    sc.ekle(Ikon("tac", 1230, 420, K("e2", "zafer") - 0.3, K("e2", "Ama"), olcek=1.2))
+    sc.ekle(EtiketBalonu("Zafer geleneği", K("e2", "geleneğine") - 0.3, K("e2", "Ama"), x=960, y=380))
+    alp_.iz.ekle(K("e2", "Ama") + 1.5, {"x": 1060}, sure=1.5)
+    rom_.iz.ekle(K("e2", "kaldırdı") + 1.2, {"y": 470}, sure=1.2)
+    sc.ekle(EtiketBalonu("Yerden kaldırdı", K("e2", "kaldırdı") - 0.3, e["e2"] + 0.3, x=880, y=380))
     sc = v.sahne(*aralik("e3", "e5"), KOYU)
     sc.kamera_git(s["e3"], e["e5"], zoom=1.05)
     sc.ekle(AlintiKarti("Eğer ben senin önüne esir olarak getirilseydim, ne yapardın?", "Alparslan", s["e3"],
@@ -913,7 +927,7 @@ def kur(v, T):
     # ============================================================ 11 SONUÇLAR
     sc = v.sahne(*aralik("n1", "n2"), KOYU)
     sc.ekle(KarakterKarti("Romen Diyojen", "Bir İmparatorun Sonu", "1071 – 1072", "bizans", s["n1"] + 0.3,
-                          e["n2"] + 0.4, monogram="R", gorsel=KISILER["Romen"]["gorsel"], kirp=KISILER["Romen"]["kirp"], dondur=KISILER["Romen"]["dondur"],
+                          e["n2"] + 0.4, monogram="R", gorsel=KISILER["Romen"].get("gorsel"), kirp=KISILER["Romen"].get("kirp"), dondur=KISILER["Romen"].get("dondur"),
                           maddeler=[
                               (K("n1", "darbe"), "Dukaslar sarayda darbe yaptı"),
                               (K("n1", "Mihail"), "VII. Mihail Dukas tahta çıktı"),
@@ -923,7 +937,7 @@ def kur(v, T):
                           ]))
     sc = v.sahne(*aralik("n3", "n3"), KOYU)
     sc.ekle(KarakterKarti("Alparslan", "Bir Sultanın Sonu", "1072", "selcuklu", s["n3"] + 0.3, e["n3"] + 0.5,
-                          monogram="A", gorsel=KISILER["Alparslan"]["gorsel"], kirp=KISILER["Alparslan"]["kirp"],
+                          monogram="A", gorsel=KISILER["Alparslan"].get("gorsel"), kirp=KISILER["Alparslan"].get("kirp"),
                           maddeler=[
                               (K("n3", "antlaşmanın"), "Antlaşmayı geçersiz saydı (rivayet)"),
                               (K("n3", "hançerlenerek"), "1072: Orta Asya seferinde hançerlendi"),
@@ -1011,72 +1025,101 @@ def kur(v, T):
                                                           "e3", "e4", "e5", "p6"))
 
 
+# ---------------------------------------------------------------- taktik düzen dönüşümü
+# Savaş kurgusu "mantıksal" düzende yazıldı (Bizans altta, Selçuklu üstte). Ekranda her zaman
+# Bizans SOLDA, Türkler SAĞDA durur ve sağdan akın eder: mantıksal (x, y) -> ekran D(x, y).
+SX, SY, YM = 1.55, 0.58, 560
+
+
+def D(x, y):
+    return 960 + (YM - y) * SX, 540 + (x - 960) * SY
+
+
+def Dl(noktalar):
+    return [D(x, y) for x, y in noktalar]
+
+
+class DonukBirlik(Birlik):
+    """Mantıksal düzende hareket eden, ekrana döndürülerek çizilen birlik."""
+
+    def _ekran_deger(self, t):
+        d = dict(self.iz.deger(t))
+        d["x"], d["y"] = D(d["x"], d["y"])
+        d["g"] = d["g"] * SY
+        d["aci"] = d["aci"] + (270 if self.taraf == "selcuklu" else 90)
+        return d
+
+    def mantiksal(self, t):
+        d = self.iz.deger(t)
+        return d["x"], d["y"]
+
+
 def _taktik(sc, v, s, e, K):
     bz = {
-        "sol_s": Birlik("bizans", "suvari", 400, 800, 150, 56, yon=1),
-        "sol_p": Birlik("bizans", "piyade", 620, 800, 260, 60, yon=1),
-        "mer_a": Birlik("bizans", "agir_suvari", 960, 760, 320, 64),
-        "mer_p": Birlik("bizans", "piyade", 960, 840, 320, 56),
-        "sag_p": Birlik("bizans", "piyade", 1300, 800, 260, 60, yon=-1),
-        "sag_s": Birlik("bizans", "suvari", 1520, 800, 150, 56, yon=-1),
-        "ihtiyat": Birlik("bizans", "piyade", 960, 960, 400, 56),
+        "sol_s": DonukBirlik("bizans", "suvari", 400, 800, 150, 56, yon=1),
+        "sol_p": DonukBirlik("bizans", "piyade", 620, 800, 260, 60, yon=1),
+        "mer_a": DonukBirlik("bizans", "agir_suvari", 960, 760, 320, 64),
+        "mer_p": DonukBirlik("bizans", "piyade", 960, 840, 320, 56),
+        "sag_p": DonukBirlik("bizans", "piyade", 1300, 800, 260, 60, yon=-1),
+        "sag_s": DonukBirlik("bizans", "suvari", 1520, 800, 150, 56, yon=-1),
+        "ihtiyat": DonukBirlik("bizans", "piyade", 960, 960, 400, 56),
     }
-    okcular = [Birlik("selcuklu", "atli_okcu", x, y, 190, 90, yon=1 if x < 960 else -1)
+    okcular = [DonukBirlik("selcuklu", "atli_okcu", x, y, 190, 90, yon=1 if x < 960 else -1)
                for x, y in ((480, 480), (720, 420), (960, 400), (1200, 420), (1440, 480))]
-    sol_ana = Birlik("selcuklu", "suvari", 300, 230, 240, 64, yon=1)
-    sag_ana = Birlik("selcuklu", "suvari", 1620, 230, 240, 64, yon=-1)
-    sultan = Birlik("selcuklu", "agir_suvari", 960, 200, 260, 64)
+    sol_ana = DonukBirlik("selcuklu", "suvari", 300, 230, 240, 64, yon=1)
+    sag_ana = DonukBirlik("selcuklu", "suvari", 1620, 230, 240, 64, yon=-1)
+    sultan = DonukBirlik("selcuklu", "agir_suvari", 960, 200, 260, 64)
     sc.ekle(*bz.values(), *okcular, sol_ana, sag_ana, sultan)
-    romen = Komutan("Romen Diyojen", "bizans", bz["mer_a"], ofset=(0, -122), unvan="İmparator")
-    bri = Komutan("Briyennios", "bizans", bz["sol_p"], ofset=(0, -110))
-    aly = Komutan("Alyates", "bizans", bz["sag_p"], ofset=(0, -110))
-    dukas = Komutan("Andronikos Dukas", "bizans", bz["ihtiyat"], ofset=(320, -30))
-    alp = Komutan("Alparslan", "selcuklu", sultan, ofset=(0, -116), unvan="Sultan")
+    romen = Komutan("Romen Diyojen", "bizans", bz["mer_a"], ofset=(0, -190), unvan="İmparator")
+    bri = Komutan("Briyennios", "bizans", bz["sol_p"], ofset=(0, -170))
+    aly = Komutan("Alyates", "bizans", bz["sag_p"], ofset=(0, -170))
+    dukas = Komutan("Andronikos Dukas", "bizans", bz["ihtiyat"], ofset=(0, 135))
+    alp = Komutan("Alparslan", "selcuklu", sultan, ofset=(0, -170), unvan="Sultan")
     sc.ekle(romen, bri, aly, dukas, alp)
 
     # p7: tanık tarihçi, Dukas'a dikkat
     t = s["p7"]
-    sc.kamera_ayarla(t - 1, x=960, y=760, zoom=1.0)
+    sc.kamera_ayarla(t - 1, x=650, y=540, zoom=1.0)
     for i, b in enumerate(bz.values()):
         b.belir(t + 0.3 + i * 0.25)
-    sc.kamera_git(K("p7", "Arka") - 1, K("p7", "Arka") + 2, x=1060, y=930, zoom=1.7)
+    sc.kamera_git(K("p7", "Arka") - 1, K("p7", "Arka") + 2, x=386, y=598, zoom=1.7)
     dukas.belir(K("p7", "Andronikos") - 0.3)
     sc.ekle(EtiketBalonu("İmparatorun düşmanı", K("p7", "düşmanı"), e["p7"] + 0.3, birlik=bz["ihtiyat"],
-                         ofset=(0, -80), renk=(1, 0.75, 0.6)))
+                         ofset=(0, -150), renk=(1, 0.75, 0.6)))
 
     # m1-m2 diziliş
     t = s["m1"]
     v.ekran(Lejant([("bizans", "Bizans"), ("selcuklu", "Büyük Selçuklu")], t, e["m12"] - 0.5))
-    sc.kamera_git(t, t + 2, x=960, y=800, zoom=1.3)
+    sc.kamera_git(t, t + 2, x=588, y=540, zoom=1.3)
     romen.belir(K("m1", "Romen") - 0.2)
-    sc.kamera_git(K("m1", "Sol") - 0.5, K("m1", "Sol") + 1.2, x=620, y=800, zoom=1.7)
+    sc.kamera_git(K("m1", "Sol") - 0.5, K("m1", "Sol") + 1.2, x=588, y=343, zoom=1.7)
     bri.belir(K("m1", "Briyennios") - 0.3)
-    sc.kamera_git(K("m1", "sağ") - 0.5, K("m1", "sağ") + 1.2, x=1300, y=800, zoom=1.7)
+    sc.kamera_git(K("m1", "sağ") - 0.5, K("m1", "sağ") + 1.2, x=588, y=737, zoom=1.7)
     aly.belir(K("m1", "Alyates") - 0.3)
-    sc.kamera_git(s["m2"], s["m2"] + 1.8, x=960, y=900, zoom=1.6)
+    sc.kamera_git(s["m2"], s["m2"] + 1.8, x=433, y=540, zoom=1.6)
     sc.ekle(EtiketBalonu("Geri çekilişi koruyacak", K("m2", "koruyacaktı") - 1.5, e["m2"] + 0.3, birlik=bz["ihtiyat"],
-                         ofset=(0, -80)))
+                         ofset=(0, -150)))
     # m3 Selçuklu hilali
     t = s["m3"]
-    sc.kamera_git(t, t + 2.2, x=960, y=330, zoom=1.15)
-    sc.ekle(EtiketBalonu("≈ 4 km", K("m3", "dört") - 0.3, K("m3", "Atlı"), x=960, y=600))
+    sc.kamera_git(t, t + 2.2, x=1316, y=540, zoom=1.15)
+    sc.ekle(EtiketBalonu("≈ 4 km", K("m3", "dört") - 0.3, K("m3", "Atlı"), x=898, y=540))
     for i, o in enumerate(okcular):
         o.belir(K("m3", "hilal") - 0.5 + abs(i - 2) * 0.3)
     for b in (sol_ana, sag_ana, sultan):
         b.git(K("m3", "Ana") - 0.3, K("m3", "Ana") + 1.2, alfa=0.45)
     alp.belir(K("m3", "Ana"))
-    sc.ekle(EtiketBalonu("Pusu", K("m3", "tepelerin"), e["m3"] + 0.4, birlik=sol_ana, ofset=(0, 85)),
-            EtiketBalonu("Pusu", K("m3", "tepelerin"), e["m3"] + 0.4, birlik=sag_ana, ofset=(0, 85)))
+    sc.ekle(EtiketBalonu("Pusu", K("m3", "tepelerin"), e["m3"] + 0.4, birlik=sol_ana, ofset=(0, 110)),
+            EtiketBalonu("Pusu", K("m3", "tepelerin"), e["m3"] + 0.4, birlik=sag_ana, ofset=(0, -110)))
     # m4-m6 ilerleme, sahte ricat, kamp boş
     t, te = s["m4"], e["m6"]
-    sc.kamera_git(t, t + 2.5, x=960, y=560, zoom=1.0)
+    sc.kamera_git(t, t + 2.5, x=960, y=540, zoom=1.0)
     yayilma = {"sol_s": -100, "sol_p": -55, "sag_p": 55, "sag_s": 100}
     for k, b in bz.items():
-        x, y = b.merkez(t)
+        x, y = b.mantiksal(t)
         b.git(t + 0.5, te - 1, x=x + yayilma.get(k, 0), y=y + (-120 if k == "ihtiyat" else -240))
     hedefler = [bz["sol_p"], bz["sol_p"], bz["mer_a"], bz["sag_p"], bz["sag_p"]]
     for i, o in enumerate(okcular):
-        x, y = o.merkez(t)
+        x, y = o.mantiksal(t)
         # dalgalar halinde yaklaş-çekil
         o.git(K("m4", "yaklaşıyor") - 0.5, K("m4", "yaklaşıyor") + 1.5, y=y + 70)
         o.git(K("m4", "geri") - 0.5, K("m4", "geri") + 2.0, y=y - 60)
@@ -1086,87 +1129,87 @@ def _taktik(sc, v, s, e, K):
     sol_ana.git(K("m4", "kanatları") - 0.5, K("m4", "kanatları") + 3, x=230, y=420)
     sag_ana.git(K("m4", "kanatları") - 0.5, K("m4", "kanatları") + 3, x=1690, y=420)
     for x in (620, 960, 1300):
-        sc.ekle(HareketOku("bizans", [(x, 700), (x, 500)], t + 0.5, t + 3, t_son=t + 7, kalinlik=20))
+        sc.ekle(HareketOku("bizans", Dl([(x, 700), (x, 500)]), t + 0.5, t + 3, t_son=t + 7, kalinlik=20))
     sc.ekle(EtiketBalonu("Sahte ricat!", s["m5"], e["m5"] + 0.4, birlik=okcular[2], ofset=(0, 90)))
     sc.ekle(EtiketBalonu("Kamp boş!", K("m6", "kamp"), K("m6", "Atlı"), birlik=sultan, ofset=(0, 90)))
     for k in ("mer_a", "sol_s", "sag_s"):
-        x, y = bz[k].merkez(K("m6", "süvarileri"))
+        x, y = bz[k].mantiksal(K("m6", "süvarileri"))
         bz[k].git(K("m6", "süvarileri") - 0.2, K("m6", "süvarileri") + 1.5, y=y - 60)
         bz[k].git(K("m6", "uzaklaşıyorlardı") - 0.2, K("m6", "uzaklaşıyorlardı") + 2, y=y)
     # m7 dönüş emri
     t, te = s["m7"], e["m7"]
     sc.ekle(EtiketBalonu("Susuz ve yorgun", K("m7", "susuz") - 0.3, K("m7", "Romen"), birlik=bz["mer_a"],
                          ofset=(0, -200), renk=(1, 0.75, 0.6)))
-    sc.kamera_git(K("m7", "Romen") - 0.5, K("m7", "Romen") + 2, x=960, y=600, zoom=1.25)
+    sc.kamera_git(K("m7", "Romen") - 0.5, K("m7", "Romen") + 2, x=898, y=540, zoom=1.25)
     sc.ekle(EtiketBalonu("Karargâha dönün!", K("m7", "kampa") - 0.5, e["m7"] + 0.5, birlik=bz["mer_a"],
                          ofset=(0, -200)))
     for k in ("sol_s", "sol_p", "mer_a", "mer_p", "sag_p", "sag_s"):
         bz[k].git(K("m7", "sancağı") - 0.3, K("m7", "sancağı") + 1.8, aci=180)
     for k in ("sol_p", "mer_a", "mer_p"):
-        bz[k].git(K("m7", "sancağı") + 1.5, e["m8"], y=bz[k].merkez(t)[1] + 50)
+        bz[k].git(K("m7", "sancağı") + 1.5, e["m8"], y=bz[k].mantiksal(t)[1] + 50)
     # m8 sağ kanat karışıklığı
     t = s["m8"]
-    sc.kamera_git(t, t + 2, x=1350, y=600, zoom=1.5)
+    sc.kamera_git(t, t + 2, x=898, y=766, zoom=1.5)
     for k, dx in (("sag_s", 80), ("sag_p", 40)):
-        x, y = bz[k].merkez(t)
+        x, y = bz[k].mantiksal(t)
         bz[k].git(K("m8", "yenildiğini") - 0.3, e["m8"] + 1, x=x + dx, y=y + 70)
     sc.ekle(EtiketBalonu("Yenildik mi?", K("m8", "yenildiğini") - 0.5, e["m8"] + 0.3, birlik=bz["sag_s"],
                          ofset=(0, -80), renk=(1, 0.75, 0.6)))
     # m9 Dukas çekilir
     t, te = s["m9"], e["m9"]
-    sc.kamera_git(t, t + 2, x=960, y=820, zoom=1.35)
+    sc.kamera_git(t, t + 2, x=557, y=540, zoom=1.35)
     sc.ekle(EtiketBalonu("“İmparator öldü!”", K("m9", "söylentisini") - 1, K("m9", "söylentisini") + 4,
-                         birlik=bz["ihtiyat"], ofset=(0, -80), renk=(1, 0.75, 0.6)))
+                         birlik=bz["ihtiyat"], ofset=(0, -150), renk=(1, 0.75, 0.6)))
     bz["ihtiyat"].git(K("m9", "ihtiyat") - 0.5, K("m9", "ihtiyat") + 0.8, aci=180)
     bz["ihtiyat"].git(K("m9", "ihtiyat") + 0.5, te + 1, y=1180, x=600)
     bz["ihtiyat"].kaybol(te - 1, 1.5)
     dukas.kaybol(te - 1.5)
-    sc.ekle(HareketOku("bizans", [(960, 900), (760, 1060)], K("m9", "Malazgirt'teki") - 0.5,
+    sc.ekle(HareketOku("bizans", Dl([(960, 900), (760, 1060)]), K("m9", "Malazgirt'teki") - 0.5,
                        K("m9", "Malazgirt'teki") + 1.5, t_son=te + 1, kalinlik=22, renk=(0.55, 0.45, 0.55)))
     # m10 saldırı
     t, te = s["m10"], e["m10"]
-    sc.kamera_git(t, t + 2, x=960, y=540, zoom=1.0)
+    sc.kamera_git(t, t + 2, x=991, y=540, zoom=1.0)
     for b in (sol_ana, sag_ana, sultan):
         b.git(K("m10", "tepelerden") - 0.5, K("m10", "tepelerden") + 0.8, alfa=1)
-    sc.ekle(HareketOku("selcuklu", [(230, 480), (300, 700), (480, 830), (640, 800)], K("m10", "iki") - 0.5,
+    sc.ekle(HareketOku("selcuklu", Dl([(230, 480), (300, 560), (480, 640), (640, 620)]), K("m10", "iki") - 0.5,
                        K("m10", "iki") + 2.5, t_son=e["m11"] - 2),
-            HareketOku("selcuklu", [(1690, 480), (1620, 700), (1440, 830), (1280, 800)], K("m10", "iki") - 0.5,
+            HareketOku("selcuklu", Dl([(1690, 480), (1620, 560), (1440, 640), (1280, 620)]), K("m10", "iki") - 0.5,
                        K("m10", "iki") + 2.5, t_son=e["m11"] - 2))
-    sol_ana.git(K("m10", "iki") - 0.3, K("m10", "iki") + 3.5, x=560, y=760, aci=60)
-    sag_ana.git(K("m10", "iki") - 0.3, K("m10", "iki") + 3.5, x=1360, y=760, aci=-60)
+    sol_ana.git(K("m10", "iki") - 0.3, K("m10", "iki") + 3.5, x=560, y=620, aci=197)
+    sag_ana.git(K("m10", "iki") - 0.3, K("m10", "iki") + 3.5, x=1360, y=620, aci=163)
     for o, (x, y) in zip(okcular, [(640, 560), (790, 450), (960, 420), (1130, 450), (1280, 560)]):
         o.git(K("m10", "iki"), K("m10", "iki") + 3.5, x=x, y=y)
     for k in ("sol_s", "sol_p", "mer_a", "mer_p", "sag_p", "sag_s"):
         bz[k].savas(K("m10", "saldırdı"), e["m11"] - 1)
     for k, dx in (("sag_s", 150), ("sag_p", 90)):
-        x, y = bz[k].merkez(K("m10", "Sağ"))
+        x, y = bz[k].mantiksal(K("m10", "Sağ"))
         bz[k].git(K("m10", "Sağ") - 0.2, K("m10", "Sağ") + 3, x=x + dx, y=y + 100, g=150, alfa=0.0)
     aly.kaybol(K("m10", "Sağ") + 1)
-    sc.ekle(EtiketBalonu("Sağ kanat bozguna uğradı", K("m10", "Sağ"), K("m10", "Sol") + 0.5, x=1500, y=640,
+    sc.ekle(EtiketBalonu("Sağ kanat bozguna uğradı", K("m10", "Sağ"), K("m10", "Sol") + 0.5, x=836, y=853,
                          renk=(1, 0.75, 0.6)))
     for k, dx in (("sol_s", -150), ("sol_p", -100)):
-        x, y = bz[k].merkez(K("m10", "Sol"))
+        x, y = bz[k].mantiksal(K("m10", "Sol"))
         bz[k].git(K("m10", "Sol") - 0.2, te, x=x + dx, y=y + 130, g=150, alfa=0.0)
     bri.kaybol(te - 1.5)
-    sc.ekle(EtiketBalonu("Briyennios geri çekiliyor", K("m10", "Briyennios"), te + 0.3, x=420, y=640,
+    sc.ekle(EtiketBalonu("Briyennios geri çekiliyor", K("m10", "Briyennios"), te + 0.3, x=836, y=227,
                          renk=(1, 0.75, 0.6)))
     # m11 esir
     t, te = s["m11"], e["m11"]
     bz["mer_a"].git(t, t + 3, g=230)
     bz["mer_p"].git(t, t + 3, g=230)
     sultan.git(t, t + 3, y=320)
-    sc.kamera_git(t + 0.5, t + 3, x=960, y=620, zoom=1.45)
+    sc.kamera_git(t + 0.5, t + 3, x=867, y=540, zoom=1.45)
     sc.ekle(EtiketBalonu("Varang muhafızları", K("m11", "Varang"), K("m11", "Kaçmayı") + 1, birlik=bz["mer_p"],
-                         ofset=(0, 80)))
+                         ofset=(0, 125)))
     sc.ekle(EtiketBalonu("Atı öldürüldü, yaralandı", K("m11", "Atı"), K("m11", "Ve"), birlik=bz["mer_a"],
                          ofset=(0, -210), renk=(1, 0.75, 0.6)))
     romen.esir(K("m11", "esir") - 0.5)
     # m12 gece takibi
     t, te = s["m12"], e["m12"]
-    sc.kamera_git(t, t + 3, x=960, y=540, zoom=1.0)
+    sc.kamera_git(t, t + 3, x=991, y=540, zoom=1.0)
     bz["mer_a"].kaybol(K("m12", "Takip"), 2)
     bz["mer_p"].kaybol(K("m12", "Takip"), 2)
     romen.kaybol(K("m12", "Takip") + 1)
     for i, o in enumerate(okcular):
-        x, y = o.merkez(t)
+        x, y = o.mantiksal(t)
         o.git(K("m12", "Takip"), te, y=y + 500)
