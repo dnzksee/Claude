@@ -12,7 +12,9 @@ from .cizim import G, Y
 from .zaman import yumusak, hizlan, yavasla
 
 SURELER = {"whip": 0.5, "punch": 0.45, "iris": 1.1, "kes": 0.0, "capraz": 0.6}
-SESLER = {"whip": "whoosh", "punch": "punch", "iris": "iris", "kes": None, "capraz": None}
+# Geçişlerde efekt sesi yok (izleyici geri bildirimi: "kanal değiştirme" gibi rahatsız edici). İsteyen
+# konu dosyası GECIS_SESLERI ile açabilir.
+SESLER = {"whip": None, "punch": None, "iris": None, "kes": None, "capraz": None}
 
 
 def whip(cr, A, B, u, yon=1):

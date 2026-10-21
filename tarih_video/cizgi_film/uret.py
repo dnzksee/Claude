@@ -141,9 +141,9 @@ def seslendir(birimler, motor, ses, klasor):
 
 
 # ---------------------------------------------------------------- zaman çizelgesi
-BOSLUK = 0.32        # aynı sahnedeki cümleler arası
-ONCE = {"acilis": 1.9, "sahne": 1.25, "kapanis": 0.9}
-SONRA = {"acilis": 0.9, "sahne": 1.1, "kapanis": 3.2}
+BOSLUK = 0.45        # aynı sahnedeki cümleler arası (belgesel temposu)
+ONCE = {"acilis": 2.0, "sahne": 1.6, "kapanis": 1.0}
+SONRA = {"acilis": 1.0, "sahne": 1.4, "kapanis": 3.2}
 
 
 def yerlestir(birimler, parcalar, turler):
@@ -235,8 +235,7 @@ def main():
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
     ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3, kanal=getattr(konu, "UST_YAZI", ""),
                         logo=getattr(konu, "LOGO", "kilic")))
-    ac.sfx("swoosh_yukari", 0.3)
-    ac.sfx("pop", 0.75)
+    ac.sfx("pop", 0.75, 0.6)
     if hasattr(konu, "acilis"):
         konu.acilis(ac)
     # içerik sahneleri
@@ -248,7 +247,6 @@ def main():
                              paralaks=1.0 if sh.get("arkaplan") == "harita" else 0.35,
                              zemin=sh.get("zemin", sh.get("arkaplan") != "harita")))
         s.ekle(BolumEtiketi(i + 1, sh["baslik"], t0 + 0.15, t1 + 0.6))
-        s.sfx("tik", t0 + 0.2, 0.7)
         sh["kurgu"](s)
     # kapanış kartı
     t0, t1 = araliklar[-1]
@@ -257,7 +255,7 @@ def main():
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
     kp.ekle(KapanisKarti(getattr(konu, "KAPANIS_YAZI", konu.BASLIK), "ABONE OL", t0 + 0.3, t1,
                          logo=getattr(konu, "LOGO", "kilic")))
-    kp.sfx("ding", t0 + 1.6, 0.6)
+    kp.sfx("ding", t0 + 1.6, 0.35)
 
     satirlar = altyazi_satirlari(cz)
     video.ust.append(Altyazi(satirlar))
@@ -280,11 +278,13 @@ def main():
     efektler = []
     for s in video.sahneler:
         efektler += s.tum_sesler()
+    sesler = dict(SESLER, **getattr(konu, "GECIS_SESLERI", {}))
     for sinir, tur, d in video.gecis_anlari():
-        if SESLER.get(tur):
-            efektler.append((max(0, sinir - d / 2 - 0.05), SESLER[tur], 0.9))
+        if sesler.get(tur):
+            efektler.append((max(0, sinir - d / 2 - 0.05), sesler[tur], 0.9))
     wav = os.path.join(cikti, "ses_miks.wav")
-    S.miksaj(video.sure, vo, konusmalar, efektler, muzik_seviye=getattr(konu, "MUZIK_SEVIYE", 0.3), cikis_wav=wav)
+    S.miksaj(video.sure, vo, konusmalar, efektler, muzik_seviye=getattr(konu, "MUZIK_SEVIYE", 0.22),
+             efekt_seviye=getattr(konu, "EFEKT_SEVIYE", 0.45), cikis_wav=wav)
     mp4 = os.path.join(cikti, f"{ad}.mp4")
     video.kaydet(mp4, wav)
     print(f"Bitti: {mp4}")

@@ -40,6 +40,10 @@ KARAKTERLER = {
     "Dukas": dict(govde=(0.62, 0.15, 0.2), sac="kivircik", sac_renk=(0.3, 0.2, 0.1), sakal=(0.3, 0.2, 0.1), etek=True),
     "Tarkaniyotis": dict(govde=(0.4, 0.32, 0.55), sapka="migfer", sakal=(0.55, 0.55, 0.55),
                          elde={"R": ("sancak", {"renk": BIZANS})}),
+    "Varang": dict(govde=(0.68, 0.2, 0.16), sapka="migfer", sakal=(0.85, 0.65, 0.3), sac_renk=(0.85, 0.65, 0.3),
+                   elde={"L": ("kalkan", {"renk": (0.68, 0.2, 0.16)}), "R": "kilic"}, pantolon=(0.3, 0.2, 0.2)),
+    "Süleyman Şah": dict(govde=(0.15, 0.45, 0.6), sapka="bork", sapka_renk=(0.15, 0.3, 0.55), sakal=(0.2, 0.12, 0.08),
+                         sac_renk=(0.2, 0.12, 0.08), etek=True, kemer=ALTIN, yon=-1),
     "Uz": dict(govde=(0.6, 0.45, 0.25), sapka="bork", sapka_renk=(0.35, 0.25, 0.15), pantolon=(0.3, 0.25, 0.2)),
 }
 
@@ -187,7 +191,66 @@ def hilal_tuzagi(s):
     s.kamera.punch(s.c(4, 0.8), 0.12)
 
 
-# ------------------------------------------------------------------ 5
+# ------------------------------------------------------------------ 5: savaş anı
+def savas_ani(s):
+    s.sfx("kalabalik", s.t0 + 0.3, 0.8)
+    s.kamera.ayarla(s.t0, zoom=1.25, x=520, y=380).git(s.c(0), s.c(0) + 2.5, zoom=1.0, x=640, y=360)
+    romen = s.karakter("Romen", x=360, olcek=0.95, ifade="kararli", poz="sunum", elde={"R": "kilic"}).belir(s.c(0, 0.2))
+    # 1: dört bir yandan akın + ok yağmuru (sağdan)
+    akincilar = []
+    for k in range(4):
+        a = s.karakter("Akıncı", x=1400, y=600 + k * 14, olcek=0.7, ifade="kararli")
+        a.gir(s.c(1, 0.05) + k * 0.25, "sag", x=860 + k * 95, sure=0.8, kos=True)
+        akincilar.append(a)
+    s.nesne("ok_yagmuru", 620, 300, olcek=1.2, yon=-1, genislik=700, adet=26, hiz=1.1).belir(s.c(1, 0.4), ses=None) \
+        .kaybol(s.c(4, 0.2))
+    for k in range(5):
+        s.sfx("ok", s.c(1, 0.4) + k * 0.35, 0.8)
+    s.kamera.sars(s.c(1, 0.5), 1.0, 0.5)
+    # 2: kenetlenen kalkanlar, durmayan oklar
+    kalkanlar = [s.nesne("kalkan", 130 + k * 70, 560 - (k % 2) * 30, olcek=0.55, renk=BIZANS).belir(s.c(2, 0.1) + k * 0.12)
+                 for k in range(4)]
+    for k in range(4):
+        s.sfx("ok", s.c(2, 0.5) + k * 0.4, 0.7)
+    for n in kalkanlar:
+        n.salla(s.c(2, 0.6), s.c(2, 0.6) + 1.2).kaybol(s.c(3) - 0.2)
+    # 3: Varang muhafızları imparatorun çevresinde
+    varang = [s.karakter("Varang", x=x, y=y, olcek=0.75, ifade="kizgin").belir(s.c(3, 0.2) + k * 0.15)
+              for k, (x, y) in enumerate(((190, 620), (520, 630), (270, 655)))]
+    isim(s, "Varang muhafızları", 360, 160, s.c(3, 0.4), renk=(1, 0.8, 0.6)).kaybol(s.c(4))
+    for v in varang:
+        v.poz(s.c(3, 0.5), "sunum")
+    # 4: kılıç kılıca
+    for k, a in enumerate(akincilar[:2]):
+        a.git(s.c(4, 0.1), s.c(4, 0.1) + 0.6, x=620 + k * 110, kos=True)
+    for k, t in enumerate((s.c(4, 0.3), s.c(4, 0.55), s.c(4, 0.8))):
+        s.nesne("patlama", 560 + k * 40, 380 - k * 30, metin="ÇAT!", boyut=44, olcek=0.7, tohum=k,
+                aci=(-10, 8, -4)[k]).belir(t, ses="kilic_sesi").kaybol(t + 0.6)
+        s.kamera.punch(t, 0.05)
+    romen.ifade(s.c(4, 0.3), "kizgin").poz(s.c(4, 0.3), "isaret")
+    for v in varang:
+        v.titre(s.c(4, 0.3), s.c(4, 0.9), 0.6)
+    # 5: muhafızlar birer birer düşer, halka daralır
+    for k, v in enumerate(varang):
+        v.ifade(s.c(5, 0.1), "yorgun").kaybol(s.c(5, 0.25) + k * 0.5)
+    for k, a in enumerate(akincilar):
+        a.git(s.c(5, 0.3), s.c(5, 0.3) + 1.5, x=600 + k * 70)
+    s.sfx("kilic_sesi", s.c(5, 0.3), 0.6)
+    # 6: atı öldürüldü, eli yaralandı
+    isim(s, "Atı öldürüldü", 360, 160, s.c(6, 0.1), renk=(1, 0.6, 0.5)).kaybol(s.c(6, 0.55))
+    romen.ifade(s.c(6, 0.15), "panik").zipla(s.c(6, 0.1), 30)
+    isim(s, "Elinden yaralandı", 360, 160, s.c(6, 0.6), renk=(1, 0.6, 0.5)).kaybol(s.c(7, 0.1))
+    romen.ifade(s.c(6, 0.6), "yorgun").poz(s.c(6, 0.6), "yorgun")
+    # 7: tanınmadan esir
+    s.kamera.git(s.c(7), s.c(7) + 2, x=520, y=400, zoom=1.25)
+    yakalayan = akincilar[0]
+    yakalayan.git(s.c(7, 0.1), s.c(7, 0.1) + 1.0, x=520).poz(s.c(7, 0.35), "isaret")
+    s.nesne("damga", 330, 280, metin="ESİR", boyut=56, olcek=1.5).belir(s.c(7, 0.4), ses="punch")
+    s.nesne("konusma", 640, 230, metin="Bu da kim?", boyut=38, olcek=1.0, kuyruk=1).belir(s.c(7, 0.7))
+    yakalayan.ifade(s.c(7, 0.7), "saskin")
+
+
+# ------------------------------------------------------------------ 6
 def acilan_kapi(s):
     romen = s.karakter("Romen", x=380, olcek=0.95, ifade="uzgun", poz="yorgun").belir(s.c(0, 0.15))
     alp = s.karakter("Alparslan", x=920, olcek=0.95, ifade="kararli").belir(s.c(0, 0.25))
@@ -213,6 +276,45 @@ def acilan_kapi(s):
     s.sfx("swoosh_yukari", s.c(3, 0.6))
     s.sfx("ding", s.c(3, 0.9), 0.6)
     s.kamera.git(s.c(3, 0.5), s.bitis(3) + 1.0, y=380, zoom=1.25)
+
+
+# ------------------------------------------------------------------ 7: sonrası
+def yeni_yurt(s):
+    romen = s.karakter("Romen", x=330, y=640, olcek=0.75, ifade="uzgun", poz="yorgun").belir(s.c(0, 0.3))
+    ix, iy = s.yer(29.72, 40.43)
+    mx, my = s.yer(*MALAZGIRT)
+    s.nesne("pin", mx, my, metin="Malazgirt", olcek=0.8).belir(s.c(0, 0.2))
+    s.nesne("damga", 330, 330, metin="TAHT GİTTİ", boyut=38, olcek=1.0).belir(s.c(1, 0.25), ses="punch")
+    romen.ifade(s.c(1, 0.5), "uzgun").bas_egim(s.c(1, 0.5), -10)
+    romen.kaybol(s.c(2) - 0.2)
+    for k in range(5):  # Türkmen boyları sağdan (doğudan) Anadolu içlerine
+        t = s.c(2, 0.15) + k * 0.25
+        s.nesne("ok", 1150 - k * 30, 360 + k * 40, olcek=0.7, aci=180, renk=SELCUK).belir(t, ses=None) \
+            .git(t, t + 3.0, x=620 - k * 60).kaybol(s.c(4) - 0.3)
+    s.sfx("whoosh", s.c(2, 0.2), 0.6)
+    # 3: aileler, sürüler, çadırlarla göç
+    for k in range(4):
+        t = s.karakter("Uz", x=1400, y=640 + k * 12, olcek=0.55 if k != 3 else 0.4, ifade="mutlu",
+                       elde={"R": ("sancak", {"renk": SELCUK})} if k == 0 else None)
+        t.gir(s.c(3, 0.05) + k * 0.35, "sag", x=900 - k * 90, sure=3.0)
+        t.kaybol(s.c(4) - 0.2)
+    isim(s, "Yeni yurt arayışı", 900, 300, s.c(3, 0.5), renk=ALTIN).kaybol(s.c(4) - 0.2)
+    # 4: Süleyman Şah ve İznik
+    s.nesne("pin", ix, iy, metin="İznik", olcek=1.0, nabiz=1).belir(s.c(4, 0.45))
+    sul = s.karakter("Süleyman Şah", x=ix + 120, y=iy + 250, olcek=0.7, ifade="gururlu").belir(s.c(4, 0.2))
+    sul.poz(s.c(4, 0.55), "isaret")
+    isim(s, "Süleyman Şah", ix + 120, iy - 40, s.c(4, 0.25))
+    s.kamera.git(s.c(4), s.c(4) + 1.5, x=ix + 250, y=iy + 120, zoom=1.2)
+    # 5: Anadolu Selçuklu Devleti
+    s.nesne("levha", ix + 330, iy + 40, metin="Anadolu Selçuklu Devleti", boyut=32, olcek=1.0).belir(s.c(5, 0.2))
+    s.nesne("isiltilar", ix + 120, iy + 120, olcek=1.4).belir(s.c(5, 0.3), ses=None)
+    sul.poz(s.c(5, 0.3), "kutlama").ifade(s.c(5, 0.3), "mutlu")
+    s.sfx("ding", s.c(5, 0.35), 0.4)
+    # 6: "Turchia"
+    s.kamera.git(s.c(6), s.c(6) + 2.0, x=640, y=360, zoom=1.0)
+    s.nesne("levha", 640, 200, metin="TURCHIA", boyut=46, olcek=1.2).belir(s.c(6, 0.6))
+    # 7: kapanış cümlesi
+    s.nesne("yazi", 640, 110, metin="1071: yeni bir yurdun ilk adımı", boyut=46, renk=ALTIN, olcek=1.0).belir(s.c(7, 0.3))
 
 
 SAHNELER = [
@@ -253,10 +355,35 @@ SAHNELER = [
              "Dukas, imparatorun yenildiği söylentisini yayarak savaş alanından çekildi.",
              "Tam o anda tepelerde bekleyen Selçuklu kuvvetleri iki yandan saldırdı ve imparator esir düştü.",
          ]),
-    dict(baslik="Açılan Kapı", arkaplan="cadir", gecis="punch", kurgu=acilan_kapi, metin=[
+    dict(baslik="Savaş Anı", arkaplan="bozkir", gecis="punch", kurgu=savas_ani,
+         arkaplan_p=dict(cadirlar=False, aksam=True), metin=[
+             "Şimdi savaşın en sıcak anına, imparatorun etrafına yakından bakalım.",
+             "Selçuklu atlıları dört bir yandan saldırırken gökyüzü oklarla karardı.",
+             "Bizans saflarında kalkanlar birbirine kenetlendi, ama oklar durmak bilmiyordu.",
+             "İmparatorun çevresinde yalnızca sadık Varang muhafızları kalmıştı.",
+             "Romen Diyojen kılıcını bırakmadı ve askerleriyle birlikte sonuna kadar savaştı.",
+             "Muhafızlar birer birer düştü ve imparatorun çevresindeki halka giderek daraldı.",
+             "Ama atı öldürüldü, kendisi de elinden yaralandı.",
+             "Akşam karanlığında bir Selçuklu askeri onu esir aldı; üstelik kim olduğunu bilmeden.",
+         ]),
+    dict(baslik="Açılan Kapı", arkaplan="cadir", gecis="whip", kurgu=acilan_kapi, metin=[
         "Esir imparator sultanın huzuruna getirildiğinde, Alparslan ona ne yapacağını sordu.",
         "Romen dürüstçe, belki onu öldüreceğini ya da teşhir edeceğini söyledi.",
         "Alparslan ise imparatoru affetti ve bir antlaşmayla serbest bıraktı.",
         "Ama asıl sonuç savaş alanının çok ötesindeydi: Anadolu'nun kapıları Türklere açılmıştı.",
     ]),
+    dict(baslik="Anadolu'nun Yeni Yüzü", arkaplan="harita", gecis="iris", kurgu=yeni_yurt,
+         arkaplan_p=dict(kapsam=(25.0, 47.0, 39.2), bolgeler=[(BIZANS, BIZANS_1071), (SELCUK, SELCUKLU_1071)],
+                         etiketler=[("ANADOLU", 33.5, 38.9, 44)]),
+         metin=[
+             "Malazgirt'ten sonra olaylar hızla gelişti.",
+             "Romen Diyojen serbest kaldığında tahtını çoktan kaybetmişti; rakipleriyle savaştı, yenildi ve gözlerine "
+             "mil çekildi.",
+             "Bizans iç savaşlarla uğraşırken Türkmen boyları Anadolu'nun içlerine doğru ilerledi.",
+             "Doğudan gelen bu boylar sürüleri, çadırları ve aileleriyle birlikte yeni bir yurt arıyordu.",
+             "Bu göç dalgasının içinden Süleyman Şah çıktı ve İznik'i alarak yeni devletine merkez yaptı.",
+             "Böylece Anadolu Selçuklu Devleti doğdu.",
+             "Bir asır sonra Batılı kaynaklar bu topraklardan artık Türkiye diye söz etmeye başlayacaktı.",
+             "Malazgirt, Anadolu'nun Türkler için yeni bir yurda dönüşmesinin ilk adımı oldu.",
+         ]),
 ]

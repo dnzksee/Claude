@@ -120,14 +120,13 @@ def muzik(sure, bpm=88, ton=57, seviye=1.0):
 # ---------------------------------------------------------------- efektler
 def efekt(ad):
     rnd = np.random.default_rng(abs(hash(ad)) % 2 ** 32)
-    if ad == "whoosh":
-        n = int(0.5 * SR)
+    if ad == "whoosh":  # yumuşak rüzgâr/hava hışırtısı (tizler kesik, cızırtı yok)
+        n = int(0.6 * SR)
         g = rnd.uniform(-1, 1, n)
         t = np.arange(n) / SR
-        zarf = np.sin(np.pi * t / t[-1]) ** 2
-        # süpürülen bant: önce alçak, sonra yüksek kesim
-        a = _alcak_geciren(g, 900) * (1 - t / t[-1]) + _alcak_geciren(g, 3500) * (t / t[-1])
-        return a * zarf * 1.6
+        zarf = np.sin(np.pi * t / t[-1]) ** 3
+        a = _alcak_geciren(_alcak_geciren(g, 500), 700)
+        return a / max(np.abs(a).max(), 1e-6) * zarf * 0.35
     if ad == "punch":
         n = int(0.4 * SR)
         t = np.arange(n) / SR
@@ -150,11 +149,11 @@ def efekt(ad):
         s = sum(np.sin(2 * np.pi * f * t) * a * np.exp(-t * d) for f, a, d in
                 ((1318, 0.5, 3), (2637, 0.25, 5), (3951, 0.12, 8), (1975, 0.15, 4)))
         return s * _zarf(n, 0.003, 0.2) * 0.8
-    if ad == "bzzt":
-        n = int(0.45 * SR)
+    if ad == "bzzt":  # yumuşak "yanlış" tonu (iki inen nota)
+        n = int(0.5 * SR)
         t = np.arange(n) / SR
-        k = np.sign(np.sin(2 * np.pi * 110 * t)) + 0.5 * np.sign(np.sin(2 * np.pi * 116 * t))
-        return _alcak_geciren(k, 1800) * _zarf(n, 0.005, 0.08) * 0.35
+        f = np.where(t < 0.22, 330.0, 247.0)
+        return np.sin(2 * np.pi * np.cumsum(f) / SR) * _zarf(n, 0.01, 0.15) * 0.3
     if ad == "boing":
         n = int(0.6 * SR)
         t = np.arange(n) / SR
@@ -168,11 +167,31 @@ def efekt(ad):
         t = np.arange(n) / SR
         zil = np.sin(2 * np.pi * 2200 * t) * (np.sin(2 * np.pi * 22 * t) > 0)
         return _alcak_geciren(zil, 3000) * _zarf(n, 0.01, 0.3) * 0.3
-    if ad == "swoosh_yukari":
+    if ad == "swoosh_yukari":  # yumuşak yükselen nefes (ton süpürmesi yok)
+        n = int(0.5 * SR)
+        g = rnd.uniform(-1, 1, n)
+        t = np.arange(n) / SR
+        a = _alcak_geciren(g, 400) * (1 - t / t[-1]) + _alcak_geciren(g, 1200) * (t / t[-1])
+        return a / max(np.abs(a).max(), 1e-6) * np.sin(np.pi * t / t[-1]) ** 2 * 0.25
+    if ad == "kilic_sesi":  # kılıç çarpışması: inharmonik metal tını + vuruş
+        n = int(0.7 * SR)
+        t = np.arange(n) / SR
+        s = sum(np.sin(2 * np.pi * f * t) * a * np.exp(-t * d) for f, a, d in
+                ((1870, 0.5, 9), (2930, 0.35, 12), (4410, 0.2, 16), (6020, 0.1, 22)))
+        vurus = _alcak_geciren(rnd.uniform(-1, 1, n), 3000) * np.exp(-t * 60)
+        return (s + vurus * 0.6) * 0.45
+    if ad == "kalabalik":  # uzaktan savaş uğultusu
+        n = int(4.0 * SR)
+        t = np.arange(n) / SR
+        g = _lp_hizli(rnd.uniform(-1, 1, n), 350)
+        g /= max(np.abs(g).max(), 1e-6)
+        mod = 0.6 + 0.4 * np.sin(2 * np.pi * 0.7 * t) * np.sin(2 * np.pi * 0.23 * t + 1)
+        return g * mod * _zarf(n, 0.8, 1.2) * 0.5
+    if ad == "ok":  # tek okun vızıltısı
         n = int(0.35 * SR)
         t = np.arange(n) / SR
-        f = 400 + 1800 * (t / t[-1]) ** 1.5
-        return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * t / t[-1]) * 0.25
+        g = _alcak_geciren(rnd.uniform(-1, 1, n), 1500)
+        return g / max(np.abs(g).max(), 1e-6) * np.sin(np.pi * t / t[-1]) ** 2 * 0.3
     if ad == "alkis":
         n = int(1.6 * SR)
         s = np.zeros(n)
@@ -194,11 +213,18 @@ def efekt(ad):
 
 
 # ---------------------------------------------------------------- miksaj
-def kis_zarfi(sure, konusmalar, alt=0.22, atak=0.15, birak=0.6, pay=0.12):
-    """Müzik kazancı: konuşma sırasında 'alt' seviyeye iner, aralarda yükselir (yumuşak)."""
+def kis_zarfi(sure, konusmalar, alt=0.22, atak=0.25, birak=1.6, pay=0.25, birlestir=1.6):
+    """Müzik kazancı: konuşma sırasında 'alt' seviyeye iner, uzun aralarda yavaşça yükselir.
+    birlestir: bundan kısa duraklamalarda müzik kısık kalır (cümle aralarında 'pompalama' olmasın)."""
     n = int(sure * SR)
     hedef = np.ones(n)
-    for t0, t1 in konusmalar:
+    birlesik = []
+    for t0, t1 in sorted(konusmalar):
+        if birlesik and t0 - birlesik[-1][1] < birlestir:
+            birlesik[-1][1] = max(birlesik[-1][1], t1)
+        else:
+            birlesik.append([t0, t1])
+    for t0, t1 in birlesik:
         a, b = max(0, int((t0 - pay) * SR)), min(n, int((t1 + pay) * SR))
         hedef[a:b] = alt
     # asimetrik yumuşatma: iniş hızlı, çıkış yavaş (blok blok, vektörel)
@@ -213,22 +239,27 @@ def kis_zarfi(sure, konusmalar, alt=0.22, atak=0.15, birak=0.6, pay=0.12):
     return np.interp(np.arange(n), np.arange(len(cikis)) * 441, cikis)
 
 
-def miksaj(sure, vo, konusmalar, efektler, muzik_seviye=0.30, cikis_wav=None):
-    """vo: SR örnekli mono dizi (zaman çizelgesine yerleşmiş). efektler: [(t, ad, kazanc)]."""
+def miksaj(sure, vo, konusmalar, efektler, muzik_seviye=0.22, efekt_seviye=0.45, cikis_wav=None):
+    """vo: SR örnekli mono dizi (zaman çizelgesine yerleşmiş). efektler: [(t, ad, kazanc)].
+    Müzik ve efektler konuşma altında kısılır; anlatıcı her zaman öndedir."""
     n = int(sure * SR)
     ses = np.zeros(n)
     v = vo[:n]
     tepe = max(np.abs(v).max(), 1e-6)
     ses[:len(v)] += v / tepe * 0.85
-    m = muzik(sure) * muzik_seviye * kis_zarfi(sure, konusmalar)
-    ses += m
+    kis = kis_zarfi(sure, konusmalar)
+    ses += muzik(sure) * muzik_seviye * kis
+    fx = np.zeros(n)
     for t, ad, kazanc in efektler:
         e = efekt(ad) * kazanc
         a = int(t * SR)
         if a >= n:
             continue
         b = min(n, a + len(e))
-        ses[a:b] += e[:b - a]
+        fx[a:b] += e[:b - a]
+    # efektler de konuşma altında yarıya iner; ani tepeler yumuşak sınırlanır
+    fx = np.tanh(fx * 1.5) / 1.5
+    ses += fx * efekt_seviye * (0.5 + 0.5 * (kis - 0.22) / 0.78)
     ses = np.tanh(ses * 1.1) / math.tanh(1.1)  # yumuşak sınırlayıcı
     sol = ses
     sag = np.concatenate([np.zeros(int(0.012 * SR)), ses])[:n] * 0.15 + ses * 0.85  # hafif genişlik
