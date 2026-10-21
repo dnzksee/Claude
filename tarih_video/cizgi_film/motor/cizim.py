@@ -113,7 +113,7 @@ def sekil(cr, yol, renk, alfa=1.0, kalin=KALIN, golge=0.18, parlama=True, golge_
         maske = cr.pop_group()
         cr.set_source_rgba(*(golge_renk or koyu(renk)), alfa)
         cr.mask(maske)
-    if parlama and boy > 14:
+    if parlama and boy > 14 and min(x1 - x0, y1 - y0) > 2:
         cx, cy = x0 + (x1 - x0) * 0.3, y0 + (y1 - y0) * 0.27
         cr.save()
         cr.translate(cx, cy)

@@ -14,6 +14,8 @@ MARKA2 = (0.18, 0.6, 0.95)    # mavi
 def kilic_logo(cr, x, y, r, t=0.0, alfa=1.0):
     """Tarih kanalı logosu: kalkan üstünde çapraz kılıçlar (hafifçe sallanır)."""
     from .nesneler import _kilic
+    if r < 2:
+        return
     cr.save()
     cr.translate(x, y)
     cr.rotate(math.sin(t * 1.3) * 0.05)
