@@ -4,12 +4,14 @@ Arka plan ekrandan büyük (1600×900) çizilir; kamera hareket ederken daha yav
 Zemin (karakterlerin bastığı yer) ayrıca keskin çizilir. Yeni arka plan: ARKAPLANLAR'a bir
 fonksiyon eklemek yeterli.
 """
+import json
 import math
+import os
 import random
 
 import cairo
 
-from .cizim import (sekil, ince_cizgi, daire_yolu, elips_yolu, kutu_yolu, egri_yolu, poligon_yolu, koyu, acik,
+from .cizim import (G, Y, sekil, ince_cizgi, daire_yolu, elips_yolu, kutu_yolu, egri_yolu, poligon_yolu, koyu, acik,
                     bulaniklastir, KONTUR)
 
 AG, AY = 1600, 900   # arka plan boyutu
@@ -185,12 +187,182 @@ def duz(cr, p):
     cr.restore()
 
 
-ARKAPLANLAR = {"oda": oda, "sinif": sinif, "doga": doga, "sahne": sahne, "beyin": beyin, "sehir": sehir, "uzay": uzay,
+def bozkir(cr, p):
+    """Doğu Anadolu ovası: uzak karlı dağlar, çimen, dağınık çadırlar."""
+    _gok(cr, p.get("gok_ust", (0.45, 0.68, 0.95)), p.get("gok_alt", (0.92, 0.88, 0.75)))
+    if p.get("aksam"):
+        _gok(cr, (0.95, 0.55, 0.35), (1.0, 0.85, 0.55))
+    for x, y, s_ in ((300, 160, 1.1), (900, 110, 0.9), (1400, 200, 1.0)):
+        _bulut(cr, x, y, s_)
+    dag = [(-50, 560)]
+    rnd = random.Random(8)
+    x = -50
+    while x < AG + 100:
+        x += rnd.randint(140, 260)
+        dag.append((x - 80, rnd.randint(260, 380)))
+        dag.append((x, rnd.randint(470, 540)))
+    dag += [(AG + 60, 900), (-50, 900)]
+    sekil(cr, poligon_yolu(dag), (0.55, 0.55, 0.68), olcek=400, parlama=False)
+    for (dx, dy) in dag[1:-2:2]:  # kar başlıkları
+        sekil(cr, poligon_yolu([(dx, dy), (dx + 36, dy + 46), (dx + 12, dy + 38), (dx - 8, dy + 52), (dx - 30, dy + 40)]),
+              (0.97, 0.97, 1.0), kalin=3, golge=0, parlama=False)
+    sekil(cr, egri_yolu([(-50, 640), (400, 560), (800, 600), (1200, 550), (1700, 620), (1700, 950), (-50, 950)],
+                        gerginlik=0.6), p.get("cimen", (0.72, 0.68, 0.38)), olcek=400, parlama=False)
+    for (x, y, r) in ((240, 600, 1.0), (380, 590, 0.8), (1250, 585, 0.9), (1380, 595, 0.7)):
+        if p.get("cadirlar", True):
+            sekil(cr, poligon_yolu([(x - 60 * r, y), (x, y - 70 * r), (x + 60 * r, y)]), (0.95, 0.92, 0.82), kalin=4)
+            sekil(cr, poligon_yolu([(x - 12 * r, y), (x, y - 36 * r), (x + 12 * r, y)]), (0.45, 0.3, 0.2), kalin=3,
+                  golge=0, parlama=False)
+
+
+def cadir(cr, p):
+    """Otağ içi: kırmızı-krem dilimli kumaş, halı, fenerler."""
+    renk1, renk2 = p.get("renk1", (0.72, 0.25, 0.2)), p.get("renk2", (0.93, 0.84, 0.66))
+    cr.set_source_rgb(*renk2)
+    cr.paint()
+    for k in range(-2, 12):
+        x = k * 160
+        cr.move_to(AG / 2, -200)
+        cr.line_to(x, AY)
+        cr.line_to(x + 38, AY)
+        cr.close_path()
+        cr.set_source_rgb(*renk1)
+        cr.fill()
+    g = cairo.RadialGradient(AG / 2, 300, 50, AG / 2, 300, 900)
+    g.add_color_stop_rgba(0, 1, 0.9, 0.6, 0.25)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0.45)
+    cr.set_source(g)
+    cr.paint()
+    for x in (330, 1270):  # fenerler
+        ince_cizgi(cr, [(x, 0), (x, 160)], kalin=4, egri=False)
+        sekil(cr, kutu_yolu(x - 26, 160, 52, 70, 12), (0.95, 0.75, 0.25), kalin=5)
+        gg = cairo.RadialGradient(x, 195, 5, x, 195, 140)
+        gg.add_color_stop_rgba(0, 1, 0.9, 0.5, 0.6)
+        gg.add_color_stop_rgba(1, 1, 0.8, 0.4, 0.0)
+        cr.set_source(gg)
+        cr.arc(x, 195, 140, 0, 2 * math.pi)
+        cr.fill()
+
+
+# ---------------------------------------------------------------- çizgi film haritası (Natural Earth, kamu malı)
+VERI = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "veri")
+_kara = []
+
+
+def _kara_halkalari():
+    if _kara:
+        return _kara
+    topo = json.load(open(os.path.join(VERI, "land-50m.json")))
+    (sx, sy), (tx, ty) = topo["transform"]["scale"], topo["transform"]["translate"]
+    yaylar = []
+    for yay in topo["arcs"]:
+        x = y = 0
+        nokt = []
+        for dx, dy in yay:
+            x += dx
+            y += dy
+            nokt.append((x * sx + tx, y * sy + ty))
+        yaylar.append(nokt)
+    for geo in topo["objects"]["land"]["geometries"]:
+        for poly in (geo["arcs"] if geo["type"] == "MultiPolygon" else [geo["arcs"]]):
+            for h in poly:
+                out = []
+                for i in h:
+                    pp = yaylar[i] if i >= 0 else yaylar[~i][::-1]
+                    out.extend(pp if not out else pp[1:])
+                _kara.append(out)
+    return _kara
+
+
+def _proj(p, lon, lat):
+    lon0, lon1, latc = p.get("kapsam", (25.0, 50.0, 39.0))
+    c = math.cos(math.radians(latc))
+    s = AG / ((lon1 - lon0) * c)
+    return (lon - lon0) * c * s, AY / 2 - (lat - latc) * s
+
+
+def harita_xy(p, lon, lat):
+    """Dünya koordinatı (arka plan ekrandan büyük çizildiği için kaydırılır)."""
+    x, y = _proj(p, lon, lat)
+    return x - (AG - G) / 2, y - (AY - Y) / 2
+
+
+def harita(cr, p):
+    """Düz renk deniz + kalın çizgili kara + isteğe bağlı bölge renkleri. p: kapsam=(lon0, lon1, lat_merkez),
+    bolgeler=[(renk, [(lon, lat), ...]), ...], etiketler=[(metin, lon, lat, boyut), ...]."""
+    deniz = p.get("deniz", (0.45, 0.72, 0.9))
+    cr.set_source_rgb(*deniz)
+    cr.paint()
+    rnd = random.Random(3)
+    for _ in range(60):  # deniz dalgacıkları
+        x, y = rnd.uniform(0, AG), rnd.uniform(0, AY)
+        ince_cizgi(cr, [(x, y), (x + 10, y - 5), (x + 20, y)], kalin=3, renk=acik(deniz, 0.35))
+    lon0, lon1, _ = p.get("kapsam", (25.0, 50.0, 39.0))
+
+    def kara_yolu(c):
+        for h in _kara_halkalari():
+            lons = [q[0] for q in h]
+            if not h or max(lons) < lon0 - 10 or min(lons) > lon1 + 10:
+                continue
+            c.move_to(*_proj(p, *h[0]))
+            for q in h[1:]:
+                c.line_to(*_proj(p, *q))
+            c.close_path()
+    sekil(cr, kara_yolu, p.get("kara", (0.93, 0.85, 0.62)), golge=0.0, parlama=False, kalin=0)
+    cr.save()
+    cr.new_path()
+    kara_yolu(cr)
+    cr.clip()
+    for renk, poligon in p.get("bolgeler", []):
+        cr.new_path()
+        cr.move_to(*_proj(p, *poligon[0]))
+        for q in poligon[1:]:
+            cr.line_to(*_proj(p, *q))
+        cr.close_path()
+        cr.set_source_rgba(*renk, 0.75)
+        cr.fill_preserve()
+        cr.set_source_rgba(*koyu(renk, 0.6), 1)
+        cr.set_line_width(4)
+        cr.set_dash([14, 9])
+        cr.stroke()
+        cr.set_dash([])
+    cr.restore()
+    cr.new_path()
+    kara_yolu(cr)
+    cr.set_source_rgb(*KONTUR)
+    cr.set_line_width(6)
+    cr.set_line_join(cairo.LINE_JOIN_ROUND)
+    cr.stroke()
+    for f in json.load(open(os.path.join(VERI, "lakes.json")))["features"]:  # göller (Van, Urmiye, Tuz...)
+        g = f["geometry"]
+        for poly in (g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]):
+            halka = poly[0]
+            lons = [q[0] for q in halka]
+            if max(lons) < lon0 - 2 or min(lons) > lon1 + 2:
+                continue
+            cr.new_path()
+            cr.move_to(*_proj(p, *halka[0]))
+            for q in halka[1:]:
+                cr.line_to(*_proj(p, *q))
+            cr.close_path()
+            cr.set_source_rgb(*deniz)
+            cr.fill_preserve()
+            cr.set_source_rgb(*KONTUR)
+            cr.set_line_width(4)
+            cr.stroke()
+    from .cizim import yazi
+    for metin, lon, lat, boy in p.get("etiketler", []):
+        x, y = _proj(p, lon, lat)
+        yazi(cr, metin, x, y, boy, renk=(1, 1, 1), kontur=0.16)
+
+
+ARKAPLANLAR = {"bozkir": bozkir, "cadir": cadir, "harita": harita, "oda": oda, "sinif": sinif, "doga": doga, "sahne": sahne, "beyin": beyin, "sehir": sehir, "uzay": uzay,
                "duz": duz}
 
 ZEMINLER = {
     "oda": (0.72, 0.5, 0.32), "sinif": (0.66, 0.48, 0.32), "doga": (0.42, 0.7, 0.36), "sahne": (0.55, 0.32, 0.18),
     "beyin": (0.82, 0.45, 0.62), "sehir": (0.5, 0.5, 0.55), "uzay": (0.35, 0.32, 0.45), "duz": None,
+    "bozkir": (0.66, 0.6, 0.32), "cadir": (0.62, 0.18, 0.15), "harita": None,
 }
 
 _onbellek = {}
@@ -198,7 +370,7 @@ _onbellek = {}
 
 def arka_plan(ad, bulanik=7.0, **p):
     """Bulanıklaştırılmış arka plan yüzeyi (önbellekli)."""
-    anahtar = (ad, bulanik, tuple(sorted(p.items())))
+    anahtar = (ad, bulanik, repr(sorted(p.items())))
     if anahtar not in _onbellek:
         s = cairo.ImageSurface(cairo.FORMAT_ARGB32, AG, AY)
         cr = cairo.Context(s)

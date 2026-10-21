@@ -8,7 +8,7 @@ yürüme salınımı otomatiktir.
 import math
 import random
 
-from .cizim import (sekil, cizgi, ince_cizgi, daire_yolu, elips_yolu, egri_yolu, poligon_yolu, yer_golgesi,
+from .cizim import (sekil, cizgi, ince_cizgi, daire_yolu, elips_yolu, kutu_yolu, egri_yolu, poligon_yolu, yer_golgesi,
                     koyu, acik, KONTUR)
 from .zaman import Iz, yumusak
 
@@ -56,9 +56,14 @@ class Karakter:
 
     def __init__(self, ad, govde=(0.95, 0.5, 0.15), sac="diken", sac_renk=(0.25, 0.15, 0.08), ten=TEN,
                  gozluk=False, pantolon=(0.22, 0.25, 0.38), ayakkabi=(0.15, 0.12, 0.12), x=-300, y=600,
-                 olcek=1.0, yon=1, ifade="notr", poz="dur"):
+                 olcek=1.0, yon=1, ifade="notr", poz="dur", sapka=None, sapka_renk=None, sakal=None, etek=False,
+                 kemer=None, elde=None):
+        """sapka: bork | tac | migfer | sarik | None; sakal: renk ya da None; etek: kaftan;
+        elde: {"R": "yay"|"kilic"|"sancak"|"kalkan", "L": ...} (eşya adı ya da (ad, parametreler))."""
         self.ad, self.govde, self.sac, self.sac_renk, self.ten = ad, govde, sac, sac_renk, ten
         self.gozluk, self.pantolon, self.ayakkabi = gozluk, pantolon, ayakkabi
+        self.sapka, self.sapka_renk, self.sakal, self.etek, self.kemer = sapka, sapka_renk, sakal, etek, kemer
+        self.elde = elde or {}
         bas = dict(x=x, y=y, olcek=olcek, alfa=1.0, yon=yon, zipla=0.0, ezil=0.0, bas_egim=0.0, yuru=0.0,
                    titre=0.0, salla=0.0, bakis_x=0.0, bakis_y=0.0, hiz_cizgi=0.0)
         bas.update(IFADELER[ifade])
@@ -112,6 +117,8 @@ class Karakter:
     def belir(self, t, sure=0.4):
         """Yerinde 'pat' diye ortaya çıkar (ezilip uzayarak)."""
         o = self.iz("olcek", t)
+        ilk = self.iz.izler["olcek"][0]
+        self.iz.izler["olcek"][0] = (ilk[0], ilk[1], 0.01, ilk[3])  # belirmeden önce görünmez
         self.iz.ayarla(t, dict(olcek=0.01))
         self.iz.ekle(t + sure, dict(olcek=o), sure=sure, egri="geri_tepme")
         return self
@@ -181,9 +188,16 @@ class Karakter:
             ay = ky + math.cos(math.radians(aci)) * 66
             cizgi(cr, [(kx, ky), (ax, ay)], self.pantolon, kalin=22, alfa=a, egri=False)
             sekil(cr, elips_yolu(19, 11, ax + yon * 8, ay - 2), self.ayakkabi, alfa=a, kalin=4, golge=0.15)
-        # gövde (armut)
+        # gövde (armut) / kaftan
+        if self.etek:
+            sekil(cr, egri_yolu([(-36, -80), (36, -80), (52, -18), (0, -10), (-52, -18)], gerginlik=0.35),
+                  koyu(self.govde, 0.9), alfa=a, olcek=90)
         govde = egri_yolu([(-32, -150), (32, -150), (42, -95), (38, -66), (-38, -66), (-42, -95)])
         sekil(cr, govde, self.govde, alfa=a, olcek=95)
+        if self.etek:  # kaftan yakası
+            ince_cizgi(cr, [(-18, -150), (yon * 6, -95), (6 * yon, -66)], kalin=4, renk=koyu(self.govde, 0.6), alfa=a)
+        if self.kemer:
+            sekil(cr, kutu_yolu(-40, -84, 80, 13, 5), self.kemer, alfa=a, golge=0.15, parlama=False, kalin=4)
         # kollar
         self._kollar(cr, d, faz, yuru, yon, a, t)
         # baş
@@ -208,7 +222,35 @@ class Karakter:
             ex, ey = ox + yon_isaret * math.sin(r1) * 46, oy + math.cos(r1) * 46
             hx, hy = ex + yon_isaret * math.sin(r2) * 44, ey + math.cos(r2) * 44
             cizgi(cr, [(ox, oy), (ex, ey), (hx, hy)], self.govde, kalin=17, alfa=a, egri=False)
+            esya = self.elde.get(taraf)
+            if esya:
+                self._esya(cr, esya, hx, hy, r2, yon_isaret, a, t)
             sekil(cr, daire_yolu(11, hx, hy), self.ten, alfa=a, kalin=4, golge=0.15, parlama=False)
+
+    def _esya(self, cr, esya, hx, hy, aci, isaret, a, t):
+        from .nesneler import CIZIMLER
+        ad, p = (esya, {}) if isinstance(esya, str) else esya
+        cr.save()
+        cr.translate(hx, hy)
+        if ad == "kalkan":  # kalkan gövdenin önünde, dik durur
+            cr.scale(0.75, 0.75)
+        elif ad == "yay":
+            cr.scale(isaret * 0.85, 0.85)
+        elif ad == "sancak":
+            cr.translate(0, 40)
+            cr.scale(isaret * 0.9, 0.9)
+        else:  # kılıç: önkolun yönünde tutulur
+            cr.rotate(-isaret * aci + math.pi)
+            cr.translate(0, -30)
+            cr.scale(0.75, 0.75)
+        if a < 0.99:
+            cr.push_group()
+            CIZIMLER[ad](cr, t, p)
+            cr.pop_group_to_source()
+            cr.paint_with_alpha(a)
+        else:
+            CIZIMLER[ad](cr, t, p)
+        cr.restore()
 
     def _bas(self, cr, d, yon, a, t):
         R = 64
@@ -222,7 +264,14 @@ class Karakter:
                   parlama=False)
         sekil(cr, egri_yolu([(-R, -5), (-R * 0.7, -R * 0.82), (0, -R), (R * 0.7, -R * 0.82), (R, -5),
                              (R * 0.8, R * 0.6), (0, R * 0.95), (-R * 0.8, R * 0.6)]), self.ten, alfa=a, olcek=130)
-        self._sac(cr, R, yon, a)
+        if self.sakal:  # sakal (ağızdan önce, ağız üstüne çizilir)
+            sekil(cr, egri_yolu([(-R * 0.82, 0), (-R * 0.55, R * 0.5), (fx * 0.5, R * 1.25), (R * 0.55, R * 0.5),
+                                 (R * 0.82, 0), (R * 0.5, R * 0.35), (fx, R * 0.42), (-R * 0.5, R * 0.35)],
+                                gerginlik=0.45), self.sakal, alfa=a, olcek=110, parlama=False)
+        if self.sapka not in ("migfer", "tac", "bork", "sarik"):
+            self._sac(cr, R, yon, a)
+        else:
+            self._sac_kisa(cr, R, yon, a)
         # yanak
         if d["yanak"] > 0.02:
             for i in (-1, 1):
@@ -279,6 +328,11 @@ class Karakter:
         ince_cizgi(cr, [(fx + yon * 2, 8), (fx + yon * 7, 16), (fx, 18)], kalin=3.5, alfa=a)
         # ağız
         self._agiz(cr, fx, 36, d, a)
+        if self.sakal:  # bıyık
+            for i in (-1, 1):
+                ince_cizgi(cr, [(fx, 27), (fx + i * 14, 25), (fx + i * 24, 33)], kalin=7, renk=self.sakal, alfa=a)
+        if self.sapka:
+            self._sapka(cr, R, yon, a, t)
         # ter damlası
         if d["ter"] > 0.05:
             u = (t * 0.8) % 1.0
@@ -316,6 +370,60 @@ class Karakter:
             cr.set_source_rgba(1, 1, 1, a)
             cr.fill()
         cr.restore()
+
+    def _sac_kisa(self, cr, R, yon, a):
+        """Başlık altında görünen kısa saç (kulak hizası)."""
+        for i in (-1, 1):
+            sekil(cr, egri_yolu([(i * R * 0.98, -R * 0.35), (i * R * 1.02, R * 0.15), (i * R * 0.78, R * 0.1),
+                                 (i * R * 0.8, -R * 0.4)]), self.sac_renk, alfa=a, kalin=4, golge=0.1, parlama=False)
+
+    def _sapka(self, cr, R, yon, a, t):
+        from .nesneler import ALTIN, CELIK
+        if self.sapka == "bork":  # Türk börkü: kürk kenar, yüksek tepe, sorguç
+            tepe = self.sapka_renk or (0.85, 0.2, 0.15)
+            sekil(cr, egri_yolu([(-R * 0.78, -R * 0.62), (-R * 0.55, -R * 1.55), (0, -R * 1.78), (R * 0.55, -R * 1.55),
+                                 (R * 0.78, -R * 0.62)], gerginlik=0.45), tepe, alfa=a, olcek=120)
+            sekil(cr, egri_yolu([(-R * 1.02, -R * 0.42), (-R * 0.95, -R * 0.82), (0, -R * 0.95), (R * 0.95, -R * 0.82),
+                                 (R * 1.02, -R * 0.42), (0, -R * 0.55)], gerginlik=0.4), (0.95, 0.9, 0.82), alfa=a,
+                  olcek=110)
+            for k in range(7):  # kürk dokusu
+                x = -R * 0.85 + k * R * 0.28
+                ince_cizgi(cr, [(x, -R * 0.62), (x + 4, -R * 0.78)], kalin=2.5, renk=(0.7, 0.62, 0.5), alfa=a)
+            sal = math.sin(t * 3) * 4
+            sekil(cr, egri_yolu([(R * 0.1, -R * 1.6), (R * 0.45 + sal, -R * 2.25), (R * 0.62 + sal, -R * 2.45),
+                                 (R * 0.42, -R * 1.95), (R * 0.25, -R * 1.6)]), (0.98, 0.96, 0.92), alfa=a, kalin=3.5,
+                  golge=0.15, parlama=False)
+            sekil(cr, daire_yolu(8, R * 0.15, -R * 1.62), ALTIN, alfa=a, kalin=3, golge=0.1, parlama=False)
+        elif self.sapka == "tac":  # Bizans tacı (kamelaukion) + inci sarkıtlar
+            for i in (-1, 1):
+                for k in range(4):
+                    sekil(cr, daire_yolu(5, i * R * 0.86, -R * 0.45 + k * 13), (0.98, 0.98, 0.95), alfa=a, kalin=2.5,
+                          golge=0, parlama=False)
+            sekil(cr, egri_yolu([(-R * 0.82, -R * 0.55), (-R * 0.75, -R * 1.25), (0, -R * 1.5), (R * 0.75, -R * 1.25),
+                                 (R * 0.82, -R * 0.55)], gerginlik=0.4), ALTIN, alfa=a, olcek=120)
+            sekil(cr, kutu_yolu(-R * 0.9, -R * 0.78, R * 1.8, R * 0.3, 6), koyu(ALTIN, 0.85), alfa=a, golge=0.15,
+                  parlama=False)
+            for k, renk in enumerate(((0.85, 0.15, 0.2), (0.2, 0.55, 0.9), (0.85, 0.15, 0.2))):
+                sekil(cr, daire_yolu(7, (k - 1) * R * 0.5, -R * 0.63), renk, alfa=a, kalin=2.5, golge=0, parlama=False)
+            ince_cizgi(cr, [(0, -R * 1.5), (0, -R * 1.85)], kalin=6, renk=ALTIN, alfa=a, egri=False)
+            ince_cizgi(cr, [(-12, -R * 1.72), (12, -R * 1.72)], kalin=6, renk=ALTIN, alfa=a, egri=False)
+        elif self.sapka == "migfer":  # konik miğfer + burun siperi
+            renk = self.sapka_renk or CELIK
+            sekil(cr, egri_yolu([(-R * 1.0, -R * 0.3), (-R * 0.85, -R * 1.0), (0, -R * 1.65), (R * 0.85, -R * 1.0),
+                                 (R * 1.0, -R * 0.3), (0, -R * 0.5)], gerginlik=0.35), renk, alfa=a, olcek=120)
+            sekil(cr, kutu_yolu(-R * 1.02, -R * 0.52, R * 2.04, R * 0.22, 5), koyu(renk, 0.8), alfa=a, golge=0.1,
+                  parlama=False)
+            sekil(cr, kutu_yolu(yon * 9 - 5, -R * 0.4, 10, R * 0.55, 4), koyu(renk, 0.85), alfa=a, golge=0.1,
+                  parlama=False, kalin=3.5)
+            if self.sapka_renk is None:
+                sekil(cr, egri_yolu([(-6, -R * 1.62), (0, -R * 1.95), (6, -R * 1.62)]), (0.85, 0.2, 0.2), alfa=a,
+                      kalin=3, golge=0.1, parlama=False)
+        elif self.sapka == "sarik":
+            renk = self.sapka_renk or (0.97, 0.95, 0.9)
+            sekil(cr, elips_yolu(R * 1.08, R * 0.62, 0, -R * 0.82), renk, alfa=a, olcek=120)
+            for k in range(3):
+                ince_cizgi(cr, [(-R * 0.95, -R * (0.6 + k * 0.2)), (0, -R * (0.75 + k * 0.22)), (R * 0.95, -R * (0.95 + k * 0.1))],
+                           kalin=3, renk=koyu(renk, 0.8), alfa=a)
 
     def _sac(self, cr, R, yon, a):
         r = self.sac_renk

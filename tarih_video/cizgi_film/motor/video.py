@@ -19,7 +19,7 @@ from .nesneler import Nesne
 
 class Sahne:
     def __init__(self, no, baslik, arkaplan, t0, t1, cumleler, gecis="whip", arkaplan_p=None, tasarimlar=None,
-                 bulanik=7.0, zemin=True):
+                 bulanik=7.0, zemin=True, paralaks=0.35):
         self.no, self.baslik = no, baslik
         self.arkaplan, self.arkaplan_p = arkaplan, dict(arkaplan_p or {})
         self.t0, self.t1 = t0, t1
@@ -32,6 +32,7 @@ class Sahne:
         self.tasarimlar = tasarimlar or {}
         self.bulanik = bulanik
         self.zemin = zemin
+        self.paralaks = paralaks  # arka planın kamerayla kayma oranı (harita: 1 = sabit zemin gibi)
         self._arka = None
 
     # ------------------------------------------------------------ zaman kısayolları
@@ -64,6 +65,11 @@ class Sahne:
             n.ekran = True
         return self.ekle(n)
 
+    def yer(self, lon, lat):
+        """Harita arka planlı sahnede (boylam, enlem) -> dünya koordinatı."""
+        from .arkaplan import harita_xy
+        return harita_xy(self.arkaplan_p, lon, lat)
+
     def sfx(self, ad, t, kazanc=1.0):
         self.sesler.append((t, ad, kazanc))
 
@@ -79,7 +85,7 @@ class Sahne:
         if self._arka is None:
             self._arka = arka_plan(self.arkaplan, self.bulanik, **self.arkaplan_p)
         cr.save()
-        self.kamera.uygula(cr, t, paralaks=0.35)
+        self.kamera.uygula(cr, t, paralaks=self.paralaks)
         cr.set_source_surface(self._arka, -(AG - G) / 2, -(AY - Y) / 2)
         cr.paint()
         cr.restore()

@@ -1,4 +1,4 @@
-# Bilgi Sarmanı — 2B çizgi film belgesel (explainer) hattı
+# Tarih kanalı — 2B çizgi film belgesel (explainer) hattı
 
 Kalın siyah dış çizgiler, cel gölgeli düz renkler, abartılı mimikli karakterler, bulanık
 (alan derinlikli) arka planlar, yumuşak 2B kamera ve whip pan / punch zoom / iris geçişleri.
@@ -6,25 +6,31 @@ Yapı: açılış kartı → 4–5 metaforik sahne (her birinde bölüm etiketi)
 
 ## Çalıştırma
 ```bash
+cd tarih_video/cizgi_film
 cp varliklar/fontlar/*.ttf ~/.fonts && fc-cache -f      # Baloo 2 (SIL OFL)
-python3 uret.py konular/hizli_yavas.py                     # tam üretim (1280×720, 24 fps)
-python3 uret.py konular/hizli_yavas.py --motor sessiz --sadece-kareler   # kota harcamadan önizleme
-python3 uret.py konular/hizli_yavas.py --onizleme 5,40,90 --sadece-kareler
+python3 uret.py konular/malazgirt.py                     # tam üretim (1280×720, 24 fps)
+python3 uret.py konular/malazgirt.py --motor sessiz --sadece-kareler   # kota harcamadan önizleme
+python3 uret.py konular/malazgirt.py --onizleme 5,40,90 --sadece-kareler
 ```
 Çıktılar `cikti/<konu>/` içinde: `<konu>.mp4`, `altyazi.srt`, `zamanlama.json`, `ses_miks.wav`.
 
 ## Seslendirme
-- Anlatıcı sesi `ses.txt` dosyasında: **Kore** (Gemini TTS). Tarih kanalı ayrıdır (`tarih_video/ses.txt`, Iapetus).
-- Seslendirme kodu tarih kanalıyla ortaktır (`tarih_video/motor/seslendirme.py`: aynı model, aynı doğrulama).
-- Metin cümle cümle işlenir: cümleler tek istekte okunur (aynı ses tınısı, az kota), sonra
-  sessizliklerden kesilip her cümle kendi zamanına yerleştirilir. Animasyon bu zamanlara bağlıdır.
+- Anlatıcı sesi tarih projesinin ayarından gelir: `tarih_video/ses.txt` → **Iapetus** (Gemini TTS).
+- Seslendirme kodu tarih projesinin ana hattıyla ortaktır (`tarih_video/motor/seslendirme.py`).
+- Her sahne ayrı istekte okunur, sesin tamamı yazıya döktürülüp metinle karşılaştırılır (Gemini bazen
+  okumayı yarıda kesip baştan başlıyor); sonra duraklamalardan cümle cümle kesilir (`motor/hizalama.py`)
+  ve her cümle kendi zamanına yerleştirilir. Animasyon bu zamanlara bağlıdır.
+- Günlük ücretsiz kota ≈ 10 istek: bir konu (açılış + 5 sahne + kapanış) 7 istek harcar.
 - Önbellek: aynı metin tekrar seslendirilmez (`cikti/<konu>/ses/`).
 
 ## Yeni konu eklemek
-`konular/hizli_yavas.py` dosyasını kopyalayın ve şunları değiştirin:
+`konular/malazgirt.py` dosyasını kopyalayın ve şunları değiştirin:
 - `BASLIK`, `ALT_BASLIK`, `ACILIS`, `KAPANIS`, `KAPANIS_YAZI`
-- `KARAKTERLER`: renk, saç (`diken | kivircik | duz | topuz | kel`), gözlük
-- `SAHNELER`: `baslik`, `arkaplan` (`oda | sinif | doga | sahne | beyin | sehir | uzay`),
+- `KARAKTERLER`: renk, saç (`diken | kivircik | duz | topuz | kel`), gözlük, başlık
+  (`bork | tac | migfer | sarik`), sakal, kaftan (`etek=True`), kemer, elde (`yay | kilic | kalkan | sancak`)
+- Kanal kuralı: Bizans (ve Batılı taraflar) solda, Türkler sağda.
+- `SAHNELER`: `baslik`, `arkaplan` (`bozkir | cadir | harita | oda | sinif | doga | sahne | beyin | sehir | uzay`; harita için
+  `arkaplan_p=dict(kapsam=(lon0, lon1, lat), bolgeler=[...], etiketler=[...])`, kurguda `s.yer(lon, lat)`),
   `gecis` (`whip | punch | iris | capraz | kes`), `metin` (her öğe tek cümle) ve `kurgu(s)`.
 
 Kurgu fonksiyonunda:
@@ -39,7 +45,8 @@ s.sfx("ding", s.c(4))
 - İfadeler: notr, mutlu, kahkaha, saskin, kizgin, uzgun, dusunceli, yorgun, gururlu, panik, utangac, kararli, uykulu
 - Pozlar: dur, el_salla, isaret, kollar_yukari, dusun, omuz_silk, eller_belde, yorgun, sunum, kutlama, dur_isareti, kafa_kasi
 - Eşyalar: ampul, beyin, disli, saat, pil, onay, carpi, top, sopa, kalp, yildiz, para, kupa, tahta, levha,
-  konusma, dusunce, patlama, ok, terazi, alarm, zzz, kitap, soru, unlem, yazi, isiltilar
+  konusma, dusunce, patlama, ok, terazi, alarm, zzz, kitap, soru, unlem, yazi, isiltilar,
+  kilic, yay, kalkan, sancak, fil, ari_suru, kapi, damga, ok_yagmuru, pin, hilal
 - Efektler: whoosh, punch, iris, pop, ding, bzzt, boing, tik, zil, swoosh_yukari, alkis, kayit
 
 ## Motor (`motor/`)

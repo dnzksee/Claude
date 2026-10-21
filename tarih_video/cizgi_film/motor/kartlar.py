@@ -1,4 +1,4 @@
-"""Ekran üstü öğeler: Bilgi Sarmanı logosu, açılış/kapanış kartı, bölüm başlığı etiketi, altyazı."""
+"""Ekran üstü öğeler: kanal logosu, açılış/kapanış kartı, bölüm başlığı etiketi, altyazı."""
 import math
 
 import cairo
@@ -11,8 +11,32 @@ MARKA = (1.0, 0.78, 0.18)     # sarmal sarısı
 MARKA2 = (0.18, 0.6, 0.95)    # mavi
 
 
+def kilic_logo(cr, x, y, r, t=0.0, alfa=1.0):
+    """Tarih kanalı logosu: kalkan üstünde çapraz kılıçlar (hafifçe sallanır)."""
+    from .nesneler import _kilic
+    cr.save()
+    cr.translate(x, y)
+    cr.rotate(math.sin(t * 1.3) * 0.05)
+    sekil(cr, daire_yolu(r), (0.62, 0.16, 0.14), alfa=alfa, olcek=r * 2)
+    sekil(cr, daire_yolu(r * 0.78), MARKA, alfa=alfa, golge=0.12, parlama=False, kalin=r * 0.05)
+    for yon in (-1, 1):
+        cr.save()
+        cr.rotate(yon * 0.75)
+        cr.scale(r / 95, r / 95)
+        _kilic(cr, t, {})
+        cr.restore()
+    cr.restore()
+
+
+def logo(cr, tur, x, y, r, t=0.0, alfa=1.0):
+    if tur == "sarmal":
+        sarmal(cr, x, y, r, t, alfa)
+    else:
+        kilic_logo(cr, x, y, r, t, alfa)
+
+
 def sarmal(cr, x, y, r, t=0.0, alfa=1.0, don=0.4):
-    """Bilgi Sarmanı logosu: dönen kalın sarmal."""
+    """Dönen kalın sarmal logosu."""
     cr.save()
     cr.translate(x, y)
     cr.rotate(t * don)
@@ -42,8 +66,8 @@ class AcilisKarti:
     katman = 20
     ekran = True
 
-    def __init__(self, baslik, alt, t0, t1, kanal="BİLGİ SARMANI"):
-        self.baslik, self.alt, self.t0, self.t1, self.kanal = baslik, alt, t0, t1, kanal
+    def __init__(self, baslik, alt, t0, t1, kanal="", logo="kilic"):
+        self.baslik, self.alt, self.t0, self.t1, self.kanal, self.logo = baslik, alt, t0, t1, kanal, logo
 
     def ciz(self, cr, t):
         if t < self.t0 - 0.1 or t > self.t1 + 0.6:
@@ -52,7 +76,7 @@ class AcilisKarti:
         cik = 1 - yumusak((t - self.t1) / 0.5)
         s = geri_tepme(u / 0.6) * cik
         if s > 0.01:
-            sarmal(cr, G / 2, 190, 70 * s, t, alfa=cik)
+            logo(cr, self.logo, G / 2, 190, 70 * s, t, alfa=cik)
         yazi(cr, self.kanal, G / 2, 300, 30, renk=(1, 1, 1), alfa=min(1, max(0, (u - 0.3) / 0.4)) * cik, kontur=0.2)
         # başlık: her kelime ayrı zıplar
         satirlar = satirlara_bol(cr, self.baslik, 84, 1100)
@@ -82,15 +106,15 @@ class KapanisKarti:
     katman = 20
     ekran = True
 
-    def __init__(self, metin, alt, t0, t1):
-        self.metin, self.alt, self.t0, self.t1 = metin, alt, t0, t1
+    def __init__(self, metin, alt, t0, t1, logo="kilic"):
+        self.metin, self.alt, self.t0, self.t1, self.logo = metin, alt, t0, t1, logo
 
     def ciz(self, cr, t):
         if t < self.t0 - 0.1:
             return
         u = t - self.t0
         s = geri_tepme(u / 0.6)
-        sarmal(cr, G / 2, 215, 95 * s, t)
+        logo(cr, self.logo, G / 2, 215, 95 * s, t)
         a = min(1, max(0, (u - 0.4) / 0.5))
         for i, satir in enumerate(satirlara_bol(cr, self.metin, 64, 1050)):
             yazi(cr, satir, G / 2, 385 + i * 74, 64, renk=(1, 1, 1), alfa=a, kontur=0.17)

@@ -346,6 +346,245 @@ CIZIMLER = {
 }
 
 
+# ---------------------------------------------------------------- tarih eşyaları
+CELIK = (0.72, 0.75, 0.8)
+ALTIN = (0.98, 0.78, 0.25)
+BIZANS = (0.5, 0.2, 0.55)
+SELCUK = (0.1, 0.55, 0.55)
+
+
+def _kilic(cr, t, p):
+    """Dikey kılıç (ucu yukarı)."""
+    sekil(cr, poligon_yolu([(-7, 30), (-7, -70), (0, -88), (7, -70), (7, 30)]), p.get("renk", CELIK), olcek=80)
+    ince_cizgi(cr, [(0, 25), (0, -72)], kalin=2, renk=acik(CELIK, 0.6), egri=False)
+    sekil(cr, kutu_yolu(-26, 28, 52, 10, 4), ALTIN, golge=0.2, parlama=False)
+    sekil(cr, kutu_yolu(-5, 38, 10, 28, 3), (0.45, 0.25, 0.12), golge=0.2, parlama=False)
+    sekil(cr, daire_yolu(7, 0, 70), ALTIN, golge=0.1, parlama=False, kalin=3)
+
+
+def _yay(cr, t, p):
+    """Türk yayı (çift kavisli) + gergin kiriş; p['ok']: oku takılı."""
+    ince_cizgi(cr, [(-4, -62), (-4, 62)], kalin=2.5, renk=(0.95, 0.92, 0.85), egri=False)
+    from .cizim import cizgi as kalin_cizgi
+    kalin_cizgi(cr, [(-4, -62), (8, -50), (14, -25), (18, 0), (14, 25), (8, 50), (-4, 62)], p.get("renk", (0.55, 0.3, 0.12)),
+                kalin=7, kontur=2.5)
+    if p.get("ok", 0) > 0.5:
+        ince_cizgi(cr, [(-4, 0), (60, 0)], kalin=3, renk=(0.5, 0.35, 0.2), egri=False)
+        sekil(cr, poligon_yolu([(60, -6), (74, 0), (60, 6)]), CELIK, kalin=2, golge=0, parlama=False)
+
+
+def _kalkan_yuvarlak(cr, t, p):
+    renk = p.get("renk", BIZANS)
+    sekil(cr, daire_yolu(55), renk, olcek=110)
+    sekil(cr, daire_yolu(46), koyu(renk, 0.85), golge=0.0, parlama=False, kalin=3)
+    sekil(cr, daire_yolu(13), ALTIN, golge=0.2, kalin=3)
+    if p.get("hac", 1):
+        for aci in (0, math.pi / 2):
+            cr.save()
+            cr.rotate(aci)
+            ince_cizgi(cr, [(-40, 0), (-16, 0)], kalin=6, renk=ALTIN, egri=False)
+            ince_cizgi(cr, [(16, 0), (40, 0)], kalin=6, renk=ALTIN, egri=False)
+            cr.restore()
+
+
+def _sancak(cr, t, p):
+    renk = p.get("renk", SELCUK)
+    sekil(cr, kutu_yolu(-4, -120, 8, 200, 3), (0.5, 0.32, 0.15), golge=0.25, parlama=False)
+    sekil(cr, daire_yolu(7, 0, -122), ALTIN, golge=0.1, parlama=False, kalin=3)
+    dal = math.sin(t * 4) * 6
+    sekil(cr, egri_yolu([(4, -115), (40, -120 + dal), (80, -112 - dal), (95, -92), (80, -72 + dal), (40, -80 - dal),
+                         (4, -75)], gerginlik=0.4), renk, olcek=90)
+    if p.get("metin"):
+        yazi(cr, str(p["metin"]), 48, -88, 22, renk=(1, 1, 1), kontur=0.12)
+
+
+def _fil(cr, t, p):
+    """Ağır zırhlı fil (Bizans ordusu metaforu). p['yuru']: adım salınımı."""
+    renk = (0.62, 0.62, 0.68)
+    adim = math.sin(t * 3) * p.get("yuru", 0.0)
+    for i, x in enumerate((-70, -30, 40, 80)):
+        dy = adim * (8 if i % 2 else -8)
+        sekil(cr, kutu_yolu(x - 18, 20 + min(dy, 0), 36, 70 - abs(dy) * 0.3, 10), koyu(renk, 0.92), golge=0.15)
+    sekil(cr, elips_yolu(120, 75, 0, -10), renk, olcek=200)
+    # zırh örtüsü (çul)
+    sekil(cr, egri_yolu([(-90, -60), (60, -70), (80, 10), (-95, 20)], gerginlik=0.3), p.get("ortu", BIZANS),
+          olcek=160)
+    ince_cizgi(cr, [(-85, 8), (75, 0)], kalin=6, renk=ALTIN)
+    ince_cizgi(cr, [(-10, -42), (-10, -6)], kalin=9, renk=ALTIN, egri=False)
+    ince_cizgi(cr, [(-28, -26), (8, -26)], kalin=9, renk=ALTIN, egri=False)
+    # baş, kulak, hortum, fildişi
+    sekil(cr, elips_yolu(46, 58, 120, -30), koyu(renk, 0.95), olcek=110)
+    sekil(cr, egri_yolu([(80, -70), (40, -60), (30, -10), (60, 20), (95, 0)], gerginlik=0.5), koyu(renk, 0.85),
+          olcek=90)
+    hortum = math.sin(t * 2) * 10
+    from .cizim import cizgi as kalin_cizgi
+    kalin_cizgi(cr, [(150, -10), (170, 30), (178 + hortum, 70), (195 + hortum, 82)], koyu(renk, 0.95), kalin=24)
+    sekil(cr, egri_yolu([(140, 5), (175, 20), (190, 8), (172, 12)], gerginlik=0.3), (0.98, 0.96, 0.88), golge=0.1,
+          parlama=False, kalin=3)
+    sekil(cr, egri_yolu([(118, -60), (160, -66), (160, -40), (120, -42)]), CELIK, golge=0.2, parlama=False, kalin=4)
+    sekil(cr, elips_yolu(9, 12, 135, -40), (1, 1, 1), golge=0, parlama=False, kalin=3)
+    cr.arc(137, -38, 5, 0, 2 * math.pi)
+    cr.set_source_rgb(*KONTUR)
+    cr.fill()
+    if p.get("ter", 0) > 0.5:
+        u = (t * 0.9) % 1
+        sekil(cr, egri_yolu([(175, -80 + u * 30), (182, -66 + u * 30), (175, -60 + u * 30), (168, -66 + u * 30)]),
+              (0.6, 0.85, 1.0), alfa=1 - u, kalin=3, golge=0)
+
+
+def _ari(cr, x, y, s, t, kanat):
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    for i in (-1, 1):
+        cr.save()
+        cr.translate(i * 4, -12)
+        cr.rotate(i * (0.5 + 0.4 * math.sin(t * 60 + kanat)))
+        sekil(cr, elips_yolu(7, 12, 0, -8), (0.92, 0.97, 1.0), kalin=2.5, golge=0, parlama=False)
+        cr.restore()
+    sekil(cr, elips_yolu(16, 11), SARI, kalin=3, golge=0.15)
+    for dx in (-5, 3):
+        cr.rectangle(dx, -10, 4, 20)
+    cr.set_source_rgb(*KONTUR)
+    cr.fill()
+    cr.arc(13, -3, 2, 0, 2 * math.pi)
+    cr.fill()
+    cr.restore()
+
+
+def _ari_suru(cr, t, p):
+    """Arı sürüsü (hafif ve hızlı atlı okçular metaforu). p['hedef_x']: sürünün hücum ettiği nokta (yerel)."""
+    n = int(p.get("adet", 12))
+    hucum = p.get("hucum", 0.0)
+    rnd = random.Random(5)
+    for k in range(n):
+        r0 = rnd.uniform(20, 90)
+        hiz = rnd.uniform(2.5, 4.5) * (1 if k % 2 else -1)
+        faz = rnd.uniform(0, 6.28)
+        x = math.cos(t * hiz + faz) * r0 * 1.3
+        y = math.sin(t * hiz * 1.3 + faz) * r0 * 0.7
+        # hücumda öne atılıp geri döner (yaklaş-ok at-uzaklaş)
+        dalga = max(0.0, math.sin(t * 3 + k * 0.7)) * hucum
+        x += p.get("hedef_x", -250) * dalga
+        _ari(cr, x, y, rnd.uniform(0.9, 1.3), t, k)
+
+
+def _kapi(cr, t, p):
+    """Taş kemer ve iki kanatlı kapı; p['acik'] 0..1."""
+    acik = p.get("acik", 0.0)
+    g = cairo.RadialGradient(0, -40, 10, 0, -40, 220)
+    g.add_color_stop_rgba(0, 1, 0.95, 0.7, 0.9 * acik)
+    g.add_color_stop_rgba(1, 1, 0.85, 0.5, 0.0)
+    cr.set_source(g)
+    cr.arc(0, -40, 220, 0, 2 * math.pi)
+    cr.fill()
+    tas = (0.78, 0.7, 0.58)
+    sekil(cr, egri_yolu([(-170, 120), (-170, -90), (-120, -170), (0, -200), (120, -170), (170, -90), (170, 120)],
+                        kapali=True, gerginlik=0.3), tas, olcek=300)
+    ic = egri_yolu([(-110, 120), (-110, -70), (-70, -130), (0, -145), (70, -130), (110, -70), (110, 120)], gerginlik=0.3)
+    sekil(cr, ic, (1.0, 0.93, 0.7) if acik > 0.02 else (0.25, 0.18, 0.12), golge=0, parlama=False)
+    cr.save()
+    cr.new_path()
+    ic(cr)
+    cr.clip()
+    for i in (-1, 1):
+        w = 110 * (1 - acik * 0.85)
+        x0 = i * 110
+        x1 = x0 - i * w
+        renk = (0.55, 0.33, 0.16)
+        sekil(cr, poligon_yolu([(x0, 125), (x0, -150), (x1, -150 + acik * 20), (x1, 125 - acik * 20)]), renk,
+              golge=0.1, parlama=False)
+        for k in range(1, 4):
+            xx = x0 - i * w * k / 4
+            ince_cizgi(cr, [(xx, -150), (xx, 125)], kalin=3, renk=koyu(renk, 0.7), egri=False)
+    cr.restore()
+    for k in range(5):
+        aci = math.pi * (1.15 + k * 0.175)
+        ince_cizgi(cr, [(math.cos(aci) * 140, -60 + math.sin(aci) * 125), (math.cos(aci) * 170, -60 + math.sin(aci) * 150)],
+                   kalin=3, renk=koyu(tas, 0.65), egri=False)
+    if p.get("metin"):
+        yazi(cr, str(p["metin"]), 0, -158, 34, renk=(1, 0.95, 0.85), kontur=0.15)
+
+
+def _damga(cr, t, p):
+    cr.save()
+    cr.rotate(-0.2)
+    metin = str(p.get("metin", "ESİR"))
+    boy = p.get("boyut", 46)
+    from .cizim import yazi_genislik
+    g = yazi_genislik(cr, metin, boy) + 40
+    cr.new_path()
+    kutu_yolu(-g / 2, -boy * 0.75, g, boy * 1.3, 8)(cr)
+    cr.set_source_rgba(0.85, 0.12, 0.12, 0.95)
+    cr.set_line_width(6)
+    cr.stroke()
+    yazi(cr, metin, 0, boy * 0.33, boy, renk=(0.85, 0.12, 0.12), kontur=0, golge=False)
+    cr.restore()
+
+
+def _ok_yagmuru(cr, t, p):
+    """Soldan sağa (yon=1) ya da sağdan sola (yon=-1) kavis çizerek uçan oklar."""
+    yon = p.get("yon", -1)
+    gen = p.get("genislik", 520)
+    yog = int(p.get("adet", 14))
+    rnd = random.Random(int(p.get("tohum", 2)))
+    for k in range(yog):
+        faz = rnd.random()
+        u = (t * p.get("hiz", 0.9) + faz) % 1.0
+        x = (u - 0.5) * gen * yon
+        y = -math.sin(u * math.pi) * 120 + rnd.uniform(-40, 40)
+        egim = math.atan2(-math.cos(u * math.pi) * 120 * math.pi, gen * yon)
+        cr.save()
+        cr.translate(x, y)
+        cr.rotate(egim)
+        ince_cizgi(cr, [(-26, 0), (14, 0)], kalin=3, renk=(0.35, 0.22, 0.12), egri=False)
+        cr.move_to(14, -5)
+        cr.line_to(24, 0)
+        cr.line_to(14, 5)
+        cr.close_path()
+        cr.set_source_rgb(*KONTUR)
+        cr.fill()
+        ince_cizgi(cr, [(-26, 0), (-32, -5)], kalin=2.5, renk=(0.9, 0.9, 0.9), egri=False)
+        ince_cizgi(cr, [(-26, 0), (-32, 5)], kalin=2.5, renk=(0.9, 0.9, 0.9), egri=False)
+        cr.restore()
+
+
+def _pin(cr, t, p):
+    """Harita iğnesi + şehir adı."""
+    renk = p.get("renk", KIRMIZI)
+    nab = 1 + 0.15 * max(0.0, math.sin(t * 4)) * p.get("nabiz", 0)
+    cr.save()
+    cr.scale(nab, nab)
+    sekil(cr, egri_yolu([(0, 0), (-16, -26), (-16, -42), (0, -54), (16, -42), (16, -26)], gerginlik=0.4), renk, olcek=60)
+    sekil(cr, daire_yolu(7, 0, -38), (1, 1, 1), golge=0, parlama=False, kalin=3)
+    cr.restore()
+    if p.get("metin"):
+        yazi(cr, str(p["metin"]), p.get("yazi_dx", 0), p.get("yazi_dy", 30), p.get("boyut", 30), renk=(1, 1, 1),
+             kontur=0.18)
+
+
+def _hilal(cr, t, p):
+    """Hilal (yay) düzeni: kalkan işaretlerinden oluşan kavis; p['kapan'] 0..1 uçları içe kapatır."""
+    kapan = p.get("kapan", 0.0)
+    renk = p.get("renk", SELCUK)
+    n = int(p.get("adet", 9))
+    for k in range(n):
+        u = k / (n - 1) - 0.5
+        aci = u * (math.pi * (0.9 + 0.7 * kapan))
+        x = -math.cos(aci) * 160 + 160 - 40 * kapan * abs(u) * 2
+        y = math.sin(aci) * 200
+        cx, cy = x - 160, y + math.sin(t * 5 + k) * 3
+        sekil(cr, daire_yolu(19, cx, cy), renk, kalin=3.5, golge=0.2, parlama=False)
+        ince_cizgi(cr, [(cx + 4, cy - 11), (cx - 5, cy), (cx + 4, cy + 11)], kalin=3, renk=(1, 1, 1))
+        ince_cizgi(cr, [(cx + 4, cy - 11), (cx + 4, cy + 11)], kalin=1.5, renk=(1, 1, 1), egri=False)
+        ince_cizgi(cr, [(cx - 10, cy), (cx + 10, cy)], kalin=2, renk=(1, 1, 1), egri=False)
+
+
+CIZIMLER.update({"kilic": _kilic, "yay": _yay, "kalkan": _kalkan_yuvarlak, "sancak": _sancak, "fil": _fil,
+                 "ari_suru": _ari_suru, "kapi": _kapi, "damga": _damga, "ok_yagmuru": _ok_yagmuru, "pin": _pin,
+                 "hilal": _hilal})
+
+
 class Nesne:
     """Sahnedeki bir eşya. Sayısal parametreler (seviye, yanik, egim, cal...) anahtar kareyle
     canlandırılır; metin gibi sayı olmayanlar sabit kalır ya da degistir() ile anında değişir."""

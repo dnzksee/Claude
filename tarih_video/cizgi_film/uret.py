@@ -1,11 +1,11 @@
-"""Bilgi Sarmanı — 2B çizgi film belgesel (explainer) üretimi.
+"""Tarih kanalı — 2B çizgi film belgesel (explainer) üretimi.
 
 Kullanım:
-    python3 uret.py konular/hizli_yavas.py                  # seslendir + müzik + efekt + video
-    python3 uret.py konular/hizli_yavas.py --motor sessiz   # seslendirme olmadan taslak (süre tahmini)
-    python3 uret.py konular/hizli_yavas.py --onizleme 5,32,70 --sadece-kareler
+    python3 uret.py konular/malazgirt.py                  # seslendir + müzik + efekt + video
+    python3 uret.py konular/malazgirt.py --motor sessiz   # seslendirme olmadan taslak (süre tahmini)
+    python3 uret.py konular/malazgirt.py --onizleme 5,32,70 --sadece-kareler
 
-Akış: metin -> cümle cümle seslendirme (Gemini, kanal anlatıcısı) -> her cümle kendi zamanına
+Akış: metin -> cümle cümle seslendirme (Gemini, tarih kanalının anlatıcısı) -> her cümle kendi zamanına
 yerleştirilir -> sahneler bu zamanlara göre kurulur -> müzik (konuşma altında kısılır) +
 efektler + seslendirme miksajı -> 1280×720, 24 fps MP4 + SRT altyazı.
 """
@@ -29,8 +29,8 @@ from motor.video import Sahne, Video  # noqa: E402
 
 
 def _tarih_seslendirme():
-    """Seslendirme kodu tarih kanalıyla ortaktır (aynı Gemini ayarları, doğrulama, önbellek sürümü)."""
-    yol = os.path.join(os.path.dirname(KOK), "tarih_video", "motor", "seslendirme.py")
+    """Seslendirme kodu tarih projesinin ana hattıyla ortaktır (aynı Gemini ayarları, doğrulama)."""
+    yol = os.path.join(os.path.dirname(KOK), "motor", "seslendirme.py")
     spec = importlib.util.spec_from_file_location("ortak_seslendirme", yol)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
@@ -38,8 +38,8 @@ def _tarih_seslendirme():
 
 
 def anlatici_sesi():
-    """Kanalın anlatıcı sesi: ses.txt (Bilgi Sarmanı'nda Gemini 'Kore')."""
-    yol = os.path.join(KOK, "ses.txt")
+    """Kanalın anlatıcı sesi: tarih_video/ses.txt (bütün tarih videolarında aynı ses: Iapetus)."""
+    yol = os.path.join(os.path.dirname(KOK), "ses.txt")
     with open(yol, encoding="utf-8") as f:
         return [s.strip() for s in f if s.strip() and not s.startswith("#")][0]
 
@@ -62,7 +62,7 @@ def _tam_dogrula(ortak, mp3, metin):
     from motor.hizalama import hece, ses_suresi
     sure = ses_suresi(mp3)
     oran = sure / hece(metin)
-    if not 0.11 < oran < 0.27:  # Kore ≈ 0.17-0.2 sn/hece; tekrar okumada çok uzar
+    if not 0.11 < oran < 0.27:  # normal okuma ≈ 0.15-0.2 sn/hece; baştan yeniden okumada çok uzar
         print(f"  süre şüpheli: {sure:.1f} sn, hece başına {oran:.3f} sn", flush=True)
         return False
     kes = mp3 + ".dogrula.mp3"
@@ -233,7 +233,8 @@ def main():
     t0, t1 = araliklar[0]
     ac = video.ekle(Sahne(0, "", "duz", t0, t1, cz[0], gecis="kes", zemin=False, bulanik=1,
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
-    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3))
+    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3, kanal=getattr(konu, "UST_YAZI", ""),
+                        logo=getattr(konu, "LOGO", "kilic")))
     ac.sfx("swoosh_yukari", 0.3)
     ac.sfx("pop", 0.75)
     if hasattr(konu, "acilis"):
@@ -242,7 +243,10 @@ def main():
     for i, sh in enumerate(konu.SAHNELER):
         t0, t1 = araliklar[i + 1]
         s = video.ekle(Sahne(i + 1, sh["baslik"], sh.get("arkaplan", "oda"), t0, t1, cz[i + 1],
-                             gecis=sh.get("gecis", "whip"), arkaplan_p=sh.get("arkaplan_p"), tasarimlar=tasarimlar))
+                             gecis=sh.get("gecis", "whip"), arkaplan_p=sh.get("arkaplan_p"), tasarimlar=tasarimlar,
+                             bulanik=sh.get("bulanik", 1.0 if sh.get("arkaplan") == "harita" else 7.0),
+                             paralaks=1.0 if sh.get("arkaplan") == "harita" else 0.35,
+                             zemin=sh.get("zemin", sh.get("arkaplan") != "harita")))
         s.ekle(BolumEtiketi(i + 1, sh["baslik"], t0 + 0.15, t1 + 0.6))
         s.sfx("tik", t0 + 0.2, 0.7)
         sh["kurgu"](s)
@@ -251,7 +255,8 @@ def main():
     kp = video.ekle(Sahne(len(konu.SAHNELER) + 1, "", "duz", t0, t1, cz[-1], gecis=getattr(konu, "KAPANIS_GECIS", "iris"),
                           zemin=False, bulanik=1,
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
-    kp.ekle(KapanisKarti(getattr(konu, "KAPANIS_YAZI", konu.BASLIK), "ABONE OL", t0 + 0.3, t1))
+    kp.ekle(KapanisKarti(getattr(konu, "KAPANIS_YAZI", konu.BASLIK), "ABONE OL", t0 + 0.3, t1,
+                         logo=getattr(konu, "LOGO", "kilic")))
     kp.sfx("ding", t0 + 1.6, 0.6)
 
     satirlar = altyazi_satirlari(cz)
