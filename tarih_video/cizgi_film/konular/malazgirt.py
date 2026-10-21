@@ -284,7 +284,8 @@ def yeni_yurt(s):
     ix, iy = s.yer(29.72, 40.43)
     mx, my = s.yer(*MALAZGIRT)
     s.nesne("pin", mx, my, metin="Malazgirt", olcek=0.8).belir(s.c(0, 0.2))
-    s.nesne("damga", 330, 330, metin="TAHT GİTTİ", boyut=38, olcek=1.0).belir(s.c(1, 0.25), ses="punch")
+    s.nesne("damga", 330, 330, metin="TAHT GİTTİ", boyut=38, olcek=1.0).belir(s.c(1, 0.25), ses="punch") \
+        .kaybol(s.c(2) - 0.2)
     romen.ifade(s.c(1, 0.5), "uzgun").bas_egim(s.c(1, 0.5), -10)
     romen.kaybol(s.c(2) - 0.2)
     for k in range(5):  # Türkmen boyları sağdan (doğudan) Anadolu içlerine
@@ -312,7 +313,7 @@ def yeni_yurt(s):
     s.sfx("ding", s.c(5, 0.35), 0.4)
     # 6: "Turchia"
     s.kamera.git(s.c(6), s.c(6) + 2.0, x=640, y=360, zoom=1.0)
-    s.nesne("levha", 640, 200, metin="TURCHIA", boyut=46, olcek=1.2).belir(s.c(6, 0.6))
+    s.nesne("levha", 1000, 330, metin="TURCHIA", boyut=46, olcek=1.2).belir(s.c(6, 0.6))
     # 7: kapanış cümlesi
     s.nesne("yazi", 640, 110, metin="1071: yeni bir yurdun ilk adımı", boyut=46, renk=ALTIN, olcek=1.0).belir(s.c(7, 0.3))
 
@@ -374,7 +375,7 @@ SAHNELER = [
     ]),
     dict(baslik="Anadolu'nun Yeni Yüzü", arkaplan="harita", gecis="iris", kurgu=yeni_yurt,
          arkaplan_p=dict(kapsam=(25.0, 47.0, 39.2), bolgeler=[(BIZANS, BIZANS_1071), (SELCUK, SELCUKLU_1071)],
-                         etiketler=[("ANADOLU", 33.5, 38.9, 44)]),
+                         etiketler=[("ANADOLU", 36.0, 38.3, 44)]),
          metin=[
              "Malazgirt'ten sonra olaylar hızla gelişti.",
              "Romen Diyojen serbest kaldığında tahtını çoktan kaybetmişti; rakipleriyle savaştı, yenildi ve gözlerine "
