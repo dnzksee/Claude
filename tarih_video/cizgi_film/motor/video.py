@@ -33,6 +33,9 @@ class Sahne:
         self.bulanik = bulanik
         self.zemin = zemin
         self.paralaks = paralaks  # arka planın kamerayla kayma oranı (harita: 1 = sabit zemin gibi)
+        if paralaks >= 0.99:  # arka plan dünyayla birlikte hareket ediyorsa kamera kenarından taşmasın
+            px, py = (AG * KAPLA - G) / 2, (AY * KAPLA - Y) / 2
+            self.kamera.sinir = (-px + 4, G + px - 4, -py + 4, Y + py - 4)
         self._arka = None
 
     # ------------------------------------------------------------ zaman kısayolları

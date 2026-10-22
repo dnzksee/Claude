@@ -193,8 +193,17 @@ def bozkir(cr, p):
     _gok(cr, p.get("gok_ust", (0.45, 0.68, 0.95)), p.get("gok_alt", (0.92, 0.88, 0.75)))
     if p.get("aksam"):
         _gok(cr, (0.95, 0.55, 0.35), (1.0, 0.85, 0.55))
-    for x, y, s_ in ((300, 160, 1.1), (900, 110, 0.9), (1400, 200, 1.0)):
-        _bulut(cr, x, y, s_)
+    if p.get("gece"):
+        _gok(cr, (0.04, 0.06, 0.18), (0.16, 0.2, 0.38))
+        rnd_y = random.Random(12)
+        for _ in range(120):
+            cr.arc(rnd_y.uniform(0, AG), rnd_y.uniform(0, 420), rnd_y.uniform(0.8, 2.4), 0, 2 * math.pi)
+            cr.set_source_rgba(1, 1, 0.9, rnd_y.uniform(0.4, 1))
+            cr.fill()
+        sekil(cr, daire_yolu(55, 1300, 150), (0.98, 0.95, 0.8), kalin=5, golge=0.15)
+    else:
+        for x, y, s_ in ((300, 160, 1.1), (900, 110, 0.9), (1400, 200, 1.0)):
+            _bulut(cr, x, y, s_)
     dag = [(-50, 560)]
     rnd = random.Random(8)
     x = -50
@@ -203,12 +212,14 @@ def bozkir(cr, p):
         dag.append((x - 80, rnd.randint(260, 380)))
         dag.append((x, rnd.randint(470, 540)))
     dag += [(AG + 60, 900), (-50, 900)]
-    sekil(cr, poligon_yolu(dag), (0.55, 0.55, 0.68), olcek=400, parlama=False)
+    sekil(cr, poligon_yolu(dag), (0.25, 0.27, 0.42) if p.get("gece") else (0.55, 0.55, 0.68), olcek=400,
+          parlama=False)
     for (dx, dy) in dag[1:-2:2]:  # kar başlıkları
         sekil(cr, poligon_yolu([(dx, dy), (dx + 36, dy + 46), (dx + 12, dy + 38), (dx - 8, dy + 52), (dx - 30, dy + 40)]),
               (0.97, 0.97, 1.0), kalin=3, golge=0, parlama=False)
     sekil(cr, egri_yolu([(-50, 640), (400, 560), (800, 600), (1200, 550), (1700, 620), (1700, 950), (-50, 950)],
-                        gerginlik=0.6), p.get("cimen", (0.72, 0.68, 0.38)), olcek=400, parlama=False)
+                        gerginlik=0.6), p.get("cimen", (0.3, 0.32, 0.25) if p.get("gece") else (0.72, 0.68, 0.38)),
+          olcek=400, parlama=False)
     for (x, y, r) in ((240, 600, 1.0), (380, 590, 0.8), (1250, 585, 0.9), (1380, 595, 0.7)):
         if p.get("cadirlar", True):
             sekil(cr, poligon_yolu([(x - 60 * r, y), (x, y - 70 * r), (x + 60 * r, y)]), (0.95, 0.92, 0.82), kalin=4)

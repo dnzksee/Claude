@@ -12,6 +12,7 @@ class Kamera:
     def __init__(self, x=G / 2, y=Y / 2, zoom=1.0, nefes=True):
         self.iz = Iz(dict(x=x, y=y, zoom=zoom, aci=0.0, sarsinti=0.0, vurus=0.0))
         self.nefes = nefes
+        self.sinir = None  # (x0, x1, y0, y1): kamera bu dünya alanının dışını göstermez (harita kenarı)
 
     def git(self, t0, t1, x=None, y=None, zoom=None, aci=None, egri="yumusak"):
         h = {k: v for k, v in dict(x=x, y=y, zoom=zoom, aci=aci).items() if v is not None}
@@ -42,6 +43,12 @@ class Kamera:
             x += math.sin(t * 0.37) * 5
             y += math.sin(t * 0.29 + 1) * 3
             z *= 1 + 0.008 * math.sin(t * 0.21)
+        if self.sinir:
+            x0, x1, y0, y1 = self.sinir
+            z = max(z, G / (x1 - x0), Y / (y1 - y0))
+            yg, yy = G / 2 / z, Y / 2 / z
+            x = min(max(x, x0 + yg), x1 - yg)
+            y = min(max(y, y0 + yy), y1 - yy)
         if d["sarsinti"] > 0.001:
             s = d["sarsinti"]
             x += (math.sin(t * 71) + math.sin(t * 43)) * 7 * s
