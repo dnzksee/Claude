@@ -682,6 +682,45 @@ def sultanin_sonu(s):
     s.nesne("isiltilar", 640, 380, olcek=1.6).belir(c(4, 0.5), ses="ding")
 
 
+# ------------------------------------------------------------------ 8: zaferin sırrı (özet)
+def zaferin_sirri(s):
+    c = s.c
+    s.nesne("soru", 640, 280, olcek=1.3, boyut=170).belir(c(0, 0.2)).salla(c(0, 0.4), c(0, 0.4) + 1).kaybol(c(1))
+    # 1: hız — fil ile arı
+    s.nesne("yazi", 220, 120, metin="1 · HIZ", boyut=52, renk=ALTIN, olcek=1.0).belir(c(1, 0.05)).kaybol(c(2))
+    fil = s.nesne("fil", 380, 470, olcek=0.9, yuru=0.6).belir(c(1, 0.15))
+    ari = s.nesne("ari_suru", 900, 330, olcek=1.0, adet=14, hucum=0.0, hedef_x=-380).belir(c(1, 0.2))
+    ari.ayarla(c(1, 0.45), hucum=1.0, sure=0.4)
+    fil.ayarla(c(1, 0.6), ter=1.0, sure=0.1)
+    for n in (fil, ari):
+        n.kaybol(c(2) - 0.1)
+    # 2: birlik — tek sancak etrafında kenetlenme / bölünen ordu
+    s.nesne("yazi", 220, 120, metin="2 · BİRLİK", boyut=52, renk=ALTIN, olcek=1.0).belir(c(2, 0.05)).kaybol(c(3))
+    s.nesne("sancak", 950, 560, renk=SELCUK, olcek=1.1).belir(c(2, 0.15)).kaybol(c(3))
+    akincilar = [s.karakter("Akıncı", x=850 + k * 70, y=620 + (k % 2) * 12, olcek=0.6, ifade="kararli")
+                 .belir(c(2, 0.2) + k * 0.08) for k in range(4)]
+    askerler = [s.karakter("Asker", x=200 + k * 110, y=620 + (k % 2) * 12, olcek=0.6, ifade="uzgun")
+                .belir(c(2, 0.45) + k * 0.08) for k in range(3)]
+    askerler[0].cik(c(2, 0.75), "sol", sure=1.2)
+    askerler[2].don(c(2, 0.8), -1).ifade(c(2, 0.8), "saskin")
+    for k in akincilar + askerler:
+        k.kaybol(c(3))
+    # 3: sabır — doğru anı beklemek
+    s.nesne("yazi", 220, 120, metin="3 · SABIR", boyut=52, renk=ALTIN, olcek=1.0).belir(c(3, 0.05)).kaybol(c(4))
+    alp = s.karakter("Alparslan", x=640, olcek=0.95, ifade="dusunceli", poz="dusun").belir(c(3, 0.15))
+    saat = s.nesne("saat", 860, 280, olcek=0.9, hiz=3.0).belir(c(3, 0.2))
+    alp.ifade(c(3, 0.75), "kararli").poz(c(3, 0.75), "isaret")
+    s.nesne("hilal", 1150, 380, olcek=0.7, kapan=0.0).belir(c(3, 0.6)).ayarla(c(3, 0.8), kapan=1.0, sure=0.8)
+    for n in (alp,):
+        n.kaybol(c(4))
+    saat.kaybol(c(4))
+    # 4: saraydaki ihanet
+    duk = s.karakter("Dukas", x=640, olcek=1.0, ifade="kararli").belir(c(4, 0.15))
+    s.nesne("damga", 640, 250, metin="İHANET", boyut=52, olcek=1.2).belir(c(4, 0.55), ses="punch")
+    duk.cik(c(4, 0.75), "sol", sure=1.5, kos=True)
+    s.kamera.punch(c(4, 0.55), 0.08)
+
+
 SAHNELER = [
     dict(baslik="Bozkırdan Doğan Güç", arkaplan="harita", gecis="punch", kurgu=bozkir_guc,
          arkaplan_p=dict(kapsam=(44.0, 76.0, 39.5), bolgeler=[((0.85, 0.48, 0.12), GAZNELI)],
@@ -831,4 +870,12 @@ SAHNELER = [
              "Bir asır sonra Batılı kaynaklar bu topraklardan artık Türkiye diye söz etmeye başlayacaktı.",
              "Malazgirt, Anadolu'nun Türkler için yeni bir yurda dönüşmesinin ilk adımı oldu.",
          ]),
+    dict(baslik="Zaferin Sırrı", arkaplan="sahne", gecis="punch", kurgu=zaferin_sirri, metin=[
+        "Peki küçük bir ordu, nasıl olup da koca bir imparatorluk ordusunu yendi?",
+        "Birinci sebep hızdı: Selçuklu atlıları vurup kaçarak ağır Bizans ordusunu saatlerce yordu.",
+        "İkinci sebep birlikti: Selçuklu ordusu tek bir sultanın etrafında kenetlenmişti, Bizans ordusu ise kendi "
+        "içinde bölünmüştü.",
+        "Üçüncü sebep sabırdı: Alparslan doğru anı bekledi ve tuzağını ancak düşman yorulunca kapattı.",
+        "Ve Bizans'ın en büyük düşmanı, belki de kendi sarayındaki ihanetti.",
+    ]),
 ]
