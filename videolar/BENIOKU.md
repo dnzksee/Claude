@@ -1,4 +1,4 @@
-# Umay ile Zıpzıp, 1. Bölüm: "Renkli Kelebekler" (12:51)
+# Umay ile Zıpzıp, 1. Bölüm: "Renkli Kelebekler" (12:51 · çizgi film stili)
 
 | Dosya | Kalite | Bölümde |
 |---|---|---|
