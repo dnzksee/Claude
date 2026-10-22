@@ -410,8 +410,9 @@ def _fil(cr, t, p):
     sekil(cr, egri_yolu([(-90, -60), (60, -70), (80, 10), (-95, 20)], gerginlik=0.3), p.get("ortu", BIZANS),
           olcek=160)
     ince_cizgi(cr, [(-85, 8), (75, 0)], kalin=6, renk=ALTIN)
-    ince_cizgi(cr, [(-10, -42), (-10, -6)], kalin=9, renk=ALTIN, egri=False)
-    ince_cizgi(cr, [(-28, -26), (8, -26)], kalin=9, renk=ALTIN, egri=False)
+    if p.get("hac", 1):  # Bizans haçı (Gazneli filinde yok)
+        ince_cizgi(cr, [(-10, -42), (-10, -6)], kalin=9, renk=ALTIN, egri=False)
+        ince_cizgi(cr, [(-28, -26), (8, -26)], kalin=9, renk=ALTIN, egri=False)
     # baş, kulak, hortum, fildişi
     sekil(cr, elips_yolu(46, 58, 120, -30), koyu(renk, 0.95), olcek=110)
     sekil(cr, egri_yolu([(80, -70), (40, -60), (30, -10), (60, 20), (95, 0)], gerginlik=0.5), koyu(renk, 0.85),

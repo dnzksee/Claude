@@ -431,20 +431,21 @@ def bozkir_guc(s):
     s.yakin_plan("Akıncı", c(2, 0.1), s.bitis(2) + 0.6, konum="sol_alt", baslik="Bozkır atlısı", ifade="mutlu",
                  poz="isaret", olcek=1.0)
     mes = s.karakter("Mesud", x=gx - 40, y=gy + 200, olcek=0.6, ifade="gururlu").belir(c(3, 0.2))
-    s.nesne("fil", gx + 70, gy + 120, olcek=0.45, yuru=0.5).belir(c(3, 0.3), ses="punch")
+    gfil = s.nesne("fil", gx + 70, gy + 120, olcek=0.45, yuru=0.5, hac=0, ortu=(0.85, 0.48, 0.12))
+    gfil.belir(c(3, 0.3), ses="punch").kaybol(c(4))
     isim(s, "Gazneli Mesud", gx - 40, gy + 235, c(3, 0.3), boyut=30).kaybol(c(5))
     s.nesne("yazi", 640, 70, metin="1040 · Dandanakan", boyut=48, renk=ALTIN, olcek=1.0).belir(c(4, 0.2)).kaybol(c(6))
     s.kamera.git(c(4), c(4) + 1.5, x=dx_, y=dy_ + 60, zoom=1.5)
     for kar, ddx in ((tug, -190), (cag, -120)):
         kar.git(c(4), c(4) + 1.5, x=dx_ + ddx, y=dy_ + 175)
     mes.git(c(4), c(4) + 1.5, x=dx_ + 120, y=dy_ + 175)
-    fil = s.nesne("fil", dx_ + 200, dy_ + 95, olcek=0.4, yuru=1.0)
+    fil = s.nesne("fil", dx_ + 200, dy_ + 95, olcek=0.4, yuru=1.0, hac=0, ortu=(0.85, 0.48, 0.12))
     fil.belir(c(4, 0.3), ses=None)
     ari = s.nesne("ari_suru", dx_ - 60, dy_ - 10, olcek=0.6, adet=14, hucum=0.0, hedef_x=220).belir(c(5, 0.05))
     ari.ayarla(c(5, 0.2), hucum=1.0, sure=0.5)
     fil.ayarla(c(5, 0.4), ter=1.0, sure=0.1)
     mes.ifade(c(5, 0.45), "panik").titre(c(5, 0.45), c(5, 0.9))
-    s.nesne("carpi", dx_ - 70, dy_ + 20, olcek=0.6).belir(c(5, 0.85), ses="bzzt")
+    s.nesne("carpi", dx_ + 120, dy_ + 20, olcek=0.6).belir(c(5, 0.85), ses="bzzt").kaybol(c(6))
     s.kamera.git(c(6), c(6) + 1.5, x=mx, y=my + 40, zoom=1.2)
     for n in (fil, ari):
         n.kaybol(c(6))
@@ -710,7 +711,8 @@ def zaferin_sirri(s):
     alp = s.karakter("Alparslan", x=640, olcek=0.95, ifade="dusunceli", poz="dusun").belir(c(3, 0.15))
     saat = s.nesne("saat", 860, 280, olcek=0.9, hiz=3.0).belir(c(3, 0.2))
     alp.ifade(c(3, 0.75), "kararli").poz(c(3, 0.75), "isaret")
-    s.nesne("hilal", 1150, 380, olcek=0.7, kapan=0.0).belir(c(3, 0.6)).ayarla(c(3, 0.8), kapan=1.0, sure=0.8)
+    s.nesne("hilal", 1150, 380, olcek=0.7, kapan=0.0).belir(c(3, 0.6)).ayarla(c(3, 0.8), kapan=1.0, sure=0.8) \
+        .kaybol(c(4))
     for n in (alp,):
         n.kaybol(c(4))
     saat.kaybol(c(4))
@@ -726,7 +728,7 @@ SAHNELER = [
          arkaplan_p=dict(kapsam=(44.0, 76.0, 39.5), bolgeler=[((0.85, 0.48, 0.12), GAZNELI)],
                          etiketler=[("HORASAN", 58.5, 35.6, 32), ("GAZNELİLER", 66.5, 31.8, 30),
                                     ("Hazar Denizi", 51.0, 41.5, 26)]),
-         aralar={5: 1.0},
+         aralar={4: 1.0, 5: 1.4},
          metin=[
              "Bu hikâye, Malazgirt'ten yaklaşık elli yıl önce, Aral Gölü'nün güneyindeki bozkırlarda başlar.",
              "Oğuzların Kınık boyundan Selçuk Bey'in torunları Tuğrul ve Çağrı, boylarını Horasan'a taşıdı.",
@@ -769,7 +771,7 @@ SAHNELER = [
         "Selçuklu ordusu ise bir arı sürüsüne benziyordu: daha küçük, hafif ve son derece hareketli.",
         "Atlı okçular düşmana yaklaşır, ok yağdırır ve göğüs göğüse çarpışmadan geri çekilirdi.",
     ]),
-    dict(baslik="Sefer Yolu", arkaplan="harita", gecis="whip", kurgu=sefer_yolu,
+    dict(baslik="Sefer Yolu", arkaplan="harita", gecis="whip", kurgu=sefer_yolu, aralar={1: 1.5, 6: 1.5},
          arkaplan_p=dict(kapsam=(26.0, 48.0, 38.8), bolgeler=[(BIZANS, BIZANS_1071), (SELCUK, SELCUKLU_1071)],
                          etiketler=[("ANADOLU", 33.5, 38.7, 40)]),
          metin=[
@@ -794,7 +796,7 @@ SAHNELER = [
              "Terazi yavaş yavaş Alparslan'dan yana dönüyordu.",
          ]),
     dict(baslik="İlk Kan", arkaplan="ova", gecis="iris", kurgu=ilk_kan,
-         aralar={1: 1.4, 2: 1.6},
+         aralar={1: 2.0, 2: 2.2, 3: 1.0},
          arkaplan_p=dict(tepeler=[(900, 40, 140), (900, 690, 140), (1350, 360, 150)],
                          dereler=[[(-200, 620), (0, 660), (150, 760)]], yollar=[[(330, 360), (1500, 360)]],
                          agaclar=[(600, 640), (560, 90)], tohum=7),
@@ -819,7 +821,7 @@ SAHNELER = [
              "Alparslan bu öneriyi kabul etti ve gözünü ertesi güne dikti.",
          ]),
     dict(baslik="Hilal Tuzağı", arkaplan="ova", gecis="whip", kurgu=hilal_tuzagi,
-         aralar={0: 1.0, 1: 2.4, 2: 1.2, 3: 1.2, 4: 1.6},
+         aralar={0: 1.0, 1: 3.0, 2: 1.5, 3: 1.2, 4: 2.0},
          arkaplan_p=dict(tepeler=[(1150, 70, 150), (1150, 655, 150), (620, 30, 110), (1450, 360, 160)],
                          dereler=[[(-200, 600), (0, 640), (120, 720), (200, 820)]],
                          yollar=[[(70, 360), (500, 350), (900, 370), (1500, 350)]],
@@ -831,7 +833,7 @@ SAHNELER = [
              "Dukas, imparatorun yenildiği söylentisini yayarak savaş alanından çekildi.",
              "Tam o anda tepelerde bekleyen Selçuklu kuvvetleri iki yandan saldırdı ve imparator esir düştü.",
          ]),
-    dict(baslik="Savaş Anı", arkaplan="bozkir", gecis="punch", kurgu=savas_ani,
+    dict(baslik="Savaş Anı", arkaplan="bozkir", gecis="punch", kurgu=savas_ani, aralar={1: 1.5, 4: 1.5},
          arkaplan_p=dict(cadirlar=False, aksam=True), metin=[
              "Şimdi savaşın en sıcak anına, imparatorun etrafına yakından bakalım.",
              "Selçuklu atlıları dört bir yandan saldırırken gökyüzü oklarla karardı.",
@@ -870,7 +872,8 @@ SAHNELER = [
              "Bir asır sonra Batılı kaynaklar bu topraklardan artık Türkiye diye söz etmeye başlayacaktı.",
              "Malazgirt, Anadolu'nun Türkler için yeni bir yurda dönüşmesinin ilk adımı oldu.",
          ]),
-    dict(baslik="Zaferin Sırrı", arkaplan="sahne", gecis="punch", kurgu=zaferin_sirri, metin=[
+    dict(baslik="Zaferin Sırrı", arkaplan="sahne", gecis="punch", kurgu=zaferin_sirri,
+         aralar={1: 0.8, 2: 0.8, 3: 0.8}, metin=[
         "Peki küçük bir ordu, nasıl olup da koca bir imparatorluk ordusunu yendi?",
         "Birinci sebep hızdı: Selçuklu atlıları vurup kaçarak ağır Bizans ordusunu saatlerce yordu.",
         "İkinci sebep birlikti: Selçuklu ordusu tek bir sultanın etrafında kenetlenmişti, Bizans ordusu ise kendi "
