@@ -4,6 +4,13 @@ Kalın siyah dış çizgiler, cel gölgeli düz renkler, abartılı mimikli kara
 (alan derinlikli) arka planlar, yumuşak 2B kamera ve whip pan / punch zoom / iris geçişleri.
 Yapı: açılış kartı → 4–5 metaforik sahne (her birinde bölüm etiketi) → kapanış kartı; altyazı her yerde.
 
+## Standart iş akışı (her konu)
+```bash
+python3 paket.py malazgirt     # uzun video (1080p) + Short (dikey) + youtube.md'ler + altyazı
+```
+Konu planı ve görev listesi: `KONU_PLANI.md`. Kanal görselleri ve açıklaması: `kanal/`
+(`python3 araclar/kanal_gorselleri.py`). Kanal kuralı: batıdaki taraf solda, doğudaki taraf sağda.
+
 ## Çalıştırma
 ```bash
 cd tarih_video/cizgi_film
@@ -28,7 +35,9 @@ python3 uret.py konular/malazgirt.py --onizleme 5,40,90 --sadece-kareler
 - `BASLIK`, `ALT_BASLIK`, `ACILIS`, `KAPANIS`, `KAPANIS_YAZI`
 - `KARAKTERLER`: renk, saç (`diken | kivircik | duz | topuz | kel`), gözlük, başlık
   (`bork | tac | migfer | sarik`), sakal, kaftan (`etek=True`), kemer, elde (`yay | kilic | kalkan | sancak`)
-- Kanal kuralı: Bizans (ve Batılı taraflar) solda, Türkler sağda.
+- Kanal kuralı: batıdaki taraf solda, doğudaki taraf sağda (Bizans–Selçuklu, Makedon–Pers, Roma–Kartaca...).
+- `YOUTUBE = dict(baslik=..., kanca=..., ozet=..., etiketler=[...], hashtagler=[...])`: yayın metni için.
+- Short için `FORMAT = "dikey"`, `TEMPO`, `ALTYAZI_BOYUT`, `BOLUM_ETIKETI = False` (bkz. `konular/malazgirt_short.py`).
 - `SAHNELER`: `baslik`, `arkaplan` (`bozkir | cadir | harita | oda | sinif | doga | sahne | beyin | sehir | uzay`; harita için
   `arkaplan_p=dict(kapsam=(lon0, lon1, lat), bolgeler=[...], etiketler=[...])`, kurguda `s.yer(lon, lat)`),
   `gecis` (`whip | punch | iris | capraz | kes`), `metin` (her öğe tek cümle) ve `kurgu(s)`.

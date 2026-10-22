@@ -11,6 +11,14 @@ LOGO = "kilic"
 KAPANIS_YAZI = "Tamamı Kroniknâme'de!"
 KAPANIS_GECIS = "punch"
 KART_RENK = {"ust": (0.55, 0.16, 0.14), "alt": (0.25, 0.06, 0.06)}
+YOUTUBE = dict(
+    baslik="Küçük Ordu Dev İmparatorluğu Tek Numarayla Yendi! Malazgirt 1071",
+    kanca="Sahte ricat ve hilal tuzağı: Malazgirt'i kazandıran taktik 40 saniyede.",
+    ozet="Selçuklu atlıları kaçıyormuş gibi yaptı, İmparator Romen Diyojen peşlerine düştü ve hilal kapandı.",
+    etiketler=["Malazgirt", "Malazgirt 1071", "Alparslan", "Romen Diyojen", "Selçuklu", "Bizans", "sahte ricat",
+               "hilal taktiği", "tarih shorts"],
+    hashtagler=["#Malazgirt", "#tarih", "#Kroniknâme"],
+)
 BOLUM_ETIKETI = False
 ALTYAZI_BOYUT = 44
 ALTYAZI_AZAMI = 44

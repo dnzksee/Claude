@@ -283,6 +283,9 @@ def main():
             f.write(f"{k}\n{_srt(t0)} --> {_srt(t1)}\n{m}\n\n")
     with open(os.path.join(cikti, "zamanlama.json"), "w", encoding="utf-8") as f:
         json.dump({"sahneler": araliklar, "cumleler": cz}, f, ensure_ascii=False, indent=1)
+    from yayin import youtube_md
+    with open(os.path.join(cikti, "youtube.md"), "w", encoding="utf-8") as f:
+        f.write(youtube_md(konu, araliklar))
     print(f"Toplam süre: {video.sure / 60:.1f} dk ({len(satirlar)} altyazı satırı)")
 
     if a.onizleme or a.sadece_kareler:

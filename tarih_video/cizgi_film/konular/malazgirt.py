@@ -14,6 +14,18 @@ KANAL = "KRONİKNÂME"
 LOGO = "kilic"
 KAPANIS_YAZI = "Anadolu'nun kapısı açıldı"
 KART_RENK = {"ust": (0.55, 0.16, 0.14), "alt": (0.25, 0.06, 0.06)}
+YOUTUBE = dict(
+    baslik="Malazgirt 1071: Ağır Zırh Hızlı Oka Nasıl Yenildi? | Animasyonlu Anlatım",
+    kanca="1071 yazında Doğu Anadolu'da iki dünya karşı karşıya geldi: ağır zırhlı Bizans ordusu ile hafif ve "
+          "hızlı Selçuklu atlıları.",
+    ozet="Sultan Alparslan ile İmparator Romen Diyojen'in Malazgirt'te karşılaşmasını haritalar ve çizgi film "
+         "sahneleriyle anlatıyoruz: iki ordunun savaş anlayışı, savaştan önce bölünen Bizans ordusu, hilal tuzağı ve "
+         "sahte ricat, imparatorun esir düşüşü ve Anadolu'nun Türklere açılan kapısı.",
+    etiketler=["Malazgirt", "Malazgirt Savaşı", "Malazgirt 1071", "Alparslan", "Romen Diyojen", "Romanos Diogenes",
+               "Selçuklu", "Büyük Selçuklu", "Bizans", "Anadolu Selçuklu", "Süleyman Şah", "1071",
+               "Türk tarihi", "Anadolu'nun fethi", "hilal taktiği", "sahte ricat", "atlı okçu"],
+    hashtagler=["#Malazgirt", "#Alparslan", "#tarih", "#Kroniknâme"],
+)
 
 ACILIS = [
     "Bin yetmiş bir yılının yazında, Doğu Anadolu'da iki dünya karşı karşıya geldi.",
