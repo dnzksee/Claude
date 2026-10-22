@@ -33,8 +33,10 @@ def hizala(ses, cumleler, duraklama_odulu=2.2):
     """[(t0, t1, cümle)] döndürür."""
     toplam = ses_suresi(ses)
     sess = sessizlikler(ses)
-    bas = sess[0][1] if sess and sess[0][0] < 0.05 else 0.0
-    son = sess[-1][0] if sess and sess[-1][1] > toplam - 0.05 else toplam
+    # Gemini sesi başta kısa bir tık, sonda ~0,15 sn'lik cızırtıyla bitiyor: kenara yakın (0,5 sn) ilk/son
+    # sessizliğin dışında kalan her şey konuşma sayılmaz ve kesilir.
+    bas = sess[0][1] if sess and sess[0][0] < 0.5 else 0.0
+    son = sess[-1][0] if sess and sess[-1][1] > toplam - 0.5 else toplam
     aday = [s for s in sess if s[0] > bas + 0.05 and s[1] < son - 0.05]
     n, m = len(cumleler), len(aday)
     if n == 1:
