@@ -7,7 +7,8 @@ from .cizim import (G, Y, sekil, yazi, yazi_genislik, satirlara_bol, daire_yolu,
                     KONTUR, YAZI)
 from .zaman import geri_tepme, yumusak, yavasla, hizlan
 
-MARKA = (1.0, 0.78, 0.18)     # sarmal sarısı
+KANAL = "KRONİKNÂME"          # kanal adı (kartlar ve filigran)
+MARKA = (1.0, 0.78, 0.18)     # altın sarısı
 MARKA2 = (0.18, 0.6, 0.95)    # mavi
 
 
@@ -79,7 +80,7 @@ class AcilisKarti:
         s = geri_tepme(u / 0.6) * cik
         if s > 0.01:
             logo(cr, self.logo, G / 2, 190, 70 * s, t, alfa=cik)
-        yazi(cr, self.kanal, G / 2, 300, 30, renk=(1, 1, 1), alfa=min(1, max(0, (u - 0.3) / 0.4)) * cik, kontur=0.2)
+        yazi(cr, self.kanal, G / 2, 300, 36, renk=MARKA, alfa=min(1, max(0, (u - 0.3) / 0.4)) * cik, kontur=0.2)
         # başlık: her kelime ayrı zıplar
         satirlar = satirlara_bol(cr, self.baslik, 84, 1100)
         for si, satir in enumerate(satirlar):
@@ -108,28 +109,48 @@ class KapanisKarti:
     katman = 20
     ekran = True
 
-    def __init__(self, metin, alt, t0, t1, logo="kilic"):
-        self.metin, self.alt, self.t0, self.t1, self.logo = metin, alt, t0, t1, logo
+    def __init__(self, metin, alt, t0, t1, logo="kilic", kanal=KANAL):
+        self.metin, self.alt, self.t0, self.t1, self.logo, self.kanal = metin, alt, t0, t1, logo, kanal
 
     def ciz(self, cr, t):
         if t < self.t0 - 0.1:
             return
         u = t - self.t0
         s = geri_tepme(u / 0.6)
-        logo(cr, self.logo, G / 2, 215, 95 * s, t)
+        logo(cr, self.logo, G / 2, 200, 90 * s, t)
         a = min(1, max(0, (u - 0.4) / 0.5))
+        if self.kanal:
+            yazi(cr, self.kanal, G / 2, 326, 30, renk=MARKA, alfa=a, kontur=0.2)
         for i, satir in enumerate(satirlara_bol(cr, self.metin, 64, 1050)):
-            yazi(cr, satir, G / 2, 385 + i * 74, 64, renk=(1, 1, 1), alfa=a, kontur=0.17)
+            yazi(cr, satir, G / 2, 412 + i * 74, 64, renk=(1, 1, 1), alfa=a, kontur=0.17)
         a2 = min(1, max(0, (u - 1.2) / 0.5))
         if a2 > 0:
             # abone ol düğmesi
             nab = 1 + 0.05 * math.sin(t * 5)
             cr.save()
-            cr.translate(G / 2, 535)
+            cr.translate(G / 2, 552)
             cr.scale(nab * a2, nab * a2)
             sekil(cr, kutu_yolu(-170, -38, 340, 76, 38), (0.9, 0.15, 0.15))
             yazi(cr, self.alt, 0, 14, 38, renk=(1, 1, 1), kontur=0.14)
             cr.restore()
+
+
+class Filigran:
+    """Sağ üst köşede küçük kanal logosu + adı (içerik sahneleri boyunca)."""
+
+    katman = 17
+    ekran = True
+
+    def __init__(self, t0, t1, kanal=KANAL, tur="kilic"):
+        self.t0, self.t1, self.kanal, self.tur = t0, t1, kanal, tur
+
+    def ciz(self, cr, t):
+        if not (self.t0 <= t <= self.t1):
+            return
+        a = 0.75 * min(1, (t - self.t0) / 0.6, (self.t1 - t) / 0.6)
+        w = yazi_genislik(cr, self.kanal, 20)
+        logo(cr, self.tur, G - 40 - w - 30, 38, 17, t, alfa=a)
+        yazi(cr, self.kanal, G - 34, 45, 20, renk=(1, 1, 1), hiza="sag", alfa=a, kontur=0.22)
 
 
 class BolumEtiketi:

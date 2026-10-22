@@ -10,7 +10,7 @@ s.c(i, 0.5) cümlenin ortasıdır; bütün oyunculuk bu anlara bağlanır.
 
 BASLIK = "Malazgirt 1071"
 ALT_BASLIK = "Ağır zırh ile hızlı okun savaşı"
-UST_YAZI = "26 AĞUSTOS 1071"
+KANAL = "KRONİKNÂME"
 LOGO = "kilic"
 KAPANIS_YAZI = "Anadolu'nun kapısı açıldı"
 KART_RENK = {"ust": (0.55, 0.16, 0.14), "alt": (0.25, 0.06, 0.06)}

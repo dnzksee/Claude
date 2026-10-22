@@ -24,7 +24,7 @@ sys.path.insert(0, KOK)
 
 from motor import ses as S  # noqa: E402
 from motor.gecisler import SURELER, SESLER  # noqa: E402
-from motor.kartlar import AcilisKarti, KapanisKarti, BolumEtiketi, Altyazi  # noqa: E402
+from motor.kartlar import AcilisKarti, KapanisKarti, BolumEtiketi, Altyazi, Filigran, KANAL  # noqa: E402
 from motor.video import Sahne, Video  # noqa: E402
 
 
@@ -233,7 +233,7 @@ def main():
     t0, t1 = araliklar[0]
     ac = video.ekle(Sahne(0, "", "duz", t0, t1, cz[0], gecis="kes", zemin=False, bulanik=1,
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
-    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3, kanal=getattr(konu, "UST_YAZI", ""),
+    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3, kanal=getattr(konu, "KANAL", KANAL),
                         logo=getattr(konu, "LOGO", "kilic")))
     ac.sfx("pop", 0.75, 0.6)
     if hasattr(konu, "acilis"):
@@ -254,7 +254,9 @@ def main():
                           zemin=False, bulanik=1,
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
     kp.ekle(KapanisKarti(getattr(konu, "KAPANIS_YAZI", konu.BASLIK), "ABONE OL", t0 + 0.3, t1,
-                         logo=getattr(konu, "LOGO", "kilic")))
+                         logo=getattr(konu, "LOGO", "kilic"), kanal=getattr(konu, "KANAL", KANAL)))
+    video.ust.append(Filigran(araliklar[1][0] + 0.5, araliklar[-1][0], kanal=getattr(konu, "KANAL", KANAL),
+                              tur=getattr(konu, "LOGO", "kilic")))
     kp.sfx("ding", t0 + 1.6, 0.35)
 
     satirlar = altyazi_satirlari(cz)
