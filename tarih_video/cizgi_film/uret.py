@@ -22,6 +22,24 @@ import numpy as np
 KOK = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, KOK)
 
+def konu_yukle(yol):
+    spec = importlib.util.spec_from_file_location("konu", yol)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def _on_ayar():
+    """Motor yüklenmeden önce: konunun tuval biçimi (yatay/dikey) ve çıktı ölçeği ortama yazılır;
+    motor modülleri G, Y, OLCEK değerlerini yüklenirken okur."""
+    konumlu = [x for x in sys.argv[1:] if not x.startswith("-")]
+    if konumlu and os.path.exists(konumlu[0]):
+        os.environ.setdefault("CIZGI_FORMAT", getattr(konu_yukle(konumlu[0]), "FORMAT", "yatay"))
+    if "--olcek" in sys.argv:
+        os.environ["CIZGI_OLCEK"] = sys.argv[sys.argv.index("--olcek") + 1]
+
+
+_on_ayar()
 from motor import ses as S  # noqa: E402
 from motor.gecisler import SURELER, SESLER  # noqa: E402
 from motor.kartlar import AcilisKarti, KapanisKarti, BolumEtiketi, Altyazi, Filigran, KANAL  # noqa: E402
@@ -42,13 +60,6 @@ def anlatici_sesi():
     yol = os.path.join(os.path.dirname(KOK), "ses.txt")
     with open(yol, encoding="utf-8") as f:
         return [s.strip() for s in f if s.strip() and not s.startswith("#")][0]
-
-
-def konu_yukle(yol):
-    spec = importlib.util.spec_from_file_location("konu", yol)
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    return m
 
 
 # ---------------------------------------------------------------- seslendirme
@@ -212,9 +223,11 @@ def main():
     ap.add_argument("--ses", default=None, help="varsayılan: ses.txt (kanal anlatıcısı)")
     ap.add_argument("--onizleme", default="", help="virgülle saniyeler: PNG kare")
     ap.add_argument("--sadece-kareler", action="store_true")
+    ap.add_argument("--olcek", type=float, default=1.5, help="1.5: 1080p (varsayılan), 1.0: 720p hızlı taslak")
     a = ap.parse_args()
 
     konu = konu_yukle(a.konu)
+    globals().update(getattr(konu, "TEMPO", {}))  # Shorts gibi hızlı tempolu konular için BOSLUK/ONCE/SONRA
     ad = os.path.splitext(os.path.basename(a.konu))[0]
     cikti = os.path.join(KOK, "cikti", ad)
     os.makedirs(cikti, exist_ok=True)
@@ -246,7 +259,8 @@ def main():
                              bulanik=sh.get("bulanik", 1.0 if sh.get("arkaplan") == "harita" else 7.0),
                              paralaks=1.0 if sh.get("arkaplan") == "harita" else 0.35,
                              zemin=sh.get("zemin", sh.get("arkaplan") != "harita")))
-        s.ekle(BolumEtiketi(i + 1, sh["baslik"], t0 + 0.15, t1 + 0.6))
+        if getattr(konu, "BOLUM_ETIKETI", True):
+            s.ekle(BolumEtiketi(i + 1, sh["baslik"], t0 + 0.15, t1 + 0.6))
         sh["kurgu"](s)
     # kapanış kartı
     t0, t1 = araliklar[-1]
@@ -259,8 +273,8 @@ def main():
                               tur=getattr(konu, "LOGO", "kilic")))
     kp.sfx("ding", t0 + 1.6, 0.35)
 
-    satirlar = altyazi_satirlari(cz)
-    video.ust.append(Altyazi(satirlar))
+    satirlar = altyazi_satirlari(cz, azami=getattr(konu, "ALTYAZI_AZAMI", 78))
+    video.ust.append(Altyazi(satirlar, boyut=getattr(konu, "ALTYAZI_BOYUT", 34)))
     with open(os.path.join(cikti, "altyazi.srt"), "w", encoding="utf-8") as f:
         for k, (t0, t1, m) in enumerate(satirlar, 1):
             f.write(f"{k}\n{_srt(t0)} --> {_srt(t1)}\n{m}\n\n")

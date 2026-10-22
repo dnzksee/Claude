@@ -321,7 +321,7 @@ def yeni_yurt(s):
 SAHNELER = [
     dict(baslik="İki Hükümdar", arkaplan="harita", gecis="punch", kurgu=iki_hukumdar,
          arkaplan_p=dict(kapsam=(24.0, 52.0, 38.6), bolgeler=[(BIZANS, BIZANS_1071), (SELCUK, SELCUKLU_1071)],
-                         etiketler=[("BİZANS", 34.5, 40.3, 46), ("BÜYÜK SELÇUKLU", 44.6, 35.0, 34)]),
+                         etiketler=[("BİZANS", 34.5, 40.3, 46), ("BÜYÜK SELÇUKLU", 45.2, 36.4, 34)]),
          metin=[
              "Bizans'ın başında, tahta yeni çıkmış asker imparator Romen Diyojen vardı.",
              "Amacı, yıllardır Anadolu'ya akın eden Türkleri bir daha dönmemek üzere durdurmaktı.",

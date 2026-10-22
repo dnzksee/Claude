@@ -11,11 +11,12 @@ import random
 
 import cairo
 
-from .cizim import (G, Y, sekil, ince_cizgi, daire_yolu, elips_yolu, kutu_yolu, egri_yolu, poligon_yolu, koyu, acik,
+from .cizim import (G, Y, DIKEY, OLCEK, sekil, ince_cizgi, daire_yolu, elips_yolu, kutu_yolu, egri_yolu, poligon_yolu, koyu, acik,
                     bulaniklastir, KONTUR)
 
-AG, AY = 1600, 900   # arka plan boyutu
-ZEMIN_Y = 610        # zemin çizgisi (dünya koordinatı)
+AG, AY = 1600, 900   # arka planların çizildiği temel boyut
+KAPLA = max(G * 1.25 / AG, Y * 1.25 / AY)  # tuvali paralaks payıyla örtmek için büyütme (dikeyde ≈1.78)
+ZEMIN_Y = int(Y * 0.68) if DIKEY else 610  # zemin çizgisi (dünya koordinatı)
 
 
 def _gok(cr, ust, alt):
@@ -284,7 +285,7 @@ def _proj(p, lon, lat):
 def harita_xy(p, lon, lat):
     """Dünya koordinatı (arka plan ekrandan büyük çizildiği için kaydırılır)."""
     x, y = _proj(p, lon, lat)
-    return x - (AG - G) / 2, y - (AY - Y) / 2
+    return x * KAPLA - (AG * KAPLA - G) / 2, y * KAPLA - (AY * KAPLA - Y) / 2
 
 
 def harita(cr, p):
@@ -372,10 +373,12 @@ def arka_plan(ad, bulanik=7.0, **p):
     """Bulanıklaştırılmış arka plan yüzeyi (önbellekli)."""
     anahtar = (ad, bulanik, repr(sorted(p.items())))
     if anahtar not in _onbellek:
-        s = cairo.ImageSurface(cairo.FORMAT_ARGB32, AG, AY)
+        k = KAPLA * OLCEK  # piksel yüzeyi: temel boyut × örtme × çıktı ölçeği
+        s = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(AG * k), int(AY * k))
         cr = cairo.Context(s)
+        cr.scale(k, k)
         ARKAPLANLAR[ad](cr, p)
-        _onbellek[anahtar] = bulaniklastir(s, bulanik) if bulanik > 1 else s
+        _onbellek[anahtar] = bulaniklastir(s, bulanik * k) if bulanik > 1 else s
     return _onbellek[anahtar]
 
 

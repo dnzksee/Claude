@@ -9,8 +9,8 @@ import subprocess
 
 import cairo
 
-from .arkaplan import arka_plan, zemin_ciz, AG, AY
-from .cizim import G, Y
+from .arkaplan import arka_plan, zemin_ciz, AG, AY, KAPLA
+from .cizim import G, Y, OLCEK
 from .gecisler import SURELER, uygula
 from .kamera import Kamera
 from .karakter import Karakter
@@ -86,7 +86,9 @@ class Sahne:
             self._arka = arka_plan(self.arkaplan, self.bulanik, **self.arkaplan_p)
         cr.save()
         self.kamera.uygula(cr, t, paralaks=self.paralaks)
-        cr.set_source_surface(self._arka, -(AG - G) / 2, -(AY - Y) / 2)
+        cr.translate(-(AG * KAPLA - G) / 2, -(AY * KAPLA - Y) / 2)
+        cr.scale(1 / OLCEK, 1 / OLCEK)  # yüzey piksel ölçeğinde
+        cr.set_source_surface(self._arka, 0, 0)
         cr.paint()
         cr.restore()
         cr.save()
@@ -125,14 +127,16 @@ class Video:
         return len(self.sahneler) - 1
 
     def _sahne_kare(self, sahne, t):
-        y = cairo.ImageSurface(cairo.FORMAT_ARGB32, G, Y)
+        y = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(G * OLCEK), int(Y * OLCEK))
         cr = cairo.Context(y)
+        cr.scale(OLCEK, OLCEK)
         sahne.ciz(cr, t)
         return y
 
     def kare(self, t):
-        yuz = cairo.ImageSurface(cairo.FORMAT_ARGB32, G, Y)
+        yuz = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(G * OLCEK), int(Y * OLCEK))
         cr = cairo.Context(yuz)
+        cr.scale(OLCEK, OLCEK)
         i = self._sahne_bul(t)
         gecis = None
         for k, (sinir, tur, d) in enumerate(self.gecis_anlari()):
@@ -152,7 +156,7 @@ class Video:
     def kaydet(self, mp4, ses_wav, crf=20):
         n = int(math.ceil(self.sure * self.fps))
         ff = subprocess.Popen(
-            ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{G}x{Y}",
+            ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{int(G * OLCEK)}x{int(Y * OLCEK)}",
              "-r", str(self.fps), "-i", "-", "-i", ses_wav, "-c:v", "libx264", "-preset", "medium",
              "-crf", str(crf), "-tune", "animation", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
              "-shortest", "-movflags", "+faststart", mp4], stdin=subprocess.PIPE)

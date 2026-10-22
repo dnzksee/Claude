@@ -3,11 +3,13 @@ import math
 
 import cairo
 
-from .cizim import (G, Y, sekil, yazi, yazi_genislik, satirlara_bol, daire_yolu, kutu_yolu, ince_cizgi, koyu,
+from .cizim import (G, Y, DIKEY, sekil, yazi, yazi_genislik, satirlara_bol, daire_yolu, kutu_yolu, ince_cizgi, koyu,
                     KONTUR, YAZI)
 from .zaman import geri_tepme, yumusak, yavasla, hizlan
 
 KANAL = "KRONİKNÂME"          # kanal adı (kartlar ve filigran)
+DY = (Y - 720) * 0.35          # dikey tuvalde kartları ortaya yaklaştırır
+GEN = min(1100, G - 90)        # kart yazılarının azami satır genişliği
 MARKA = (1.0, 0.78, 0.18)     # altın sarısı
 MARKA2 = (0.18, 0.6, 0.95)    # mavi
 
@@ -79,10 +81,10 @@ class AcilisKarti:
         cik = 1 - yumusak((t - self.t1) / 0.5)
         s = geri_tepme(u / 0.6) * cik
         if s > 0.01:
-            logo(cr, self.logo, G / 2, 190, 70 * s, t, alfa=cik)
-        yazi(cr, self.kanal, G / 2, 300, 36, renk=MARKA, alfa=min(1, max(0, (u - 0.3) / 0.4)) * cik, kontur=0.2)
+            logo(cr, self.logo, G / 2, 190 + DY, 70 * s, t, alfa=cik)
+        yazi(cr, self.kanal, G / 2, 300 + DY, 36, renk=MARKA, alfa=min(1, max(0, (u - 0.3) / 0.4)) * cik, kontur=0.2)
         # başlık: her kelime ayrı zıplar
-        satirlar = satirlara_bol(cr, self.baslik, 84, 1100)
+        satirlar = satirlara_bol(cr, self.baslik, 84, GEN)
         for si, satir in enumerate(satirlar):
             kel = satir.split()
             toplam = yazi_genislik(cr, satir, 84)
@@ -93,7 +95,7 @@ class AcilisKarti:
                 w = yazi_genislik(cr, k + " ", 84)
                 if v > 0.01:
                     cr.save()
-                    cx, cy = x + yazi_genislik(cr, k, 84) / 2, 400 + si * 92
+                    cx, cy = x + yazi_genislik(cr, k, 84) / 2, 400 + DY + si * 92
                     cr.translate(cx, cy)
                     cr.scale(v, v)
                     cr.rotate(math.sin(t * 2 + ki) * 0.02)
@@ -102,7 +104,7 @@ class AcilisKarti:
                 x += w
         a2 = min(1, max(0, (u - 1.4) / 0.5)) * cik
         if a2 > 0:
-            yazi(cr, self.alt, G / 2, 400 + len(satirlar) * 92 + 6, 36, renk=(1, 0.95, 0.85), alfa=a2, kontur=0.18)
+            yazi(cr, self.alt, G / 2, 400 + DY + len(satirlar) * 92 + 6, 36, renk=(1, 0.95, 0.85), alfa=a2, kontur=0.18)
 
 
 class KapanisKarti:
@@ -117,18 +119,18 @@ class KapanisKarti:
             return
         u = t - self.t0
         s = geri_tepme(u / 0.6)
-        logo(cr, self.logo, G / 2, 200, 90 * s, t)
+        logo(cr, self.logo, G / 2, 200 + DY, 90 * s, t)
         a = min(1, max(0, (u - 0.4) / 0.5))
         if self.kanal:
-            yazi(cr, self.kanal, G / 2, 326, 30, renk=MARKA, alfa=a, kontur=0.2)
-        for i, satir in enumerate(satirlara_bol(cr, self.metin, 64, 1050)):
-            yazi(cr, satir, G / 2, 412 + i * 74, 64, renk=(1, 1, 1), alfa=a, kontur=0.17)
+            yazi(cr, self.kanal, G / 2, 326 + DY, 30, renk=MARKA, alfa=a, kontur=0.2)
+        for i, satir in enumerate(satirlara_bol(cr, self.metin, 64, GEN)):
+            yazi(cr, satir, G / 2, 412 + DY + i * 74, 64, renk=(1, 1, 1), alfa=a, kontur=0.17)
         a2 = min(1, max(0, (u - 1.2) / 0.5))
         if a2 > 0:
             # abone ol düğmesi
             nab = 1 + 0.05 * math.sin(t * 5)
             cr.save()
-            cr.translate(G / 2, 552)
+            cr.translate(G / 2, 552 + DY + max(0, len(satirlara_bol(cr, self.metin, 64, GEN)) - 1) * 74)
             cr.scale(nab * a2, nab * a2)
             sekil(cr, kutu_yolu(-170, -38, 340, 76, 38), (0.9, 0.15, 0.15))
             yazi(cr, self.alt, 0, 14, 38, renk=(1, 1, 1), kontur=0.14)
@@ -201,13 +203,14 @@ class Altyazi:
 
     def __init__(self, satirlar, boyut=34):
         self.satirlar, self.boyut = satirlar, boyut
+        self.taban = Y * 0.8 if DIKEY else Y - 34  # dikeyde Shorts arayüzünün üstünde kalır
 
     def ciz(self, cr, t):
         for t0, t1, metin in self.satirlar:
             if t0 <= t < t1:
                 a = min(1, (t - t0) / 0.12, (t1 - t) / 0.12)
-                satir = satirlara_bol(cr, metin, self.boyut, 1100)
+                satir = satirlara_bol(cr, metin, self.boyut, GEN)
                 for i, s in enumerate(satir[-2:]):
-                    y = Y - 34 - (len(satir[-2:]) - 1 - i) * (self.boyut * 1.2)
+                    y = self.taban - (len(satir[-2:]) - 1 - i) * (self.boyut * 1.2)
                     yazi(cr, s, G / 2, y, self.boyut, renk=(1, 1, 1), alfa=a, kontur=0.22)
                 return

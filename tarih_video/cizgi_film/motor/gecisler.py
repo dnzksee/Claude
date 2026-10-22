@@ -17,6 +17,16 @@ SURELER = {"whip": 0.5, "punch": 0.45, "iris": 1.1, "kes": 0.0, "capraz": 0.6}
 SESLER = {"whip": None, "punch": None, "iris": None, "kes": None, "capraz": None}
 
 
+def _desen(S, dx=0.0, dy=0.0, pad=False):
+    """Piksel yüzeyini mantıksal koordinatta (dx, dy) kaydırılmış desen olarak verir."""
+    o = S.get_width() / G
+    p = cairo.SurfacePattern(S)
+    p.set_matrix(cairo.Matrix(o, 0, 0, o, -dx * o, -dy * o))
+    if pad:
+        p.set_extend(cairo.EXTEND_PAD)
+    return p
+
+
 def whip(cr, A, B, u, yon=1):
     cr.set_source_rgb(0, 0, 0)
     cr.paint()
@@ -38,12 +48,7 @@ def _tek(cr, S, dx, bul):
     n = 15 if bul > 20 else 1
     for k in range(n):
         o = (k / max(n - 1, 1) - 0.5) * bul
-        p = cairo.SurfacePattern(S)
-        p.set_extend(cairo.EXTEND_PAD)
-        m = cairo.Matrix()
-        m.translate(-(dx + o), 0)
-        p.set_matrix(m)
-        cr.set_source(p)
+        cr.set_source(_desen(S, dx + o, 0, pad=True))
         cr.paint_with_alpha(1.0 / (k + 1))
     cr.restore()
 
@@ -60,9 +65,7 @@ def punch(cr, A, B, u, merkez=(G / 2, Y / 2)):
     cr.translate(cx, cy)
     cr.scale(s, s)
     cr.translate(-cx, -cy)
-    p = cairo.SurfacePattern(kaynak)
-    p.set_extend(cairo.EXTEND_PAD)
-    cr.set_source(p)
+    cr.set_source(_desen(kaynak, pad=True))
     cr.paint()
     cr.restore()
     flas = max(0.0, 1 - abs(u - 0.5) / 0.22)
@@ -87,7 +90,7 @@ def iris(cr, A, B, u, merkez=(G / 2, Y / 2)):
     cr.save()
     cr.arc(cx, cy, r, 0, 2 * math.pi)
     cr.clip()
-    cr.set_source_surface(kaynak, 0, 0)
+    cr.set_source(_desen(kaynak))
     cr.paint()
     cr.restore()
     cr.arc(cx, cy, r, 0, 2 * math.pi)
@@ -97,9 +100,9 @@ def iris(cr, A, B, u, merkez=(G / 2, Y / 2)):
 
 
 def capraz(cr, A, B, u):
-    cr.set_source_surface(A, 0, 0)
+    cr.set_source(_desen(A))
     cr.paint()
-    cr.set_source_surface(B, 0, 0)
+    cr.set_source(_desen(B))
     cr.paint_with_alpha(yumusak(u))
 
 
@@ -113,5 +116,5 @@ def uygula(tur, cr, A, B, u, **k):
     elif tur == "capraz":
         capraz(cr, A, B, u)
     else:
-        cr.set_source_surface(B if u >= 0.5 else A, 0, 0)
+        cr.set_source(_desen(B if u >= 0.5 else A))
         cr.paint()

@@ -5,10 +5,15 @@ Temel kalıp: şeklin yolunu çizen bir fonksiyon verilir; sekil() onu doldurur,
 ve parlama koyar, en son kalın siyah çizgiyle çevreler.
 """
 import math
+import os
 
 import cairo
 
-G, Y = 1280, 720
+# Mantıksal tuval: yatay 1280×720 ya da dikey (Shorts) 720×1280. Bütün sahne koordinatları bu
+# birimdedir; çıktı OLCEK ile çarpılarak çizilir (1.5 -> 1920×1080 / 1080×1920), vektörel olduğu için keskin.
+DIKEY = os.environ.get("CIZGI_FORMAT") == "dikey"
+G, Y = (720, 1280) if DIKEY else (1280, 720)
+OLCEK = float(os.environ.get("CIZGI_OLCEK", "1.5"))
 KONTUR = (0.07, 0.06, 0.09)
 KALIN = 5.0          # varsayılan dış çizgi kalınlığı (piksel, 720p)
 ISIK = (-0.55, -0.75)  # ışık sol üstten gelir; gölge sağ alta düşer
