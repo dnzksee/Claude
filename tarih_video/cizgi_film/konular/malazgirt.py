@@ -195,14 +195,14 @@ def hilal_tuzagi(s):
     for k, (u, h) in enumerate(zip(hilal, hedefler)):
         x0, y0 = u.merkez(c(1))
         t = c(1, 0.15) + k * 0.12
-        u.git(t, t + 1.4, x=x0 - 190)
-        s.ok_akini(u, h, t + 1.2, t + 3.4, yogunluk=9, tohum=k, ses=(k == 2))
-        u.git(t + 3.4, t + 4.6, x=x0)
-        u.git(t + 5.2, t + 6.4, x=x0 - 210)
-        s.ok_akini(u, h, t + 6.2, t + 7.8, yogunluk=9, tohum=k + 5, ses=(k == 2))
-        u.git(t + 7.8, t + 9.0, x=x0)
+        u.git(t, t + 1.1, x=x0 - 190)
+        s.ok_akini(u, h, t + 1.0, t + 2.8, yogunluk=9, tohum=k, ses=(k == 2))
+        u.git(t + 2.8, t + 3.7, x=x0)
+        u.git(t + 3.9, t + 4.9, x=x0 - 210)
+        s.ok_akini(u, h, t + 4.8, t + 6.2, yogunluk=9, tohum=k + 5, ses=(k == 2))
+        u.git(t + 6.2, t + 7.0, x=x0)
     for u in (sol, mer, sag):
-        u.titre(c(1, 0.4), c(1, 0.4) + 7.5, 0.6)
+        u.titre(c(1, 0.4), c(1, 0.4) + 6.0, 0.6)
     s.nesne("yazi", 640, 64, metin="Yaklaş · ok at · çekil", boyut=36, renk=(1, 1, 1), olcek=1.0) \
         .belir(c(1, 0.4)).kaybol(c(2))
 
@@ -211,12 +211,12 @@ def hilal_tuzagi(s):
     s.ekle(Karartma(c(2), b(3), renk=(0.95, 0.45, 0.2), azami=0.3))
     for k, u in enumerate(hilal):
         x0, y0 = u.merkez(c(2))
-        u.git(c(2, 0.1), c(2, 0.1) + 5.5, x=x0 + 260, y=360 + (y0 - 360) * 1.15)
-    sultan.git(c(2, 0.1), c(2, 0.1) + 5.5, x=1330)
+        u.git(c(2, 0.1), c(2, 0.1) + 4.5, x=x0 + 260, y=360 + (y0 - 360) * 1.15)
+    sultan.git(c(2, 0.1), c(2, 0.1) + 4.5, x=1330)
     for u, dx in ((sol, 380), (mer, 380), (sag, 380), (iht, 200)):
         x0, y0 = u.merkez(c(2))
-        u.git(c(2, 0.25), c(2, 0.25) + 5.2, x=x0 + dx)
-    s.kamera.git(c(2, 0.2), c(2, 0.2) + 5.0, x=760, zoom=1.0)
+        u.git(c(2, 0.25), c(2, 0.25) + 4.3, x=x0 + dx)
+    s.kamera.git(c(2, 0.2), c(2, 0.2) + 4.2, x=760, zoom=1.0)
     s.nesne("yazi", 760, 64, metin="Sahte ricat!", boyut=40, renk=(1, 0.75, 0.6), olcek=1.0).belir(c(2, 0.15)) \
         .kaybol(c(3))
     rom = s.yakin_plan("Romen", c(2, 0.45), b(2) + 2.6, konum="sol_alt", baslik="Romen Diyojen",
@@ -415,7 +415,7 @@ SAHNELER = [
              "Terazi yavaş yavaş Alparslan'dan yana dönüyordu.",
          ]),
     dict(baslik="Hilal Tuzağı", arkaplan="ova", gecis="whip", kurgu=hilal_tuzagi,
-         aralar={0: 2.0, 1: 4.5, 2: 2.5, 3: 2.5, 4: 3.0},
+         aralar={0: 1.0, 1: 2.4, 2: 1.2, 3: 1.2, 4: 1.6},
          arkaplan_p=dict(tepeler=[(1150, 70, 150), (1150, 655, 150), (620, 30, 110), (1450, 360, 160)],
                          dereler=[[(-200, 600), (0, 640), (120, 720), (200, 820)]],
                          yollar=[[(70, 360), (500, 350), (900, 370), (1500, 350)]],

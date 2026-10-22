@@ -139,12 +139,21 @@ def seslendir(birimler, motor, ses, klasor):
             else:
                 raise RuntimeError("seslendirme 3 denemede de doğrulanamadı")
             os.replace(gecici, mp3)
-        zam = hizala(mp3, b)
-        dalga = S.ses_oku(mp3)
+        if ANLATIM_HIZI != 1.0:  # perdeyi koruyarak tempo (aynı ses, daha akıcı anlatım)
+            hizli = mp3[:-4] + f"_x{ANLATIM_HIZI:.2f}.wav"
+            if not os.path.exists(hizli):
+                import subprocess
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-af", f"atempo={ANLATIM_HIZI}",
+                                "-ar", str(S.SR), "-ac", "1", hizli], check=True)
+            kaynak = hizli
+        else:
+            kaynak = mp3
+        zam = hizala(kaynak, b)
+        dalga = S.ses_oku(kaynak)
         parcalar = []
         for t0, t1, _ in zam:
             a, z = max(0, int((t0 - 0.04) * S.SR)), min(len(dalga), int((t1 + 0.1) * S.SR))
-            parca = dalga[a:z].copy()
+            parca = _duraklama_kisalt(dalga[a:z].copy())
             n = min(len(parca) // 4, int(0.02 * S.SR))
             if n:
                 parca[:n] *= np.linspace(0, 1, n)
@@ -155,9 +164,46 @@ def seslendir(birimler, motor, ses, klasor):
 
 
 # ---------------------------------------------------------------- zaman çizelgesi
-BOSLUK = 0.45        # aynı sahnedeki cümleler arası (belgesel temposu)
-ONCE = {"acilis": 2.0, "sahne": 1.6, "kapanis": 1.0}
-SONRA = {"acilis": 1.0, "sahne": 1.4, "kapanis": 3.2}
+BOSLUK = 0.2         # aynı sahnedeki cümleler arası (akıcı belgesel temposu)
+ONCE = {"acilis": 1.6, "sahne": 0.9, "kapanis": 0.8}
+SONRA = {"acilis": 0.7, "sahne": 0.7, "kapanis": 3.0}
+ANLATIM_HIZI = 1.08  # seslendirme temposu (perde korunur)
+DURAKLAMA_AZAMI = 0.3  # cümle içindeki duraklamaların en uzun hâli (sn)
+
+
+def _duraklama_kisalt(parca, esik_db=-38.0):
+    """Cümle içindeki uzun sessizlikleri DURAKLAMA_AZAMI'ya indirir (kısa yumuşak geçişle)."""
+    pen = int(0.01 * S.SR)
+    if len(parca) < pen * 10:
+        return parca
+    n = len(parca) // pen
+    rms = np.sqrt((parca[:n * pen].reshape(n, pen) ** 2).mean(axis=1))
+    esik = max(np.abs(parca).max(), 1e-6) * 10 ** (esik_db / 20)
+    sessiz = rms < esik
+    azami = int(DURAKLAMA_AZAMI / 0.01)
+    parcalar, i, son = [], 0, 0
+    while i < n:
+        if sessiz[i]:
+            j = i
+            while j < n and sessiz[j]:
+                j += 1
+            if j - i > azami and i > 0 and j < n:  # baştaki/sondaki sessizliğe dokunma
+                kes0, kes1 = (i + azami // 2) * pen, (j - azami // 2) * pen
+                parcalar.append(parca[son:kes0])
+                son = kes1
+            i = j
+        else:
+            i += 1
+    parcalar.append(parca[son:])
+    sonuc = parcalar[0]
+    x = int(0.01 * S.SR)
+    for p in parcalar[1:]:  # 10 ms çapraz geçiş: tık sesi olmasın
+        if len(sonuc) > x and len(p) > x:
+            karisim = sonuc[-x:] * np.linspace(1, 0, x) + p[:x] * np.linspace(0, 1, x)
+            sonuc = np.concatenate([sonuc[:-x], karisim, p[x:]])
+        else:
+            sonuc = np.concatenate([sonuc, p])
+    return sonuc
 
 
 def yerlestir(birimler, parcalar, turler, aralar=None):
