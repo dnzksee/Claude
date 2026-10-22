@@ -111,12 +111,50 @@ class KapanisKarti:
     katman = 20
     ekran = True
 
-    def __init__(self, metin, alt, t0, t1, logo="kilic", kanal=KANAL):
+    def __init__(self, metin, alt, t0, t1, logo="kilic", kanal=KANAL, bitis=None):
+        """bitis: bu andan sonra YouTube bitiş ekranı düzenine geçilir (iki video çerçevesi + abone dairesi)."""
         self.metin, self.alt, self.t0, self.t1, self.logo, self.kanal = metin, alt, t0, t1, logo, kanal
+        self.bitis = bitis
 
     def ciz(self, cr, t):
         if t < self.t0 - 0.1:
             return
+        if self.bitis is not None and t >= self.bitis:
+            gec = min(1.0, (t - self.bitis) / 0.6)
+            if gec < 1:
+                cr.push_group()
+                self._kart(cr, t)
+                cr.pop_group_to_source()
+                cr.paint_with_alpha(1 - gec)
+            self._bitis_ekrani(cr, t, gec)
+            return
+        self._kart(cr, t)
+
+    def _bitis_ekrani(self, cr, t, a):
+        """YouTube bitiş ekranı öğeleri için yer: Studio'da bu çerçevelerin üstüne video/abone öğeleri konur."""
+        yazi(cr, "Sıradaki savaş seni bekliyor!", G / 2, 120 + DY, 56, renk=MARKA, alfa=a, kontur=0.16)
+        if DIKEY:
+            kutular = [(G / 2 - 300, 260 + DY, 600, 338)]
+        else:
+            kutular = [(90, 220, 560, 315), (G - 650, 220, 560, 315)]
+        for k, (x, y, w, h) in enumerate(kutular):
+            cr.save()
+            kutu_yolu(x, y, w, h, 18)(cr)
+            cr.set_source_rgba(0, 0, 0, 0.35 * a)
+            cr.fill_preserve()
+            cr.set_source_rgba(1, 1, 1, 0.85 * a)
+            cr.set_line_width(5)
+            cr.set_dash([18, 12], t * 20)
+            cr.stroke()
+            cr.restore()
+            yazi(cr, ("▶ Sıradaki video", "▶ Önerilen video")[k], x + w / 2, y + h / 2 + 14, 36, renk=(1, 1, 1),
+                 alfa=a * 0.85, kontur=0.15)
+        cx, cy = (G / 2, Y - 230) if DIKEY else (G / 2, 620)
+        logo(cr, self.logo, cx, cy, 70 * (1 + 0.04 * math.sin(t * 4)), t, alfa=a)
+        if not DIKEY:
+            yazi(cr, "ABONE OL", cx + 220, cy + 14, 40, renk=(1, 1, 1), alfa=a, kontur=0.16)
+
+    def _kart(self, cr, t):
         u = t - self.t0
         s = geri_tepme(u / 0.6)
         logo(cr, self.logo, G / 2, 200 + DY, 90 * s, t)
@@ -188,9 +226,9 @@ class BolumEtiketi:
         ox = -w / 2 * (1 - yerles)  # ortalıyken merkezden, köşedeyken sol kenardan
         cr.rotate(-0.03 * (1 - yerles))
         sekil(cr, kutu_yolu(ox, 0, w, 130, 22), (0.12, 0.1, 0.16), golge=0, parlama=False, kalin=7)
-        sekil(cr, kutu_yolu(ox + 18, -26, yazi_genislik(cr, ust, 30) + 40, 48, 16), self.renk, golge=0.1,
-              parlama=False)
-        yazi(cr, ust, ox + 38, 8, 30, renk=KONTUR, kontur=0, golge=False)
+        ug = yazi_genislik(cr, ust, 30) + 40
+        sekil(cr, kutu_yolu(ox + 18, -26, ug, 48, 16), self.renk, golge=0.1, parlama=False)
+        yazi(cr, ust, ox + 18 + ug / 2, 10, 30, renk=KONTUR, kontur=0, golge=False)  # sarı kutunun tam ortası
         yazi(cr, self.baslik, ox + 35, 98, boy, renk=(1, 1, 1), hiza="sol", kontur=0.12)
         cr.restore()
 

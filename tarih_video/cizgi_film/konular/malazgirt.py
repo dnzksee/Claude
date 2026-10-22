@@ -15,6 +15,10 @@ ALT_BASLIK = "Ağır zırh ile hızlı okun savaşı"
 KANAL = "KRONİKNÂME"
 LOGO = "kilic"
 KAPANIS_YAZI = "Anadolu'nun kapısı açıldı"
+KART_SURE = 4.5  # açılış kartı kısa kalır; anlatım ilk sahne görüntüsüyle sürer
+KAPAK = dict(ust="MALAZGİRT", alt="1071", vurgu="İMPARATOR ESİR!",
+             sol=("Romen", dict(ifade="panik", poz="kollar_yukari")),
+             sag=("Alparslan", dict(ifade="kararli", poz="isaret", elde={"R": "kilic"})))
 KART_RENK = {"ust": (0.55, 0.16, 0.14), "alt": (0.25, 0.06, 0.06)}
 YOUTUBE = dict(
     baslik="Malazgirt 1071: Ağır Zırh Hızlı Oka Nasıl Yenildi? | Animasyonlu Anlatım",
@@ -89,6 +93,20 @@ SELCUKLU_1071 = [(42.6, 41.4), (44.6, 41.6), (46.5, 41.9), (49.5, 41.6), (50, 40
                  (48.5, 30), (46.5, 31.5), (44.5, 33), (42.8, 34.2), (41, 34.6), (39.6, 36.0), (40.2, 37.8),
                  (41.2, 38.6), (42.0, 39.4), (42.6, 40.2), (42.5, 41.2)]
 MALAZGIRT, AHLAT = (42.54, 39.14), (42.49, 38.75)
+
+
+def acilis(s):
+    """Açılış kartından sonra ikinci cümle: solda ağır Bizans ordusu, sağdan hızlı bozkır atlıları."""
+    c = s.c
+    for k in range(3):
+        s.karakter("Asker", x=150 + k * 130, y=620 + (k % 2) * 14, olcek=0.85 + 0.05 * (k == 1),
+                   ifade="kararli").belir(c(1, 0.05) + k * 0.15)
+    for k in range(3):
+        a = s.karakter("Akıncı", x=1450, y=615 + (k % 2) * 14, olcek=0.8, ifade="kararli")
+        a.gir(c(1, 0.5) + k * 0.2, "sag", x=820 + k * 130, sure=0.9, kos=True)
+    s.sfx("whoosh", c(1, 0.5), 0.5)
+    s.nesne("levha", 280, 260, metin="AĞIR", boyut=40, olcek=1.0).belir(c(1, 0.2))
+    s.nesne("levha", 950, 260, metin="HIZLI", boyut=40, olcek=1.0).belir(c(1, 0.7))
 
 
 def isim(s, metin, x, y, t, renk=(1, 1, 1), boyut=38):
@@ -339,7 +357,7 @@ def savas_ani(s):
 def acilan_kapi(s):
     romen = s.karakter("Romen", x=380, olcek=0.95, ifade="uzgun", poz="yorgun").belir(s.c(0, 0.15))
     alp = s.karakter("Alparslan", x=920, olcek=0.95, ifade="kararli").belir(s.c(0, 0.25))
-    b1 = s.nesne("konusma", 870, 230, metin="Beni esir alsaydın ne yapardın?", boyut=34, azami=360, olcek=1.0,
+    b1 = s.nesne("konusma", 870, 230, metin="Ben senin esirin olsaydım, bana ne yapardın?", boyut=34, azami=360, olcek=1.0,
                  kuyruk=1).belir(s.c(0, 0.55))
     alp.poz(s.c(0, 0.55), "sunum")
     b1.kaybol(s.c(1))
@@ -398,7 +416,7 @@ def yeni_yurt(s):
     s.sfx("ding", s.c(5, 0.35), 0.4)
     # 6: "Turchia"
     s.kamera.git(s.c(6), s.c(6) + 2.0, x=640, y=360, zoom=1.0)
-    s.nesne("levha", 1000, 330, metin="TURCHIA", boyut=46, olcek=1.2).belir(s.c(6, 0.6))
+    s.nesne("levha", 1000, 330, metin="TÜRKİYE", boyut=46, olcek=1.2).belir(s.c(6, 0.6))
     # 7: kapanış cümlesi
     s.nesne("yazi", 640, 110, metin="1071: yeni bir yurdun ilk adımı", boyut=46, renk=ALTIN, olcek=1.0).belir(s.c(7, 0.3))
 
@@ -833,7 +851,7 @@ SAHNELER = [
              "Dukas, imparatorun yenildiği söylentisini yayarak savaş alanından çekildi.",
              "Tam o anda tepelerde bekleyen Selçuklu kuvvetleri iki yandan saldırdı ve imparator esir düştü.",
          ]),
-    dict(baslik="Savaş Anı", arkaplan="bozkir", gecis="punch", kurgu=savas_ani, aralar={1: 1.5, 4: 1.5},
+    dict(baslik="Savaş Anı", arkaplan="bozkir", gecis="punch", kurgu=savas_ani,
          arkaplan_p=dict(cadirlar=False, aksam=True), metin=[
              "Şimdi savaşın en sıcak anına, imparatorun etrafına yakından bakalım.",
              "Selçuklu atlıları dört bir yandan saldırırken gökyüzü oklarla karardı.",
@@ -845,7 +863,8 @@ SAHNELER = [
              "Akşam karanlığında bir Selçuklu askeri onu esir aldı; üstelik kim olduğunu bilmeden.",
          ]),
     dict(baslik="Açılan Kapı", arkaplan="cadir", gecis="whip", kurgu=acilan_kapi, metin=[
-        "Esir imparator sultanın huzuruna getirildiğinde, Alparslan ona ne yapacağını sordu.",
+        "Esir imparator sultanın huzuruna getirildiğinde Alparslan ona şunu sordu: Eğer ben senin esirin olsaydım, "
+        "bana ne yapardın?",
         "Romen dürüstçe, belki onu öldüreceğini ya da teşhir edeceğini söyledi.",
         "Alparslan ise imparatoru affetti ve bir antlaşmayla serbest bıraktı.",
         "Ama asıl sonuç savaş alanının çok ötesindeydi: Anadolu'nun kapıları Türklere açılmıştı.",

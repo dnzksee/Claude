@@ -109,17 +109,60 @@ def _tam_dogrula(ortak, mp3, metin):
     return True
 
 
+def _f0(dalga):
+    """Konuşmanın ortanca perdesi (Hz), basit özilinti ile."""
+    sr, n = S.SR, int(0.04 * S.SR)
+    tepe = max(np.abs(dalga).max(), 1e-6)
+    degerler = []
+    for i in range(0, len(dalga) - n, int(0.03 * sr)):
+        x = dalga[i:i + n] / tepe
+        if np.sqrt((x ** 2).mean()) < 0.02:
+            continue
+        x = x - x.mean()
+        ac = np.correlate(x, x, "full")[n - 1:]
+        lo, hi = int(sr / 250), int(sr / 70)
+        j = lo + int(np.argmax(ac[lo:hi]))
+        if ac[j] > 0.3 * ac[0]:
+            degerler.append(sr / j)
+    return float(np.median(degerler)) if degerler else 0.0
+
+
+BANTLAR = np.geomspace(90, 11000, 14)
+
+
+def _bant_profili(dalga):
+    X = np.abs(np.fft.rfft(dalga)) ** 2
+    f = np.fft.rfftfreq(len(dalga), 1 / S.SR)
+    prof = np.array([X[(f >= a) & (f < b)].mean() for a, b in zip(BANTLAR[:-1], BANTLAR[1:])])
+    return 10 * np.log10(prof / prof.sum() + 1e-12)
+
+
+def _esitle(dalga, mevcut, hedef, azami_db=5.0):
+    """Ses rengini hedef bant profiline yaklaştırır (sahneden sahneye tını farkını azaltır)."""
+    kazanc = np.clip(hedef - mevcut, -azami_db, azami_db) * 0.8
+    merkez = np.sqrt(BANTLAR[:-1] * BANTLAR[1:])
+    X = np.fft.rfft(dalga)
+    f = np.fft.rfftfreq(len(dalga), 1 / S.SR)
+    g_db = np.interp(np.log(np.maximum(f, 1)), np.log(merkez), kazanc)
+    y = np.fft.irfft(X * 10 ** (g_db / 20), len(dalga))
+    return y * (np.sqrt((dalga ** 2).mean()) / max(np.sqrt((y ** 2).mean()), 1e-9))
+
+
 def seslendir(birimler, motor, ses, klasor):
     """birimler: [[cümle, ...], ...] (açılış, sahneler, kapanış). Her cümlenin ses parçasını döndürür:
     [[np.array, ...], ...]. Her birim (sahne) tek istekte okunur: sahne içinde ses tınısı ve
     tonlama bütün kalır, uzun metinlerde görülen "baştan yeniden okuma" hatası olasılığı azalır.
-    Ses sonra sessizliklerden cümle cümle kesilir (motor/hizalama.py)."""
+    Ses sonra sessizliklerden cümle cümle kesilir (motor/hizalama.py).
+    Ses tutarlılığı: yeni okunan sahnenin perdesi önceki sahnelerden çok sapıyorsa yeniden okunur;
+    bütün sahnelerin ses rengi ortak bir profile eşitlenir (aynı anlatıcı hissi)."""
     from motor.hizalama import hizala
+    import glob
+    import subprocess
     os.makedirs(klasor, exist_ok=True)
     if motor == "sessiz":
         return [[np.zeros(int(S.SR * max(1.2, len(c) * 0.068))) for c in b] for b in birimler]
     ortak = _tarih_seslendirme()
-    sonuc = []
+    hazir = []
     for b in birimler:
         metin = " ".join(b)
         anahtar = hashlib.sha1(f"{motor}|{ses}|{ortak.SURUM}|{ortak.GEMINI_MODEL}|{metin}".encode()).hexdigest()[:12]
@@ -127,6 +170,9 @@ def seslendir(birimler, motor, ses, klasor):
         if not os.path.exists(mp3):
             print(f"  seslendiriliyor ({len(metin)} karakter, {len(b)} cümle)...", flush=True)
             gecici = mp3 + ".tmp.mp3"
+            digerleri = [_f0(S.ses_oku(x)) for x in sorted(glob.glob(os.path.join(klasor, "vo_*.mp3")))[:12]]
+            ref = float(np.median(digerleri)) if len(digerleri) >= 3 else None
+            en_iyi = None
             for deneme in range(3):
                 if motor == "gemini":
                     ortak.gemini_seslendir(metin, gecici, ses)
@@ -135,21 +181,32 @@ def seslendir(birimler, motor, ses, klasor):
                         continue
                 else:
                     ortak.edge_seslendir(metin, gecici, ses)
-                break
-            else:
+                sapma = abs(_f0(S.ses_oku(gecici)) - ref) / ref if ref else 0.0
+                if en_iyi is None or sapma < en_iyi[0]:
+                    en_iyi = (sapma, gecici + f".{deneme}.mp3")
+                    os.replace(gecici, en_iyi[1])
+                if sapma <= 0.10 or motor != "gemini" or deneme == 2:
+                    break
+                print(f"  ses perdesi diğer sahnelerden %{sapma * 100:.0f} farklı, yeniden okunuyor", flush=True)
+            if en_iyi is None:
                 raise RuntimeError("seslendirme 3 denemede de doğrulanamadı")
-            os.replace(gecici, mp3)
+            os.replace(en_iyi[1], mp3)
+            for x in glob.glob(mp3 + ".tmp.mp3.*.mp3"):
+                os.remove(x)
         if ANLATIM_HIZI != 1.0:  # perdeyi koruyarak tempo (aynı ses, daha akıcı anlatım)
             hizli = mp3[:-4] + f"_x{ANLATIM_HIZI:.2f}.wav"
             if not os.path.exists(hizli):
-                import subprocess
                 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp3, "-af", f"atempo={ANLATIM_HIZI}",
                                 "-ar", str(S.SR), "-ac", "1", hizli], check=True)
             kaynak = hizli
         else:
             kaynak = mp3
-        zam = hizala(kaynak, b)
-        dalga = S.ses_oku(kaynak)
+        hazir.append((b, hizala(kaynak, b), S.ses_oku(kaynak)))
+    profiller = [_bant_profili(d) for _, _, d in hazir]
+    hedef = np.median(profiller, axis=0)
+    sonuc = []
+    for (b, zam, dalga), prof in zip(hazir, profiller):
+        dalga = _esitle(dalga, prof, hedef)
         parcalar = []
         for t0, t1, _ in zam:
             a, z = max(0, int((t0 - 0.04) * S.SR)), min(len(dalga), int((t1 + 0.1) * S.SR))
@@ -166,7 +223,7 @@ def seslendir(birimler, motor, ses, klasor):
 # ---------------------------------------------------------------- zaman çizelgesi
 BOSLUK = 0.2         # aynı sahnedeki cümleler arası (akıcı belgesel temposu)
 ONCE = {"acilis": 1.6, "sahne": 0.9, "kapanis": 0.8}
-SONRA = {"acilis": 0.7, "sahne": 0.7, "kapanis": 3.0}
+SONRA = {"acilis": 0.7, "sahne": 0.7, "kapanis": 16.0}  # kapanışta 15 sn YouTube bitiş ekranı
 ANLATIM_HIZI = 1.08  # seslendirme temposu (perde korunur)
 DURAKLAMA_AZAMI = 0.3  # cümle içindeki duraklamaların en uzun hâli (sn)
 
@@ -296,9 +353,10 @@ def main():
     video = Video(fps=24)
     # açılış kartı
     t0, t1 = araliklar[0]
-    ac = video.ekle(Sahne(0, "", "duz", t0, t1, cz[0], gecis="kes", zemin=False, bulanik=1,
+    ac = video.ekle(Sahne(0, "", "duz", t0, t1, cz[0], gecis="kes", zemin=False, bulanik=1, tasarimlar=tasarimlar,
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
-    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, t1 - 0.3, kanal=getattr(konu, "KANAL", KANAL),
+    kart_bitis = min(t1 - 0.3, 0.25 + getattr(konu, "KART_SURE", 4.5))  # kart kısa kalır, anlatım sürer
+    ac.ekle(AcilisKarti(konu.BASLIK, konu.ALT_BASLIK, 0.25, kart_bitis, kanal=getattr(konu, "KANAL", KANAL),
                         logo=getattr(konu, "LOGO", "kilic")))
     ac.sfx("pop", 0.75, 0.6)
     if hasattr(konu, "acilis"):
@@ -320,7 +378,8 @@ def main():
                           zemin=False, bulanik=1,
                           arkaplan_p=getattr(konu, "KART_RENK", {"ust": (0.2, 0.45, 0.9), "alt": (0.1, 0.2, 0.55)})))
     kp.ekle(KapanisKarti(getattr(konu, "KAPANIS_YAZI", konu.BASLIK), "ABONE OL", t0 + 0.3, t1,
-                         logo=getattr(konu, "LOGO", "kilic"), kanal=getattr(konu, "KANAL", KANAL)))
+                         logo=getattr(konu, "LOGO", "kilic"), kanal=getattr(konu, "KANAL", KANAL),
+                         bitis=(cz[-1][-1][1] + 1.0) if getattr(konu, "BITIS_EKRANI", True) else None))
     video.ust.append(Filigran(araliklar[1][0] + 0.5, araliklar[-1][0], kanal=getattr(konu, "KANAL", KANAL),
                               tur=getattr(konu, "LOGO", "kilic")))
     kp.sfx("ding", t0 + 1.6, 0.35)
@@ -335,6 +394,9 @@ def main():
     from yayin import youtube_md
     with open(os.path.join(cikti, "youtube.md"), "w", encoding="utf-8") as f:
         f.write(youtube_md(konu, araliklar))
+    if hasattr(konu, "KAPAK"):
+        from motor.kapak import kapak_resmi
+        kapak_resmi(konu, os.path.join(cikti, "kapak.png"))
     print(f"Toplam süre: {video.sure / 60:.1f} dk ({len(satirlar)} altyazı satırı)")
 
     if a.onizleme or a.sadece_kareler:
