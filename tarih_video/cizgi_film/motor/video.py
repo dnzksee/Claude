@@ -70,6 +70,29 @@ class Sahne:
         from .arkaplan import harita_xy
         return harita_xy(self.arkaplan_p, lon, lat)
 
+    def birlik(self, taraf, tur, x, y, **k):
+        from .birlikler import OrduBirligi
+        return self.ekle(OrduBirligi(taraf, tur, x, y, **k))
+
+    def ok_akini(self, kaynak, hedef, t0, t1, yogunluk=10, tohum=0, ses=True):
+        from .birlikler import OkAkini
+        if ses:
+            for k in range(int((t1 - t0) / 0.6)):
+                self.sfx("ok", t0 + k * 0.6, 0.5)
+        return self.ekle(OkAkini(kaynak, hedef, t0, t1, yogunluk, tohum))
+
+    def yakin_plan(self, ad, t0, t1, konum="sag_alt", baslik=None, zemin=(0.98, 0.85, 0.55), **k):
+        """Köşe penceresinde yakın plan karakter (sahne dünyasına eklenmez; döndürülen karakter canlandırılır)."""
+        from .birlikler import YakinPlan
+        from .karakter import Karakter
+        d = dict(self.tasarimlar.get(ad, {}))
+        d.update(k)
+        d.setdefault("x", 0)
+        d["y"] = 0
+        kar = Karakter(ad, **d)
+        self.ekle(YakinPlan(kar, t0, t1, konum=konum, zemin=zemin, baslik=baslik or ad))
+        return kar
+
     def sfx(self, ad, t, kazanc=1.0):
         self.sesler.append((t, ad, kazanc))
 

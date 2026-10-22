@@ -8,6 +8,8 @@ cümle, . ! ? ile biter) ve kurgu fonksiyonu. Kurguda s.c(i) i. cümlenin başla
 s.c(i, 0.5) cümlenin ortasıdır; bütün oyunculuk bu anlara bağlanır.
 """
 
+import math
+
 BASLIK = "Malazgirt 1071"
 ALT_BASLIK = "Ağır zırh ile hızlı okun savaşı"
 KANAL = "KRONİKNÂME"
@@ -160,47 +162,100 @@ def bolunen_ordu(s):
 
 # ------------------------------------------------------------------ 4
 def hilal_tuzagi(s):
-    s.nesne("yazi", 640, 80, metin="26 Ağustos 1071 · Cuma", boyut=44, renk=ALTIN, olcek=1.0).belir(s.c(0, 0.05))
-    alp = s.karakter("Alparslan", govde=(0.97, 0.96, 0.92), x=1020, olcek=0.9, ifade="kararli",
-                     elde={"R": "kilic"}).belir(s.c(0, 0.3))
-    alp.poz(s.c(0, 0.6), "kutlama")
-    s.nesne("isiltilar", 1020, 330, olcek=1.2, renk=(1, 1, 1)).belir(s.c(0, 0.6), ses=None)
+    """Kuş bakışı savaş alanı: diziliş, ok akınları, sahte ricat, dönüş kargaşası, Dukas'ın çekilmesi, kuşatma."""
+    c, b = s.c, s.bitis
+    s.nesne("kale_ust", 70, 360, olcek=0.6, metin="Malazgirt").goster(s.t0)
+    s.nesne("yazi", 640, 64, metin="26 Ağustos 1071 · Cuma", boyut=40, renk=ALTIN, olcek=1.0).belir(c(0, 0.05)) \
+        .kaybol(c(1))
+    s.kamera.ayarla(s.t0, x=640, y=360, zoom=1.0)
+    # Bizans (solda): iki kanat, merkez, arkada ihtiyat
+    sol = s.birlik("bizans", "piyade", 330, 160, sira=4, kol=7, ad="Briyennios", tohum=1)
+    mer = s.birlik("bizans", "agir", 420, 360, sira=3, kol=5, ad="Romen Diyojen", tohum=2)
+    sag = s.birlik("bizans", "piyade", 330, 565, sira=4, kol=7, ad="Alyates", tohum=3)
+    iht = s.birlik("bizans", "piyade", 185, 360, sira=3, kol=6, ad="Dukas (ihtiyat)", tohum=4)
+    for k, u in enumerate((mer, sol, sag, iht)):
+        u.belir(c(0, 0.1) + k * 0.25)
+    # Selçuklu (sağda): hilal biçiminde atlı okçular, arkada sultan, tepelerin ardında pusu
+    hilal = []
+    for k, aci in enumerate((-60, -30, 0, 30, 60)):
+        r = math.radians(aci)
+        x, y = 1180 - 250 * math.cos(r), 360 + 275 * math.sin(r)
+        u = s.birlik("selcuklu", "atli_okcu", x, y, sira=2, kol=4, aci=180, tohum=10 + k)
+        hilal.append(u.belir(c(0, 0.45) + abs(k - 2) * 0.2))
+    sultan = s.birlik("selcuklu", "agir", 1200, 360, sira=2, kol=4, aci=180, ad="Alparslan", tohum=20)
+    sultan.belir(c(0, 0.5))
+    pusu_ust = s.birlik("selcuklu", "suvari", 1150, 70, sira=3, kol=5, aci=180, tohum=21)
+    pusu_alt = s.birlik("selcuklu", "suvari", 1150, 655, sira=3, kol=5, aci=180, tohum=22)
+    alp = s.yakin_plan("Alparslan", c(0, 0.3), b(0) + 1.8, konum="sag_alt", baslik="Alparslan",
+                       govde=(0.97, 0.96, 0.92), ifade="kararli", elde={"R": "kilic"})
+    alp.poz(c(0, 0.6), "kutlama")
 
-    alp.git(s.c(1), s.c(1) + 0.8, x=1130).poz(s.c(1), "dur")
-    hilal = s.nesne("hilal", 980, 400, olcek=1.0, kapan=0.0).belir(s.c(1, 0.2), ses="swoosh_yukari")
-    askerler = [s.karakter("Asker", x=200 + k * 110, y=620 + (k % 2) * 14, olcek=0.6, ifade="kararli").belir(
-        s.c(1, 0.25) + k * 0.1) for k in range(3)]
-    romen = s.karakter("Romen", x=110, olcek=0.7, ifade="kararli").belir(s.c(1, 0.3))
-    s.nesne("ok_yagmuru", 640, 380, olcek=1.0, yon=-1, genislik=520, adet=18).belir(s.c(1, 0.55), ses="whoosh") \
-        .kaybol(s.c(2, 0.2))
+    # 1: hilal düzeni ve ok akınları (yaklaş - ok at - çekil, iki dalga)
+    hedefler = [sol, sol, mer, sag, sag]
+    for k, (u, h) in enumerate(zip(hilal, hedefler)):
+        x0, y0 = u.merkez(c(1))
+        t = c(1, 0.15) + k * 0.12
+        u.git(t, t + 1.4, x=x0 - 190)
+        s.ok_akini(u, h, t + 1.2, t + 3.4, yogunluk=9, tohum=k, ses=(k == 2))
+        u.git(t + 3.4, t + 4.6, x=x0)
+        u.git(t + 5.2, t + 6.4, x=x0 - 210)
+        s.ok_akini(u, h, t + 6.2, t + 7.8, yogunluk=9, tohum=k + 5, ses=(k == 2))
+        u.git(t + 7.8, t + 9.0, x=x0)
+    for u in (sol, mer, sag):
+        u.titre(c(1, 0.4), c(1, 0.4) + 7.5, 0.6)
+    s.nesne("yazi", 640, 64, metin="Yaklaş · ok at · çekil", boyut=36, renk=(1, 1, 1), olcek=1.0) \
+        .belir(c(1, 0.4)).kaybol(c(2))
 
-    for k, a in enumerate(askerler):  # kovalama (sağa) — hilal geri çekilir
-        a.git(s.c(2, 0.2), s.c(2, 0.2) + 2.5, x=420 + k * 110)
-    romen.git(s.c(2, 0.2), s.c(2, 0.2) + 2.5, x=320)
-    hilal.git(s.c(2, 0.15), s.c(2, 0.15) + 2.5, x=1080)
-    s.kamera.git(s.c(2, 0.2), s.c(2, 0.2) + 2.5, x=700)
+    # 2: sahte ricat ve kovalama (akşama kadar)
+    from motor.birlikler import Karartma
+    s.ekle(Karartma(c(2), b(3), renk=(0.95, 0.45, 0.2), azami=0.3))
+    for k, u in enumerate(hilal):
+        x0, y0 = u.merkez(c(2))
+        u.git(c(2, 0.1), c(2, 0.1) + 5.5, x=x0 + 260, y=360 + (y0 - 360) * 1.15)
+    sultan.git(c(2, 0.1), c(2, 0.1) + 5.5, x=1330)
+    for u, dx in ((sol, 380), (mer, 380), (sag, 380), (iht, 200)):
+        x0, y0 = u.merkez(c(2))
+        u.git(c(2, 0.25), c(2, 0.25) + 5.2, x=x0 + dx)
+    s.kamera.git(c(2, 0.2), c(2, 0.2) + 5.0, x=760, zoom=1.0)
+    s.nesne("yazi", 760, 64, metin="Sahte ricat!", boyut=40, renk=(1, 0.75, 0.6), olcek=1.0).belir(c(2, 0.15)) \
+        .kaybol(c(3))
+    rom = s.yakin_plan("Romen", c(2, 0.45), b(2) + 2.6, konum="sol_alt", baslik="Romen Diyojen",
+                       zemin=(0.85, 0.7, 0.95), ifade="kizgin")
+    rom.ifade(c(2, 0.8), "yorgun")
 
-    romen.don(s.c(3), -1).poz(s.c(3), "isaret").ifade(s.c(3), "kizgin")
-    s.nesne("konusma", 330, 300, metin="Geri dönün!", boyut=40, olcek=1.0, kuyruk=-1).belir(s.c(3, 0.05)) \
-        .kaybol(s.c(3, 0.4))
-    for a in askerler:
-        a.ifade(s.c(3, 0.2), "panik").titre(s.c(3, 0.2), s.c(3, 0.45))
-    dukas = s.karakter("Dukas", x=-80, olcek=0.65, ifade="kizgin")
-    dukas.iz.ayarla(s.c(3, 0.4), dict(x=150))
-    dukas.belir(s.c(3, 0.4))
-    s.nesne("konusma", 260, 330, metin="İmparator yenildi!", boyut=36, olcek=1.0, kuyruk=-1).belir(s.c(3, 0.6)) \
-        .kaybol(s.c(3, 0.92))
-    dukas.cik(s.c(3, 0.85), "sol", sure=0.8, kos=True)
-    s.kamera.git(s.c(3, 0.3), s.c(3, 0.3) + 1, x=620)
+    # 3: dönüş emri, saflar karışır, Dukas çekilir
+    for u in (sol, mer, sag):
+        u.don(c(3, 0.1), 180, sure=1.2).titre(c(3, 0.1), c(3, 0.1) + 3.5, 1.2)
+    iht.don(c(3, 0.35), 180, sure=0.6)
+    iht.git(c(3, 0.45), c(3, 0.45) + 3.0, x=-200, egri="hizlan")
+    s.nesne("konusma", 300, 250, metin="İmparator yenildi!", boyut=34, olcek=1.0, kuyruk=-1) \
+        .belir(c(3, 0.45)).kaybol(c(3, 0.45) + 3.0)
+    s.kamera.git(c(3, 0.3), c(3, 0.3) + 1.5, x=560)
+    duk = s.yakin_plan("Dukas", c(3, 0.5), b(3) + 2.0, konum="sag_alt", baslik="Andronikos Dukas",
+                       zemin=(0.9, 0.6, 0.55), ifade="kizgin", poz="isaret")
+    duk.don(c(3, 0.7), -1)
 
-    s.kamera.git(s.c(4), s.c(4) + 0.6, x=640, zoom=1.0)
-    hilal.git(s.c(4, 0.15), s.c(4, 0.15) + 1.0, x=780)
-    hilal.ayarla(s.c(4, 0.15), kapan=1.0, sure=1.0, egri="geri_tepme")
-    s.sfx("punch", s.c(4, 0.3))
-    s.kamera.sars(s.c(4, 0.3), 0.6, 1.0)
-    romen.ifade(s.c(4, 0.5), "panik").poz(s.c(4, 0.5), "kollar_yukari")
-    s.nesne("damga", 330, 300, metin="ESİR", boyut=56, olcek=1.7).belir(s.c(4, 0.8), ses="punch")
-    s.kamera.punch(s.c(4, 0.8), 0.12)
+    # 4: tepelerden iki yandan saldırı, hilal kapanır, kanatlar dağılır, imparator esir
+    s.kamera.git(c(4), c(4) + 1.2, x=760, zoom=1.0)
+    for u in (pusu_ust, pusu_alt):
+        u.belir(c(4, 0.05), 0.4)
+    pusu_ust.git(c(4, 0.1), c(4, 0.1) + 2.0, x=720, y=110, aci=150)
+    pusu_alt.git(c(4, 0.1), c(4, 0.1) + 2.0, x=720, y=610, aci=210)
+    halka = [(930, 240), (960, 360), (930, 480), (800, 210), (800, 510)]
+    for u, (x, y) in zip(hilal, halka):
+        u.git(c(4, 0.15), c(4, 0.15) + 2.0, x=x, y=y)
+    sultan.git(c(4, 0.2), c(4, 0.2) + 2.5, x=1090)
+    sol.dagil(c(4, 0.45), 2.0)
+    sag.dagil(c(4, 0.5), 2.0)
+    mer.titre(c(4, 0.3), b(4) + 3, 1.5).git(c(4, 0.3), c(4, 0.3) + 2, yayilma=0.75)
+    for k in range(3):
+        t = c(4, 0.35) + k * 0.6
+        s.nesne("patlama", 760 + (k - 1) * 70, 300 + (k % 2) * 110, metin="ÇAT!", boyut=34, olcek=0.6, tohum=k) \
+            .belir(t, ses="kilic_sesi").kaybol(t + 0.6)
+    s.kamera.sars(c(4, 0.4), 1.0, 0.6)
+    s.nesne("damga", 780, 270, metin="ESİR", boyut=56, olcek=1.4).belir(c(4, 0.85), ses="punch")
+    s.kamera.git(c(4, 0.7), c(4, 0.7) + 1.5, x=780, y=360, zoom=1.35)
+    s.kamera.punch(c(4, 0.85), 0.1)
 
 
 # ------------------------------------------------------------------ 5: savaş anı
@@ -359,8 +414,12 @@ SAHNELER = [
              "Selçukluların safına geçti.",
              "Terazi yavaş yavaş Alparslan'dan yana dönüyordu.",
          ]),
-    dict(baslik="Hilal Tuzağı", arkaplan="bozkir", gecis="whip", kurgu=hilal_tuzagi,
-         arkaplan_p=dict(cadirlar=False), metin=[
+    dict(baslik="Hilal Tuzağı", arkaplan="ova", gecis="whip", kurgu=hilal_tuzagi,
+         aralar={0: 2.0, 1: 4.5, 2: 2.5, 3: 2.5, 4: 3.0},
+         arkaplan_p=dict(tepeler=[(1150, 70, 150), (1150, 655, 150), (620, 30, 110), (1450, 360, 160)],
+                         dereler=[[(-200, 600), (0, 640), (120, 720), (200, 820)]],
+                         yollar=[[(70, 360), (500, 350), (900, 370), (1500, 350)]],
+                         agaclar=[(560, 90), (700, 660), (-60, 150)]), metin=[
              "Yirmi altı Ağustos Cuma günü Alparslan, beyazlar giyerek askerlerinin önüne çıktı.",
              "Selçuklu atlıları hilal biçiminde dizildi ve Bizans ordusunu ok yağmuruna tuttu.",
              "Sonra geri çekilir gibi yaptılar; imparator onları akşama kadar boş yere kovaladı.",

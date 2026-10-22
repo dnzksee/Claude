@@ -245,6 +245,41 @@ def cadir(cr, p):
         cr.fill()
 
 
+def ova(cr, p):
+    """Kuş bakışı savaş alanı: çimen lekeleri, tepeler (eş yükselti halkaları), dere, yol, ağaç kümeleri.
+    p: tepeler=[(x, y, r), ...] dünya koordinatında (arka plan ofseti eklenir)."""
+    ox, oy = (AG - G) / 2, (AY - Y) / 2
+    zem = p.get("zemin", (0.62, 0.7, 0.36))
+    cr.set_source_rgb(*zem)
+    cr.paint()
+    rnd = random.Random(p.get("tohum", 4))
+    for _ in range(90):
+        x, y, r = rnd.uniform(0, AG), rnd.uniform(0, AY), rnd.uniform(30, 110)
+        cr.save()
+        cr.translate(x, y)
+        cr.scale(r, r * rnd.uniform(0.4, 0.8))
+        cr.arc(0, 0, 1, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(*(koyu(zem, 0.88) if rnd.random() < 0.5 else acik(zem, 0.15)), 0.5)
+        cr.fill()
+    for (x, y, r) in p.get("tepeler", []):
+        for k, kat in enumerate((1.0, 0.72, 0.45)):
+            sekil(cr, elips_yolu(r * kat, r * kat * 0.7, x + ox, y + oy), koyu(zem, 0.95 - k * 0.07) if k else
+                  acik(zem, 0.05), kalin=4 if k == 0 else 2.5, golge=0.1, parlama=False)
+    for yol_ in p.get("dereler", []):
+        pts = [(x + ox, y + oy) for x, y in yol_]
+        ince_cizgi(cr, pts, kalin=30, renk=KONTUR)
+        ince_cizgi(cr, pts, kalin=22, renk=(0.4, 0.68, 0.92))
+    for yol_ in p.get("yollar", []):
+        pts = [(x + ox, y + oy) for x, y in yol_]
+        ince_cizgi(cr, pts, kalin=16, renk=(0.8, 0.72, 0.52), alfa=0.8)
+    for (x, y) in p.get("agaclar", []):
+        for k in range(5):
+            dx, dy = rnd.uniform(-35, 35), rnd.uniform(-25, 25)
+            sekil(cr, daire_yolu(rnd.uniform(14, 22), x + ox + dx, y + oy + dy), (0.25, 0.48, 0.25), kalin=3.5,
+                  golge=0.25, parlama=False)
+
+
 # ---------------------------------------------------------------- çizgi film haritası (Natural Earth, kamu malı)
 VERI = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "veri")
 _kara = []
@@ -357,13 +392,13 @@ def harita(cr, p):
         yazi(cr, metin, x, y, boy, renk=(1, 1, 1), kontur=0.16)
 
 
-ARKAPLANLAR = {"bozkir": bozkir, "cadir": cadir, "harita": harita, "oda": oda, "sinif": sinif, "doga": doga, "sahne": sahne, "beyin": beyin, "sehir": sehir, "uzay": uzay,
+ARKAPLANLAR = {"ova": ova, "bozkir": bozkir, "cadir": cadir, "harita": harita, "oda": oda, "sinif": sinif, "doga": doga, "sahne": sahne, "beyin": beyin, "sehir": sehir, "uzay": uzay,
                "duz": duz}
 
 ZEMINLER = {
     "oda": (0.72, 0.5, 0.32), "sinif": (0.66, 0.48, 0.32), "doga": (0.42, 0.7, 0.36), "sahne": (0.55, 0.32, 0.18),
     "beyin": (0.82, 0.45, 0.62), "sehir": (0.5, 0.5, 0.55), "uzay": (0.35, 0.32, 0.45), "duz": None,
-    "bozkir": (0.66, 0.6, 0.32), "cadir": (0.62, 0.18, 0.15), "harita": None,
+    "bozkir": (0.66, 0.6, 0.32), "cadir": (0.62, 0.18, 0.15), "harita": None, "ova": None,
 }
 
 _onbellek = {}

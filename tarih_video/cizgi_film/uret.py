@@ -160,21 +160,23 @@ ONCE = {"acilis": 2.0, "sahne": 1.6, "kapanis": 1.0}
 SONRA = {"acilis": 1.0, "sahne": 1.4, "kapanis": 3.2}
 
 
-def yerlestir(birimler, parcalar, turler):
-    """Her birimin [t0, t1] aralığı ve cümle zamanları; bir de tek parça seslendirme dizisi."""
+def yerlestir(birimler, parcalar, turler, aralar=None):
+    """Her birimin [t0, t1] aralığı ve cümle zamanları; bir de tek parça seslendirme dizisi.
+    aralar: her birim için {cümle_no: ek_saniye} — anlatıcının sustuğu aksiyon araları (seslendirmeyi değiştirmez)."""
+    aralar = aralar or [{}] * len(birimler)
     t = 0.0
     araliklar, cumle_zaman, konusmalar = [], [], []
     yerlesim = []
-    for b, pp, tur in zip(birimler, parcalar, turler):
+    for b, pp, tur, ara in zip(birimler, parcalar, turler, aralar):
         bas = t
         t += ONCE[tur]
         cz = []
-        for c, p in zip(b, pp):
+        for ci, (c, p) in enumerate(zip(b, pp)):
             sure = len(p) / S.SR
             cz.append((t, t + sure, c))
             yerlesim.append((t, p))
             konusmalar.append((t, t + sure))
-            t += sure + BOSLUK
+            t += sure + BOSLUK + ara.get(ci, 0.0)
         t += SONRA[tur] - BOSLUK
         araliklar.append((bas, t))
         cumle_zaman.append(cz)
@@ -241,7 +243,8 @@ def main():
     birimler = [konu.ACILIS] + [sh["metin"] for sh in konu.SAHNELER] + [konu.KAPANIS]
     turler = ["acilis"] + ["sahne"] * len(konu.SAHNELER) + ["kapanis"]
     parcalar = seslendir(birimler, motor, ses, os.path.join(cikti, "ses"))
-    araliklar, cz, konusmalar, vo = yerlestir(birimler, parcalar, turler)
+    aralar = [{}] + [sh.get("aralar", {}) for sh in konu.SAHNELER] + [{}]
+    araliklar, cz, konusmalar, vo = yerlestir(birimler, parcalar, turler, aralar)
 
     tasarimlar = getattr(konu, "KARAKTERLER", {})
     video = Video(fps=24)
@@ -259,9 +262,9 @@ def main():
         t0, t1 = araliklar[i + 1]
         s = video.ekle(Sahne(i + 1, sh["baslik"], sh.get("arkaplan", "oda"), t0, t1, cz[i + 1],
                              gecis=sh.get("gecis", "whip"), arkaplan_p=sh.get("arkaplan_p"), tasarimlar=tasarimlar,
-                             bulanik=sh.get("bulanik", 1.0 if sh.get("arkaplan") == "harita" else 7.0),
-                             paralaks=1.0 if sh.get("arkaplan") == "harita" else 0.35,
-                             zemin=sh.get("zemin", sh.get("arkaplan") != "harita")))
+                             bulanik=sh.get("bulanik", 1.0 if sh.get("arkaplan") in ("harita", "ova") else 7.0),
+                             paralaks=1.0 if sh.get("arkaplan") in ("harita", "ova") else 0.35,
+                             zemin=sh.get("zemin", sh.get("arkaplan") not in ("harita", "ova"))))
         if getattr(konu, "BOLUM_ETIKETI", True):
             s.ekle(BolumEtiketi(i + 1, sh["baslik"], t0 + 0.15, t1 + 0.6))
         sh["kurgu"](s)

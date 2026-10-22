@@ -580,7 +580,19 @@ def _hilal(cr, t, p):
         ince_cizgi(cr, [(cx - 10, cy), (cx + 10, cy)], kalin=2, renk=(1, 1, 1), egri=False)
 
 
-CIZIMLER.update({"kilic": _kilic, "yay": _yay, "kalkan": _kalkan_yuvarlak, "sancak": _sancak, "fil": _fil,
+def _kale_ust(cr, t, p):
+    """Tepeden kale: sur, köşe kuleleri, iç avlu."""
+    tas = (0.8, 0.74, 0.62)
+    sekil(cr, kutu_yolu(-60, -60, 120, 120, 8), tas, olcek=120)
+    sekil(cr, kutu_yolu(-40, -40, 80, 80, 6), (0.62, 0.52, 0.4), golge=0, parlama=False, kalin=3)
+    for x in (-60, 60):
+        for y in (-60, 60):
+            sekil(cr, daire_yolu(18, x, y), koyu(tas, 0.92), golge=0.15, parlama=False)
+    if p.get("metin"):
+        yazi(cr, str(p["metin"]), 0, 100, 26, renk=(1, 1, 1), kontur=0.2)
+
+
+CIZIMLER.update({"kale_ust": _kale_ust, "kilic": _kilic, "yay": _yay, "kalkan": _kalkan_yuvarlak, "sancak": _sancak, "fil": _fil,
                  "ari_suru": _ari_suru, "kapi": _kapi, "damga": _damga, "ok_yagmuru": _ok_yagmuru, "pin": _pin,
                  "hilal": _hilal})
 
