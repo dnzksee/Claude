@@ -99,7 +99,10 @@ def _tam_dogrula(ortak, mp3, metin):
         print("  uyarı: tam doğrulama yapılamadı", flush=True)
         return None
     # kelime düzeyinde (karakter düzeyinde uzun metinlerde difflib'in otomatik "junk" sezgisi yanıltıyor)
-    benzerlik = difflib.SequenceMatcher(None, ortak._sade(duyulan), ortak._sade(metin), autojunk=False).ratio()
+    # şapkalı harfler korunur, kesme işareti kelimeyi bölmez (Kroniknâme'de = kroniknamede)
+    duz = str.maketrans({"â": "a", "î": "i", "û": "u", "Â": "A", "Î": "I", "Û": "U", "'": "", "’": ""})
+    benzerlik = difflib.SequenceMatcher(None, ortak._sade(duyulan.translate(duz)), ortak._sade(metin.translate(duz)),
+                                        autojunk=False).ratio()
     if benzerlik < 0.8:
         print(f"  ses metinle uyuşmuyor (benzerlik {benzerlik:.2f}): {duyulan[:100]!r}...", flush=True)
         return False

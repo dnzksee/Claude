@@ -5,7 +5,7 @@ altyazı y≈1024'te (Shorts arayüzünün üstünde). Kanal kuralı burada da g
 """
 FORMAT = "dikey"
 BASLIK = "Malazgirt'i Kazandıran Tuzak"
-ALT_BASLIK = "1071 · 60 saniyede"
+ALT_BASLIK = "26 Ağustos 1071"
 KANAL = "KRONİKNÂME"
 LOGO = "kilic"
 KAPANIS_YAZI = "Tamamı Kroniknâme'de!"
