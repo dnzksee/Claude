@@ -5,8 +5,9 @@ Claude yönetmen, yazar ve tasarımcıdır.
 
 ## Her yeni bölümde teslim edilecekler (görev listesi)
 
-1. **Bölüm videosu — yalnızca 1080p** (720p üretme). GitHub'da `videolar/` altında 100 MB altı parçalara bölünür
-   (`bolumN_..._1080p_parcaK.mp4`, bölüm sınırlarından), `videolar/BENIOKU.md` güncellenir; parçalar sohbete de gönderilir.
+1. **Bölüm videosu — yalnızca 1080p, tek parça** (720p üretme). GitHub sınırı (100 MB) için iki geçişli kodlanır
+   (`-tune animation`, ~860 kb/sn video + 128 kb/sn ses ≈ 96 MB / 13 dk) → `videolar/bolumN_..._1080p.mp4`;
+   `videolar/BENIOKU.md` güncellenir, video sohbete de gönderilir. Çok uzun bölüm sığmazsa bölüm sınırlarından parçalara bölünür.
 2. **Shorts videosu** — 1080×1920, ≤60 sn, bölümün en akılda kalan kısmı (genelde tekerleme/şarkı):
    `python3 studio/short_yap.py --src ... --start ... --end ... --baslik ... --renk ... --out shorts/...`
 3. **Küçük resim (kapak)** — 1280×720, `studio/kanal_gorselleri.py` içine bölüm için yeni bir `kapak_...` fonksiyonu eklenir → `kanal/`.

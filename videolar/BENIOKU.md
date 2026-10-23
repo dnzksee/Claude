@@ -1,15 +1,9 @@
 # Umay ile Zıpzıp, 1. Bölüm: "Renkli Kelebekler" (12:51 · çizgi film stili)
 
-| Dosya | Kalite | Bölümde |
+| Dosya | Kalite | Süre |
 |---|---|---|
-| `bolum1_renkli_kelebekler_1080p_parca1.mp4` | 1080p | 0:00 – 4:10 · Açılış ve MAVİ |
-| `bolum1_renkli_kelebekler_1080p_parca2.mp4` | 1080p | 4:10 – 7:28 · KIRMIZI |
-| `bolum1_renkli_kelebekler_1080p_parca3.mp4` | 1080p | 7:28 – 12:51 · SARI ve final |
+| `bolum1_renkli_kelebekler_1080p.mp4` | 1080p, tek parça (96 MB) | 0:00 – 12:51 |
 
-GitHub'da dosyaya tıklayıp **Download raw file** (indir) simgesiyle indirebilirsiniz.
+GitHub'da dosyaya tıklayıp **Download raw file** (indir) simgesiyle indirebilirsiniz; YouTube'a doğrudan yüklenebilir.
 
-1080p parçaları tek dosyada birleştirmek için (bilgisayarda, ffmpeg ile):
-```
-printf "file 'bolum1_renkli_kelebekler_1080p_parca%s.mp4'\n" 1 2 3 > liste.txt
-ffmpeg -f concat -safe 0 -i liste.txt -c copy bolum1_renkli_kelebekler_1080p.mp4
-```
+Bölümler: 0:00 Açılış · 0:55 Mavi · 4:10 Kırmızı · 7:21 Sarı · 10:18 Final: Gökkuşağı
