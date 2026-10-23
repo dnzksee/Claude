@@ -38,10 +38,10 @@ SPAN = 11900
 WALK_V = 135.0          # Umay'ın yürüyüş hızı (px/sn): 3 yaşına uygun, sakin
 STRIDE_W = 140.0        # yürüyüş adım döngüsü (px); karakter çiziminde de aynısı kullanılır
 GAP = 0.55              # cümleler arası boşluk
-DANCE_LEN = 30.0        # her renk sonundaki dans arası (tekerleme bir kez daha)
+DANCE_LEN = 9.0         # her renk sonundaki kısa dans arası (tekerleme tekrar edilmez)
 SONG_LEN = 6.0          # açılış şarkısı
 RECAP_PER = 20.0        # finalde her renk için "hatırlayalım"
-FINAL_DANCE = 24.0      # gökkuşağı dansı
+FINAL_DANCE = 12.0      # gökkuşağı dansı
 TARGET = 0              # hedef süre (sn); 0 = doldurma yok (sessiz beklemeler çocukları sıkıyordu)
 
 BF_COL = {"mavi": (P.COL["mavi"], P.COL["mavi_l"]), "kirmizi": (P.COL["kirmizi"], P.COL["kirmizi_l"]),
@@ -96,7 +96,7 @@ SC = {
     "S6": dict(x=9800, cam=(160, 640, 1.25), focus=(PICNIC[0] + 30, PICNIC[1] - 90), bf="hover", pre=2.0, post=3.0),
     "S7": dict(x=9800, cam=(140, 560, 1.0), focus=None, bf="dance", pre=1.0, post=3.0, dance_after="S33", away_after="S35"),
     "F1": dict(x=10600, cam=(120, 520, 1.0), focus=None, bf="final", pre=4.0, post=2.5),
-    "F2": dict(x=10600, cam=(120, 500, 1.0), focus=None, bf="final", pre=1.5, post=5.0, recap_after="F09", dance_after="F12"),
+    "F2": dict(x=10600, cam=(120, 500, 1.0), focus=None, bf="final", pre=1.5, post=5.0, dance_after="F12"),
     "F3": dict(x=10600, cam=(90, 640, 1.3), focus=None, bf="final", pre=0.5, post=6.5, end=True),
 }
 
@@ -216,9 +216,8 @@ class Plan:
                         t += wait + 0.3
                     if sc.get("dance_after") == cid:
                         d0 = t + 0.6
-                        if ch:  # renk dansı: tekerleme 3 kez, müzikle
+                        if ch:  # renk dansı: yalnızca müzik ve zıplayan nesneler (tekerleme bir kez söylendi)
                             self.segs.append((d0, d0 + DANCE_LEN, "dance", code))
-                            self._replay_block(d0, tek_all[ch], ch, 1, ch)
                             t = d0 + DANCE_LEN + 0.6
                         else:   # final: gökkuşağı dansı
                             self.segs.append((d0, d0 + FINAL_DANCE, "dance", code))
@@ -631,7 +630,8 @@ def ball_state(pl, t, anchors):
         if n is not None and t > a + 2.6:
             return n[0] + 10, n[1] + 40, 0.0, False
         return BALL0[0] + 400, GROUND_Y, 11.0, False
-    return pl_ux(t) + 140 + 70, GROUND_Y, 0.0, False
+    # bırakıldığı yerde kalır (karakterler yürüyüp gidince peşlerinden gelmez)
+    return pl_ux(a + 6.5) + 140 + 70, GROUND_Y, 0.0, False
 
 
 def pl_ux(t):
@@ -997,8 +997,8 @@ def render_frame(i, layers):
 
 def draw_dance_items(p, pl, t, dseg, ux, ch, sub=None):
     u = (t - dseg[0])
-    items = {"mavi": ["flower", "drop", "bird", "ball"], "kirmizi": ["apple", "ladybug", "straw", "heart"],
-             "sari": ["sunflower", "chick", "lemon", "star"]}[ch]
+    items = {"mavi": ["flower", "drop", "bird", "ball"], "kirmizi": ["apple", "ladybug", "straw"],
+             "sari": ["sunflower", "chick", "lemon"]}[ch]
     if sub is not None:  # final dansı: üç rengin birer nesnesi gökkuşağı altında
         items = items[:1] if sub == 0 else items[:1]
     for k, it in enumerate(items):

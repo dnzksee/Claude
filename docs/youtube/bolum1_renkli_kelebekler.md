@@ -1,6 +1,6 @@
 # 1. Bölüm: Renkli Kelebekler — YouTube metinleri
 
-**Video:** `videolar/bolum1_renkli_kelebekler_1080p_parca1-3.mp4` (1080p, 12:51; tek dosya için BENIOKU'daki birleştirme komutu)
+**Video:** `videolar/bolum1_renkli_kelebekler_1080p.mp4` (1080p, 10:35, tek parça)
 **Küçük resim:** `kanal/kapak_bolum1_renkli_kelebekler_1280x720.jpg`
 **Kitle:** Çocuklara yönelik — *Evet*
 
@@ -17,18 +17,18 @@ Umay ile köpeği Zıpzıp, bahçede renkli kelebeklerin peşinde! 🦋
 Bu bölümde çocuklar renkleri tek tek, acele etmeden öğreniyor: önce MAVİ, sonra KIRMIZI, sonra SARI.
 
 💙 Mavi: gökyüzü, çiçekler, göl, kuş Cik-Cik ve mavi top
-❤️ Kırmızı: elma, uğur böceği, çilek ve kırmızı kalp
-💛 Sarı: ayçiçeği, civciv, limon ve sarı yıldız
+❤️ Kırmızı: elma, uğur böceği ve çilek
+💛 Sarı: ayçiçeği, civciv ve limon
 🌈 Final: üç renk birlikte ve gökkuşağı!
 
-Her rengin sonunda birlikte tekerleme söylüyor, sayıyor ve dans ediyoruz. Anlatıcı soru sorduğunda durup çocuğunuzla birlikte cevap verin: "Su ne renk?" — "Mavi!" 😊
+Her rengin sonunda birlikte tekerleme söylüyor ve dans ediyoruz. Anlatıcı soru sorduğunda durup çocuğunuzla birlikte cevap verin: "Su ne renk?" — "Mavi!" 😊
 
 Bölümler:
 0:00 Açılış: Umay ile Zıpzıp
 0:55 Mavi
-4:10 Kırmızı
-7:21 Sarı
-10:18 Final: Gökkuşağı
+3:50 Kırmızı
+6:39 Sarı
+9:15 Final: Gökkuşağı
 
 👶 2–5 yaş için · Türkçe · Eğitici çizgi film
 🔔 Yeni bölümler için abone olun: Umay ile Zıpzıp
@@ -46,7 +46,7 @@ umay ile zıpzıp, renkli kelebekler, renkleri öğreniyorum, mavi kırmızı sa
 
 # Shorts: Mavi Tekerlemesi
 
-**Video:** `shorts/short_bolum1_mavi_tekerlemesi.mp4` (1080×1920, 56 sn; bölümün 3:08–4:04 arası)
+**Video:** `shorts/short_bolum1_mavi_tekerlemesi.mp4` (1080×1920, 33 sn; bölümün 3:08–3:41 arası)
 
 ## Başlık
 
