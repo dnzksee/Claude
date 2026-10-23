@@ -136,7 +136,7 @@ class KapanisKarti:
         if DIKEY:
             kutular = [(G / 2 - 300, 260 + DY, 600, 338)]
         else:
-            kutular = [(90, 220, 560, 315), (G - 650, 220, 560, 315)]
+            kutular = [(90, 220, 520, 293), (G - 610, 220, 520, 293)]  # aralarında boşluk kalsın
         for k, (x, y, w, h) in enumerate(kutular):
             cr.save()
             kutu_yolu(x, y, w, h, 18)(cr)
