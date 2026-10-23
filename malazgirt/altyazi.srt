@@ -1,0 +1,516 @@
+1
+00:00:01,600 --> 00:00:06,029
+Bin yetmiş bir yılının yazında, Doğu Anadolu'da iki dünya karşı karşıya geldi.
+
+2
+00:00:05,979 --> 00:00:08,997
+Bir yanda ağır ve kalabalık bir imparatorluk ordusu,
+
+3
+00:00:08,997 --> 00:00:11,685
+öbür yanda hafif ve hızlı bozkır atlıları.
+
+4
+00:00:13,035 --> 00:00:15,957
+Bu hikâye, Malazgirt'ten yaklaşık elli yıl önce,
+
+5
+00:00:15,957 --> 00:00:18,946
+Aral Gölü'nün güneyindeki bozkırlarda başlar.
+
+6
+00:00:18,896 --> 00:00:22,718
+Oğuzların Kınık boyundan Selçuk Bey'in torunları Tuğrul ve Çağrı,
+
+7
+00:00:22,718 --> 00:00:24,555
+boylarını Horasan'a taşıdı.
+
+8
+00:00:24,505 --> 00:00:29,592
+Bu bozkır atlıları daha çocukken ata binmeyi ve at üstünden ok atmayı öğreniyordu.
+
+9
+00:00:29,542 --> 00:00:34,438
+Bölgenin hâkimi Gazneliler ise bu göçebeleri kolayca dağıtabileceklerini düşünüyordu.
+
+10
+00:00:34,388 --> 00:00:38,243
+Ama bin kırk yılında Dandanakan'da işler tam tersine döndü.
+
+11
+00:00:39,193 --> 00:00:41,927
+Filleri ve ağır ordusuyla gelen Sultan Mesud,
+
+12
+00:00:41,927 --> 00:00:46,248
+susuzluk ve bitmeyen akınlarla yıpratıldı ve ağır bir yenilgi aldı.
+
+13
+00:00:47,598 --> 00:00:50,179
+Bu zaferle Büyük Selçuklu Devleti kuruldu.
+
+14
+00:00:50,129 --> 00:00:55,323
+On beş yıl sonra Tuğrul Bey Bağdat'a girdi ve İslam dünyasının en güçlü hükümdarı oldu.
+
+15
+00:00:55,273 --> 00:01:00,018
+Tuğrul'un ölümünden sonra tahta yeğeni Alparslan geçti ve bakışlarını batıya,
+
+16
+00:01:00,018 --> 00:01:01,439
+Anadolu'ya çevirdi.
+
+17
+00:01:02,789 --> 00:01:06,132
+Aynı yıllarda Bizans İmparatorluğu ise içeriden çürüyordu.
+
+18
+00:01:06,082 --> 00:01:11,487
+Güçlü imparator İkinci Basileios'un ölümünden sonra tahta birbiri ardına zayıf hükümdarlar geçti.
+
+19
+00:01:11,437 --> 00:01:15,630
+Saraydaki entrikalar ve darbeler, devletin bütün enerjisini tüketti.
+
+20
+00:01:15,580 --> 00:01:18,995
+Hazineyi korumak için sınırdaki yerli askerler terhis edildi;
+
+21
+00:01:18,995 --> 00:01:21,988
+ordu giderek paralı askerlere bağımlı hâle geldi.
+
+22
+00:01:21,938 --> 00:01:26,178
+Sınır kaleleri bakımsız kaldı ve doğu sınırı neredeyse savunmasız kaldı.
+
+23
+00:01:26,128 --> 00:01:29,001
+Türkmen akıncıları Anadolu'nun içlerine kadar ilerliyor,
+
+24
+00:01:29,001 --> 00:01:31,149
+Kayseri gibi şehirler yağmalanıyordu.
+
+25
+00:01:31,099 --> 00:01:33,340
+Bin altmış sekizde imparatoriçe Evdokia,
+
+26
+00:01:33,340 --> 00:01:37,681
+tecrübeli bir asker olan Romen Diyojen'le evlendi ve onu imparator yaptı.
+
+27
+00:01:37,631 --> 00:01:41,249
+Ama güçlü Dukas ailesi bu evlilikten hiç hoşlanmamıştı.
+
+28
+00:01:42,599 --> 00:01:47,128
+Bizans'ın başında, tahta yeni çıkmış asker imparator Romen Diyojen vardı.
+
+29
+00:01:47,078 --> 00:01:47,439
+Amacı,
+
+30
+00:01:47,439 --> 00:01:52,258
+yıllardır Anadolu'ya akın eden Türkleri bir daha dönmemek üzere durdurmaktı.
+
+31
+00:01:52,208 --> 00:01:55,542
+Karşısında ise Büyük Selçuklu Sultanı Alparslan duruyordu.
+
+32
+00:01:55,492 --> 00:02:00,086
+Sultan aslında bu savaşı istemiyordu; gözü güneyde, Mısır'daki Fatımilerdeydi.
+
+33
+00:02:00,036 --> 00:02:04,212
+Ama imparatorun büyük bir orduyla geldiğini duyunca hemen kuzeye döndü.
+
+34
+00:02:05,562 --> 00:02:08,889
+İki ordu, iki farklı savaş anlayışını temsil ediyordu.
+
+35
+00:02:08,839 --> 00:02:13,835
+Bizans ordusu bir fil gibiydi: ağır zırhlı, kalabalık ve güçlü, ama yavaş.
+
+36
+00:02:13,785 --> 00:02:16,935
+Saflarında Bizanslıların yanında Ermeni, Frank,
+
+37
+00:02:16,935 --> 00:02:19,866
+Varang ve Peçenek paralı askerler vardı.
+
+38
+00:02:19,816 --> 00:02:23,349
+Selçuklu ordusu ise bir arı sürüsüne benziyordu: daha küçük,
+
+39
+00:02:23,349 --> 00:02:25,365
+hafif ve son derece hareketli.
+
+40
+00:02:25,315 --> 00:02:26,994
+Atlı okçular düşmana yaklaşır,
+
+41
+00:02:26,994 --> 00:02:30,323
+ok yağdırır ve göğüs göğüse çarpışmadan geri çekilirdi.
+
+42
+00:02:31,673 --> 00:02:36,479
+Bin yetmiş bir baharında Romen Diyojen büyük ordusuyla İstanbul'dan yola çıktı.
+
+43
+00:02:36,429 --> 00:02:41,173
+Ordu Anadolu'yu boydan boya geçerek Sivas'a, oradan da Erzurum'a ulaştı.
+
+44
+00:02:42,623 --> 00:02:47,213
+Yol boyunca disiplinsizlik ve paralı askerlerin yağmaları imparatoru uğraştırdı.
+
+45
+00:02:47,163 --> 00:02:51,023
+İmparator ordusunu Erzurum'da toplayıp son hazırlıklarını yaptı.
+
+46
+00:02:50,973 --> 00:02:55,687
+Hedefi, Van Gölü'nün kuzeyindeki Malazgirt ve Ahlat kalelerini geri almaktı.
+
+47
+00:02:55,637 --> 00:02:58,750
+Alparslan o sırada Suriye'de, Halep önlerindeydi.
+
+48
+00:02:58,700 --> 00:03:02,035
+Haberi alınca kuşatmayı kaldırdı ve hızla kuzeye yöneldi;
+
+49
+00:03:02,035 --> 00:03:05,386
+yolda Türkmen ve Kürt birlikleri de ordusuna katıldı.
+
+50
+00:03:08,236 --> 00:03:11,504
+Romen Diyojen, ilk büyük hatasını savaştan önce yaptı.
+
+51
+00:03:11,454 --> 00:03:15,586
+Ordusunun önemli bir kısmını general Tarkaniyotis ile Ahlat'a gönderdi.
+
+52
+00:03:15,536 --> 00:03:18,102
+Bu birlikler savaşa hiç katılmadı.
+
+53
+00:03:18,052 --> 00:03:21,328
+Üstelik ordudaki Uz ve Peçenek atlılarının bir kısmı,
+
+54
+00:03:21,328 --> 00:03:25,286
+savaştan bir gün önce soydaşları Selçukluların safına geçti.
+
+55
+00:03:25,236 --> 00:03:28,359
+Terazi yavaş yavaş Alparslan'dan yana dönüyordu.
+
+56
+00:03:29,709 --> 00:03:34,025
+Ordunun geri kalanıyla Malazgirt'e varan Romen, kaleyi kolayca teslim aldı.
+
+57
+00:03:33,975 --> 00:03:37,693
+Ertesi gün ot ve erzak toplamak için dağılan Bizans birlikleri,
+
+58
+00:03:37,693 --> 00:03:39,832
+Selçuklu öncüleriyle karşılaştı.
+
+59
+00:03:41,782 --> 00:03:45,641
+Yardıma koşan general Vasilakis pusuya düştü ve esir alındı.
+
+60
+00:03:47,791 --> 00:03:52,016
+Onu kurtarmaya giden Briyennios da ancak ağır kayıplarla geri dönebildi.
+
+61
+00:03:52,966 --> 00:03:54,095
+Bizanslılar ilk kez,
+
+62
+00:03:54,095 --> 00:03:57,790
+karşılarındaki ordunun sultanın kendi ordusu olduğunu anladı.
+
+63
+00:03:57,740 --> 00:04:01,455
+Alparslan bu sırada imparatora elçiler gönderip barış teklif etti.
+
+64
+00:04:01,405 --> 00:04:05,828
+Ama Romen teklifi reddetti; bunu sultanın zaman kazanma çabası olarak gördü.
+
+65
+00:04:07,178 --> 00:04:11,401
+Yirmi beş Ağustos gecesi iki ordugâhta da kimse rahat uyuyamadı.
+
+66
+00:04:11,351 --> 00:04:17,797
+Bizans kampının çevresinde Selçuklu okçuları gece boyunca dolaşıp ok attı ve askerlerin uykusunu kaçırdı.
+
+67
+00:04:17,747 --> 00:04:20,381
+Uz atlılarının bir kısmının karşı tarafa geçmesi,
+
+68
+00:04:20,381 --> 00:04:22,836
+kamptaki güvensizliği daha da artırmıştı.
+
+69
+00:04:22,786 --> 00:04:23,756
+Romen'in yanında,
+
+70
+00:04:23,756 --> 00:04:27,718
+imparatora pek de bağlı olmayan Andronikos Dukas komuta ediyordu.
+
+71
+00:04:27,668 --> 00:04:29,873
+Selçuklu karargâhında ise Alparslan,
+
+72
+00:04:29,873 --> 00:04:32,879
+din âlimi Ebu Nasr el-Buhari ile konuşuyordu.
+
+73
+00:04:32,829 --> 00:04:34,464
+Âlim, saldırının Cuma günü,
+
+74
+00:04:34,464 --> 00:04:38,349
+bütün camilerde zafer için dua edilirken yapılmasını önerdi.
+
+75
+00:04:38,299 --> 00:04:41,996
+Alparslan bu öneriyi kabul etti ve gözünü ertesi güne dikti.
+
+76
+00:04:43,346 --> 00:04:45,633
+Yirmi altı Ağustos Cuma günü Alparslan,
+
+77
+00:04:45,633 --> 00:04:48,346
+beyazlar giyerek askerlerinin önüne çıktı.
+
+78
+00:04:49,296 --> 00:04:54,162
+Selçuklu atlıları hilal biçiminde dizildi ve Bizans ordusunu ok yağmuruna tuttu.
+
+79
+00:04:57,112 --> 00:04:59,053
+Sonra geri çekilir gibi yaptılar;
+
+80
+00:04:59,053 --> 00:05:02,127
+imparator onları akşama kadar boş yere kovaladı.
+
+81
+00:05:03,577 --> 00:05:06,237
+Romen geri dönme emri verdiğinde saflar karıştı;
+
+82
+00:05:06,237 --> 00:05:09,394
+arkadaki ihtiyat birliklerinin komutanı Andronikos Dukas,
+
+83
+00:05:09,394 --> 00:05:13,356
+imparatorun yenildiği söylentisini yayarak savaş alanından çekildi.
+
+84
+00:05:14,506 --> 00:05:20,499
+Tam o anda tepelerde bekleyen Selçuklu kuvvetleri iki yandan saldırdı ve imparator esir düştü.
+
+85
+00:05:23,849 --> 00:05:28,481
+Şimdi savaşın en sıcak anına, imparatorun etrafına yakından bakalım.
+
+86
+00:05:28,431 --> 00:05:32,902
+Selçuklu atlıları dört bir yandan saldırırken gökyüzü oklarla karardı.
+
+87
+00:05:32,852 --> 00:05:37,284
+Bizans saflarında kalkanlar birbirine kenetlendi, ama oklar durmak bilmiyordu.
+
+88
+00:05:37,234 --> 00:05:41,323
+İmparatorun çevresinde yalnızca sadık Varang muhafızları kalmıştı.
+
+89
+00:05:41,273 --> 00:05:46,014
+Romen Diyojen kılıcını bırakmadı ve askerleriyle birlikte sonuna kadar savaştı.
+
+90
+00:05:45,964 --> 00:05:50,869
+Muhafızlar birer birer düştü ve imparatorun çevresindeki halka giderek daraldı.
+
+91
+00:05:50,819 --> 00:05:53,708
+Ama atı öldürüldü, kendisi de elinden yaralandı.
+
+92
+00:05:53,658 --> 00:05:56,597
+Akşam karanlığında bir Selçuklu askeri onu esir aldı;
+
+93
+00:05:56,597 --> 00:05:58,511
+üstelik kim olduğunu bilmeden.
+
+94
+00:05:59,861 --> 00:06:04,084
+Esir imparator sultanın huzuruna getirildiğinde Alparslan ona şunu sordu:
+
+95
+00:06:04,084 --> 00:06:07,168
+Eğer ben senin esirin olsaydım, bana ne yapardın?
+
+96
+00:06:07,118 --> 00:06:11,146
+Romen dürüstçe, belki onu öldüreceğini ya da teşhir edeceğini söyledi.
+
+97
+00:06:11,096 --> 00:06:15,253
+Alparslan ise imparatoru affetti ve bir antlaşmayla serbest bıraktı.
+
+98
+00:06:15,203 --> 00:06:18,004
+Ama asıl sonuç savaş alanının çok ötesindeydi:
+
+99
+00:06:18,004 --> 00:06:20,690
+Anadolu'nun kapıları Türklere açılmıştı.
+
+100
+00:06:22,040 --> 00:06:26,326
+Malazgirt zaferinin sahibi Alparslan, bu zaferin tadını uzun süre çıkaramadı.
+
+101
+00:06:26,276 --> 00:06:28,567
+Bir yıl sonra Orta Asya'daki bir seferde,
+
+102
+00:06:28,567 --> 00:06:31,723
+esir alınan bir kale komutanı onu hançerle yaraladı.
+
+103
+00:06:31,673 --> 00:06:35,256
+Büyük sultan, aldığı yaralarla birkaç gün sonra hayatını kaybetti.
+
+104
+00:06:35,206 --> 00:06:36,777
+Kaynaklara göre son sözleri,
+
+105
+00:06:36,777 --> 00:06:40,731
+gücüne güvenmenin bile insanı nasıl yanıltabileceğini anlatıyordu.
+
+106
+00:06:40,681 --> 00:06:45,619
+Yerine oğlu Melikşah geçti ve Selçuklular onun döneminde en parlak çağlarını yaşadı.
+
+107
+00:06:46,969 --> 00:06:49,552
+Malazgirt'ten sonra olaylar hızla gelişti.
+
+108
+00:06:49,502 --> 00:06:52,982
+Romen Diyojen serbest kaldığında tahtını çoktan kaybetmişti;
+
+109
+00:06:52,982 --> 00:06:56,421
+rakipleriyle savaştı, yenildi ve gözlerine mil çekildi.
+
+110
+00:06:56,371 --> 00:07:00,995
+Bizans iç savaşlarla uğraşırken Türkmen boyları Anadolu'nun içlerine doğru ilerledi.
+
+111
+00:07:00,945 --> 00:07:02,871
+Doğudan gelen bu boylar sürüleri,
+
+112
+00:07:02,871 --> 00:07:06,448
+çadırları ve aileleriyle birlikte yeni bir yurt arıyordu.
+
+113
+00:07:06,398 --> 00:07:11,529
+Bu göç dalgasının içinden Süleyman Şah çıktı ve İznik'i alarak yeni devletine merkez yaptı.
+
+114
+00:07:11,479 --> 00:07:14,165
+Böylece Anadolu Selçuklu Devleti doğdu.
+
+115
+00:07:14,115 --> 00:07:18,789
+Bir asır sonra Batılı kaynaklar bu topraklardan artık Türkiye diye söz etmeye başlayacaktı.
+
+116
+00:07:18,739 --> 00:07:19,301
+Malazgirt,
+
+117
+00:07:19,301 --> 00:07:23,373
+Anadolu'nun Türkler için yeni bir yurda dönüşmesinin ilk adımı oldu.
+
+118
+00:07:24,723 --> 00:07:29,450
+Peki küçük bir ordu, nasıl olup da koca bir imparatorluk ordusunu yendi?
+
+119
+00:07:29,400 --> 00:07:30,788
+Birinci sebep hızdı:
+
+120
+00:07:30,788 --> 00:07:35,828
+Selçuklu atlıları vurup kaçarak ağır Bizans ordusunu saatlerce yordu.
+
+121
+00:07:36,578 --> 00:07:37,881
+İkinci sebep birlikti:
+
+122
+00:07:37,881 --> 00:07:41,257
+Selçuklu ordusu tek bir sultanın etrafında kenetlenmişti,
+
+123
+00:07:41,257 --> 00:07:43,994
+Bizans ordusu ise kendi içinde bölünmüştü.
+
+124
+00:07:44,744 --> 00:07:46,153
+Üçüncü sebep sabırdı:
+
+125
+00:07:46,153 --> 00:07:51,167
+Alparslan doğru anı bekledi ve tuzağını ancak düşman yorulunca kapattı.
+
+126
+00:07:51,917 --> 00:07:56,119
+Ve Bizans'ın en büyük düşmanı, belki de kendi sarayındaki ihanetti.
+
+127
+00:07:57,369 --> 00:07:59,388
+Ağır zırh hızlı oka yenilmişti,
+
+128
+00:07:59,388 --> 00:08:04,003
+ama bu zaferi asıl belirleyen bölünmüş bir ordu ve bozulan güvendi.
+
+129
+00:08:03,953 --> 00:08:06,225
+Bir sonraki büyük savaşta görüşmek üzere!
+
