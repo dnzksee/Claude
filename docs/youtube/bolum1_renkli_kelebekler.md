@@ -44,23 +44,25 @@ umay ile zıpzıp, renkli kelebekler, renkleri öğreniyorum, mavi kırmızı sa
 
 ---
 
-# Shorts: Mavi Tekerlemesi
+# Shorts: Mavi şeyleri bulalım!
 
-**Video:** `shorts/short_bolum1_mavi_tekerlemesi.mp4` (1080×1920, 33 sn; bölümün 3:08–3:41 arası)
+**Video:** `shorts/short_bolum1_mavi.mp4` (1080×1920 dikey, 55 sn) — `studio/short_dikey.py` ile doğrudan dikey çizilir:
+kelebek → gökyüzü → üç mavi çiçek → göl ve ıslanan Zıpzıp → Cik-Cik → mavi top → mavi tekerlemesi → kanal kartı.
 
 ## Başlık
 
 ```
-Mavi Tekerlemesi 💙 Sen de söyle! #shorts
+Mavi Şeyleri Bulalım! 💙 Gökyüzü, Çiçek, Göl, Kuş | Umay ile Zıpzıp #shorts
 ```
 
 ## Açıklama
 
 ```
-Mavi, mavi, gökyüzü mavi! 💙 Umay ve Zıpzıp ile mavi tekerlemesini birlikte söyleyelim.
+Umay ve köpeği Zıpzıp mavi şeyleri arıyor! 💙 Kelebek, gökyüzü, çiçekler, göl, kuş Cik-Cik ve mavi top...
+Sen de etrafına bak: mavi bir şey bulabilir misin?
 Tam bölüm: "Renkli Kelebekler" — Umay ile Zıpzıp kanalında.
 
-#shorts #renkleriöğreniyorum #çocukşarkısı #umayilezıpzıp
+#shorts #renkleriöğreniyorum #mavi #çocukçizgifilmi #umayilezıpzıp
 ```
 
 **İpucu:** Shorts'u yüklerken "İlgili video" olarak 1. bölümü seçin; izleyen tam bölüme tek dokunuşla geçer.

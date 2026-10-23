@@ -8,8 +8,10 @@ Claude yönetmen, yazar ve tasarımcıdır.
 1. **Bölüm videosu — yalnızca 1080p, tek parça** (720p üretme). GitHub sınırı (100 MB) için iki geçişli kodlanır
    (`-tune animation`, ~860 kb/sn video + 128 kb/sn ses ≈ 96 MB / 13 dk) → `videolar/bolumN_..._1080p.mp4`;
    `videolar/BENIOKU.md` güncellenir, video sohbete de gönderilir. Çok uzun bölüm sığmazsa bölüm sınırlarından parçalara bölünür.
-2. **Shorts videosu** — 1080×1920, ≤60 sn, bölümün en akılda kalan kısmı (genelde tekerleme/şarkı):
-   `python3 studio/short_yap.py --src ... --start ... --end ... --baslik ... --renk ... --out shorts/...`
+2. **Shorts videosu** — 1080×1920, ≤60 sn, **doğrudan dikey çizilir** (`studio/short_dikey.py`: kamera karakterlere yakın,
+   bölümün en eğlenceli anlarından hızlı kurgu, ilk 2-3 sn büyük "kanca" başlığı, kesintisiz müzik, sonda kanal kartı,
+   ses -14 LUFS). Yeni bölüm için betikteki `KLIPLER` (bölüm saniyeleri) ve `KANCA` metni değiştirilir.
+   Yatay videodan kare kesip bantlarla doldurma (`short_yap.py`) kullanıcı tarafından beğenilmedi.
 3. **Küçük resim (kapak)** — 1280×720, `studio/kanal_gorselleri.py` içine bölüm için yeni bir `kapak_...` fonksiyonu eklenir → `kanal/`.
 4. **YouTube metinleri** — `docs/youtube/bolumN_....md`: başlık (≤100 karakter), açıklama (bölüm zaman damgalarıyla,
    `ep*.py --plan` çıktısından), etiketler; Shorts için başlık + açıklama. Kitle: **çocuklara yönelik**.

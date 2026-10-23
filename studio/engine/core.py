@@ -1,10 +1,13 @@
 """Temel araçlar: sabitler, yumuşatma eğrileri, anahtar kare izleri, gürültü dokuları, şekil yardımcıları."""
 import math
+import os
 
 import cv2
 import numpy as np
 
-W, H, FPS = 1920, 1080, 24
+# kare ölçüsü: varsayılan yatay 1920x1080; dikey Shorts için UMAY_KARE=1080x1920 (modüller içe aktarılmadan önce)
+W, H = (int(v) for v in os.environ.get("UMAY_KARE", "1920x1080").split("x"))
+FPS = 24
 GROUND_Y = 880.0
 
 

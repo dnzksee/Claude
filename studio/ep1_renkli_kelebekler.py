@@ -1051,11 +1051,10 @@ def draw_dance_items(p, pl, t, dseg, ux, ch, sub=None):
 
 
 # ================================================================ SES
-def build_audio(path):
+def music_bed(dur, mode_at):
+    """Sözsüz müzik yatağı. mode_at(t0, orta) → "soft" | "calm" | "travel" | "dance" (her 4 vuruşluk ölçü için)."""
     from engine import audio as Au
-    pl = plan()
-    dur = pl.duration
-    music, sfx, vo = Au.Bus(dur), Au.Bus(dur), Au.Bus(dur)
+    music = Au.Bus(dur)
     BEAT = 0.6
     BAR = 4 * BEAT
     CH = {"C": ("C3", ["C4", "E4", "G4"]), "G": ("G2", ["B3", "D4", "G4"]), "Am": ("A2", ["A3", "C4", "E4"]), "F": ("F2", ["F3", "A3", "C4"])}
@@ -1109,23 +1108,33 @@ def build_audio(path):
     nb = int(dur / BAR) + 1
     for b in range(nb):
         t0 = b * BAR
-        mid = t0 + BAR / 2
-        if mid > dur - 4.0:
+        if t0 + BAR / 2 > dur - 4.0:
             break
-        if pl.seg_at(mid, "wait") or pl.seg_at(t0, "wait"):
-            mode = "soft"
-        elif pl.seg_at(mid, "dance") or pl.seg_at(mid, "recap"):
-            mode = "dance"
-        elif pl.seg_at(mid, "travel"):
-            mode = "travel"
-        else:
-            mode = "calm"
-        bar(t0, b, mode)
-    tend = (nb - 2) * BAR
+        bar(t0, b, mode_at(t0, t0 + BAR / 2))
     music.add(dur - 4.0, Au.pad([hz("C4"), hz("E4"), hz("G4"), hz("C5")], 3.0, attack=0.3, release=1.0), 0.09)
     music.add(dur - 4.0, Au.strum("C", True, 2.5, spread=0.03), 0.2, pan=-0.25)
     music.add(dur - 3.95, Au.kalimba(hz("C6"), 3.0), 0.22)
+    return music
 
+
+def build_audio(path, with_music=True):
+    """with_music=False: yalnız konuşma + efekt (Shorts kurgusu için)."""
+    from engine import audio as Au
+    pl = plan()
+    dur = pl.duration
+    sfx, vo = Au.Bus(dur), Au.Bus(dur)
+    hz = lambda nm: Au.midi_hz(Au.n(nm))
+
+    def mode_at(t0, mid):
+        if pl.seg_at(mid, "wait") or pl.seg_at(t0, "wait"):
+            return "soft"
+        if pl.seg_at(mid, "dance") or pl.seg_at(mid, "recap"):
+            return "dance"
+        if pl.seg_at(mid, "travel"):
+            return "travel"
+        return "calm"
+
+    music = music_bed(dur, mode_at)
     # efektler
     T = pl.T
     sfx.add(0.9, Au.sparkle(base=Au.n("G5")), 0.28)
@@ -1184,7 +1193,7 @@ def build_audio(path):
     sfx.buf = Au.reverb(sfx.buf, 1.2, 0.12)
     t_ = np.arange(len(music.buf)) / Au.SR
     fade = np.clip((dur - 0.3 - t_) / 2.0, 0, 1) * np.clip(t_ / 0.5, 0, 1)
-    mix = (music.buf * duck * 0.8 + sfx.buf * 0.9 + vo.buf * 1.1) * fade[:, None]
+    mix = ((music.buf * duck * 0.8 if with_music else 0.0) + sfx.buf * 0.9 + vo.buf * 1.1) * fade[:, None]
     Au.write_wav(path, Au.soft_limit(mix[: int(dur * Au.SR)]))
     return path
 
