@@ -2,6 +2,7 @@
 Ses: bölümün konuşma + efekt kaydından kesilir, altına kesintisiz yeni bir müzik yatağı konur. Sonda kanal kartı.
 
     python3 short_dikey.py --out ../shorts/short_bolum1_mavi.mp4
+    UMAY_BOLUM=2 python3 short_dikey.py --out ../shorts/short_bolum2_sekil_avi.mp4
 """
 import argparse
 import math
@@ -16,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cv2
 import numpy as np
 
-import ep1_renkli_kelebekler as E
+import importlib
 from engine import world
 from engine import audio as Au
 from engine.core import W, H, FPS, GROUND_Y, clamp, smooth, ease_out_back
@@ -25,26 +26,38 @@ from engine.characters import draw_umay, draw_zipzip, draw_butterfly, umay_arm_p
 from engine import props as P
 import kanal_gorselleri as K
 
+BOLUM = os.environ.get("UMAY_BOLUM", "1")
+E = importlib.import_module({"1": "ep1_renkli_kelebekler", "2": "ep2_sekil_avi"}[BOLUM])
 ROOT = E.ROOT
-WORK = os.path.join(ROOT, "build", "short")
+WORK = os.path.join(ROOT, "build", f"short{BOLUM}")
 ZOOM = 1.9                  # dikey kadrajda karakterler büyük (ekran yüksekliğinin ~1/3'ü)
 GROUND_AT = 0.70            # zemin ekranın bu yüksekliğinde
-# 1. bölüm, mavi: (başlangıç, bitiş) sn — bölüm zaman çizelgesinden
-KLIPLER = [
-    (57.5, 62.6),    # Bak! Bir kelebek geliyor! — Kelebek! Kelebek!
-    (63.0, 64.4),    # Kelebek ne renk?
-    (67.6, 72.9),    # Mavi! Evet, mavi! — Mavi kelebek! — Hav hav!
-    (86.2, 87.5),    # Gökyüzü ne renk?
-    (91.0, 95.4),    # Mavi! Gökyüzü de mavi! — Gökyüzü mavi!
-    (108.6, 114.6),  # Bir... iki... üç! — Üç mavi çiçek!
-    (133.4, 134.6),  # Su ne renk?
-    (138.1, 142.5),  # Mavi! — Hav! — Hi hi! Zıpzıp ıslandı!
-    (160.0, 164.6),  # Bu Cik-Cik... Cik cik cik!
-    (178.0, 184.4),  # Top! Mavi top! — Zıpzıp, yakala! — Aferin!
-    (188.6, 200.2),  # Mavi tekerlemesi
-]
+# bölüm başına: kesitler (bölüm saniyeleri), kanca başlığı, kart yazısı, kart süsü, son kesitte müzik "dans" moduna geçer mi
+AYAR = {
+    "1": dict(klipler=[
+        (57.5, 62.6),    # Bak! Bir kelebek geliyor! — Kelebek! Kelebek!
+        (63.0, 64.4),    # Kelebek ne renk?
+        (67.6, 72.9),    # Mavi! Evet, mavi! — Mavi kelebek! — Hav hav!
+        (86.2, 87.5),    # Gökyüzü ne renk?
+        (91.0, 95.4),    # Mavi! Gökyüzü de mavi! — Gökyüzü mavi!
+        (108.6, 114.6),  # Bir... iki... üç! — Üç mavi çiçek!
+        (133.4, 134.6),  # Su ne renk?
+        (138.1, 142.5),  # Mavi! — Hav! — Hi hi! Zıpzıp ıslandı!
+        (160.0, 164.6),  # Bu Cik-Cik... Cik cik cik!
+        (178.0, 184.4),  # Top! Mavi top! — Zıpzıp, yakala! — Aferin!
+        (188.6, 200.2),  # Mavi tekerlemesi
+    ], kanca=("Mavi şeyleri", "bulalım!"), kanca_renk="mavi", kart="Renkli Kelebekler", sus="kelebek", son_dans=True),
+    "2": dict(klipler=[
+        (34.5, 39.8),    # Hav? — Eyvah! Zıpzıp kutuya çarptı, parçalar bahçeye düştü!
+        (55.2, 66.1),    # Bak! Bir parça yuvarlanıyor! — Dur! Kaçma! — Bunun adı... daire! — Daire!
+        (223.6, 237.4),  # Zıpzıp kareyi daire deliğe koyuyor... Hav? — Olmadı! — Kare, kare deliğe! — Tık!
+        (387.1, 399.6),  # Karpuz dilimi de üçgen! — Ham! Mmm, tatlı! — Hapşuuu! — Çok yaşa Zıpzıp!
+        (505.8, 518.6),  # Şekiller bir resim yaptı! — Kare ev, üçgen çatı, daire güneş! — Ev! Bizim ev!
+    ], kanca=("Hangisi", "nereye?"), kanca_renk="mor", kart="Şekil Avı", sus="sekil", son_dans=False),
+}[BOLUM]
+KLIPLER = AYAR["klipler"]
 KART = 3.0                   # sondaki kanal kartı (sn)
-KANCA = ("Mavi şeyleri", "bulalım!")   # ilk saniyelerde büyük başlık (izleyiciyi yakalar)
+KANCA = AYAR["kanca"]        # ilk saniyelerde büyük başlık (izleyiciyi yakalar)
 KANCA_SN = 2.6
 
 
@@ -91,11 +104,15 @@ def kart_kare(u):
     draw_umay(p, 0, 0, 1.0, {"facing": 1, "arms": umay_arm_pose("cheer", u * 3), "happy": 0.8, "mouth": 0.6})
     ctx.restore()
     for k, (x, y, col) in enumerate(((170, 560, "mavi"), (900, 620, "kirmizi"), (560, 520, "sari"))):
-        draw_butterfly(p, x, y + 18 * math.sin(u * 9 + k), 1.3, u * 14 + k, 0.2 * math.sin(u * 5 + k), col=P.COL[col])
+        if AYAR["sus"] == "kelebek":
+            draw_butterfly(p, x, y + 18 * math.sin(u * 9 + k), 1.3, u * 14 + k, 0.2 * math.sin(u * 5 + k), col=P.COL[col])
+        else:
+            from engine import props2 as Q
+            Q.piece(p, ("kare", "ucgen", "daire")[k], x, y + 18 * math.sin(u * 9 + k), 52, rot=u * 3 + k, seed=f"kp{k}")
     a = clamp((u - 0.15) / 0.2)
     if a > 0:
         K.text(p, "Tam bölüm kanalda!", W / 2, 1560, 92, (1, 1, 1), lw=1.6)
-        K.text(p, "Renkli Kelebekler", W / 2, 1700, 70, (1.0, 0.89, 0.43), lw=1.3)
+        K.text(p, AYAR["kart"], W / 2, 1700, 70, (1.0, 0.89, 0.43), lw=1.3)
     cv.surface.flush()
     return cv.arr[..., :3].copy()
 
@@ -112,7 +129,7 @@ def kanca(img, u):
         ctx.scale(pop, pop)
         ctx.rotate(-0.04)
         K.text(p, KANCA[0], 0, -80, 128, (1, 1, 1), lw=2.0)
-        K.text(p, KANCA[1], 0, 70, 150, P.COL["mavi"], lw=2.2)
+        K.text(p, KANCA[1], 0, 70, 150, P.COL[AYAR["kanca_renk"]], lw=2.2)
         ctx.restore()
     cv.surface.flush()
     a = cv.arr[..., 3:4].astype(np.float32) / 255
@@ -136,7 +153,7 @@ def _iş(args):
 
 def ses(pl, out):
     """Konuşma + efekt kesitleri art arda, altında kesintisiz müzik; konuşmada müzik kısılır."""
-    stem = os.path.join(WORK, "ep1_konusma_efekt.wav")
+    stem = os.path.join(WORK, f"ep{BOLUM}_konusma_efekt.wav")
     if not os.path.exists(stem):
         E.build_audio(stem, with_music=False)
     import wave
@@ -158,7 +175,7 @@ def ses(pl, out):
     parts.append(np.zeros((int(KART * sr), x.shape[1]), np.float32))
     vo = np.concatenate(parts)[: int(dur * sr)]
     tek0 = sum(b - a for a, b in KLIPLER[:-1])          # tekerleme başlangıcı
-    music = E.music_bed(dur + 0.5, lambda t0, mid: "dance" if mid > tek0 - 0.3 else "travel")
+    music = E.music_bed(dur + 0.5, lambda t0, mid: "dance" if (AYAR["son_dans"] and mid > tek0 - 0.3) else "travel")
     mbuf = Au.lowpass(Au.reverb(music.buf, 1.8, 0.24), 8500)[: len(vo)]
     duck = Au.duck_curve(dur + 0.5, spans, depth=0.35)[: len(vo), None]
     tt = np.arange(len(vo)) / sr
@@ -176,6 +193,8 @@ def main():
     a = ap.parse_args()
     os.makedirs(WORK, exist_ok=True)
     E.STYLE = "cizgi"
+    if not hasattr(E, "focus_point"):
+        raise SystemExit("bölüm modülünde focus_point yok")
     orig = world.build_layers
     world.build_layers = lambda style, cache_dir=None, tag="", **kw: orig(style, cache_dir, tag + f"_{W}x{H}", **kw)
     pl = E.setup()

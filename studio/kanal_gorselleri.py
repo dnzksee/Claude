@@ -203,6 +203,40 @@ def kapak_bolum1():
     print(out)
 
 
+# --------------------------------------------------------------- 2. bölüm kapağı (sağ alt köşe süre etiketi için boş)
+def kapak_bolum2():
+    from engine import props2 as Q
+    KW, KH = 1920, 1080
+    cv = Canvas(KW, KH)
+    p = painter(cv)
+    p.part(lambda c: c.rectangle(0, 0, KW, KH), None, grad=(SKY[0], SKY[1], 0, KH), line=False, flat=True, seed="k2bg")
+    sun_burst(p, 520, 640, 80, 1500, 18, hexrgb("#FFFFFF"), alpha=0.14)
+    p.part(lambda c: blob(c, 520, 1250, 900, n=12, wobble=0.04, seed=3, sy=0.45), hexrgb("#7CC062"), seed="k2hill", flat=True)
+    ctx = p.ctx
+    ctx.save()
+    ctx.translate(500, 1010)
+    ctx.scale(1.75, 1.75)
+    draw_zipzip(p, -250, 0, 1.0, {"facing": 1, "happy": 1.0, "mouth": 0.7, "look_up": 0.4})
+    draw_umay(p, 0, 0, 1.0, {"facing": 1, "arms": umay_arm_pose("cheer", 0.3), "happy": 0.8, "mouth": 0.7})
+    ctx.restore()
+    Q.shape_box(p, 860, 1050, 1.3, filled=("daire",))
+    text(p, "Şekil Avı", 1400, 105, 100, hexrgb("#FFFFFF"), lw=1.6)
+    for i, kind in enumerate(("daire", "kare", "ucgen")):
+        y = 330 + i * 195
+        Q.piece(p, kind, 1120, y, 62, rot=0.12 * (i - 1), seed=f"k2p{i}")
+        ctx.save()
+        ctx.translate(1530, y)
+        ctx.rotate(-0.04 + 0.03 * i)
+        text(p, Q.SHAPE_WORD[kind], 0, 0, 160, Q.SHAPE_COL[kind], lw=2.2)
+        ctx.restore()
+    path = save(cv, "_kapak2.png")
+    im = cv2.imread(path)
+    out = os.path.join(OUT, "kapak_bolum2_sekil_avi_1280x720.jpg")
+    cv2.imwrite(out, cv2.resize(im, (1280, 720), interpolation=cv2.INTER_AREA), [cv2.IMWRITE_JPEG_QUALITY, 92])
+    os.remove(path)
+    print(out)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     profil()
@@ -210,3 +244,4 @@ if __name__ == "__main__":
     filigran()
     yazi_logo()
     kapak_bolum1()
+    kapak_bolum2()
