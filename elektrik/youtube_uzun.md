@@ -26,14 +26,14 @@ Bölümler:
 
 Görseller yapay zekâ ile üretilmiştir; anlatım tarihî kaynaklara dayanır.
 
-Bilgi Sarmanı: Tarihten bilime, merak ettiğin her şeyin hikâyesi çizgi filmle anlatılıyor. Abone ol, bir sonraki bilgiyi kaçırma!
+Kroniknâme: Tarihin büyük savaşları, unutulmuş hikâyeleri ve dünyayı değiştiren keşifler çizgi filmle anlatılıyor. Abone ol, bir sonraki sayfayı birlikte açalım!
 
-#elektrik #bilimtarihi #Tesla #BilgiSarmanı
+#elektrik #bilimtarihi #Tesla #Kroniknâme
 ```
 
-## Etiketler (366/500)
+## Etiketler (363/500)
 ```
-elektrik, elektriğin keşfi, elektriği kim buldu, elektriğin tarihi, bilim tarihi, Thales, kehribar, William Gilbert, Leyden şişesi, Benjamin Franklin, uçurtma deneyi, paratoner, Galvani, Volta, ilk pil, Ørsted, Faraday, jeneratör, Morse, telgraf, Edison, ampul, Tesla, alternatif akım, Akımlar Savaşı, Niagara, icatlar, mucitler, animasyon, çizgi film, Bilgi Sarmanı
+elektrik, elektriğin keşfi, elektriği kim buldu, elektriğin tarihi, bilim tarihi, Thales, kehribar, William Gilbert, Leyden şişesi, Benjamin Franklin, uçurtma deneyi, paratoner, Galvani, Volta, ilk pil, Ørsted, Faraday, jeneratör, Morse, telgraf, Edison, ampul, Tesla, alternatif akım, Akımlar Savaşı, Niagara, icatlar, mucitler, animasyon, çizgi film, Kroniknâme
 ```
 
 ## Yükleme notları

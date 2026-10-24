@@ -9,14 +9,14 @@ Bilim İnsanları Elektriği Kendilerini Çarparak Test Etti! ⚡ #shorts
 ```
 Elektriğin ilk deneyleri tam bir macera: Musschenbroek elektrik dolu şişeye dokundu ve bir daha asla denemeyeceğini yazdı, Nollet ise el ele tutuşmuş 200 keşişi aynı anda zıplattı.
 
-Bilgi Sarmanı: Tarihten bilime, merak ettiğin her şeyin hikâyesi çizgi filmle anlatılıyor. Abone ol, bir sonraki bilgiyi kaçırma!
+Kroniknâme: Tarihin büyük savaşları, unutulmuş hikâyeleri ve dünyayı değiştiren keşifler çizgi filmle anlatılıyor. Abone ol, bir sonraki sayfayı birlikte açalım!
 
-#elektrik #bilimtarihi #BilgiSarmanı #shorts
+#elektrik #bilimtarihi #Kroniknâme #shorts
 ```
 
-## Etiketler (225/500)
+## Etiketler (222/500)
 ```
-elektrik, elektriğin keşfi, Leyden şişesi, Musschenbroek, Nollet, keşişler, Benjamin Franklin, uçurtma deneyi, paratoner, bilim tarihi, ilginç bilgiler, tarih shorts, bilim shorts, animasyon, çizgi film, Bilgi Sarmanı, shorts
+elektrik, elektriğin keşfi, Leyden şişesi, Musschenbroek, Nollet, keşişler, Benjamin Franklin, uçurtma deneyi, paratoner, bilim tarihi, ilginç bilgiler, tarih shorts, bilim shorts, animasyon, çizgi film, Kroniknâme, shorts
 ```
 
 ## Yükleme notları
