@@ -53,7 +53,8 @@ AYAR = {
         (223.6, 237.4),  # Zıpzıp kareyi daire deliğe koyuyor... Hav? — Olmadı! — Kare, kare deliğe! — Tık!
         (387.1, 399.6),  # Karpuz dilimi de üçgen! — Ham! Mmm, tatlı! — Hapşuuu! — Çok yaşa Zıpzıp!
         (505.8, 518.6),  # Şekiller bir resim yaptı! — Kare ev, üçgen çatı, daire güneş! — Ev! Bizim ev!
-    ], kanca=("Hangisi", "nereye?"), kanca_renk="mor", kart="Şekil Avı", sus="sekil", son_dans=False),
+    ], kanca=("Hangisi", "nereye?"), kanca_renk="mor", kart="Şekil Avı", sus="sekil", son_dans=False,
+        ozel={"F2": lambda ux, zx: (ux - 50, GROUND_Y - 0.28 * H / 1.2, 1.2)}),   # finaldeki ev resmi ve güneş kadraja girsin
 }[BOLUM]
 KLIPLER = AYAR["klipler"]
 KART = 3.0                   # sondaki kanal kartı (sn)
@@ -76,6 +77,15 @@ def kadraj(pl, st):
             fp = E.focus_point(pl, sc["code"], t, st.ux[i], st.zx[i])
             if fp is not None and abs(fp[0] - mid) < 700:
                 cx = mid + np.clip((fp[0] - mid) * 0.5, -110, 110)   # konuşulan nesneye doğru, karakterleri kaybetmeden
+        if hi - lo > 0.8 * W / ZOOM:          # ikisi birden sığmıyorsa hareketi yapanı (Zıpzıp) izle
+            cx = st.zx[i] + 60
+        oz = AYAR.get("ozel", {}).get(sc["code"]) if sc is not None else None
+        if oz:
+            v = oz(st.ux[i], st.zx[i])
+            if isinstance(v, tuple):          # (cx, cy, zoom): bu sahnede kamera geri çekilir
+                cam[i] = v
+                continue
+            cx = v
         cam[i] = (cx, cy, ZOOM)
     cam = E._spring(cam, w=2.0)
     cam[:, 0] = np.maximum(cam[:, 0], W / (2 * ZOOM) - world.MX + 20)
