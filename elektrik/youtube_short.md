@@ -21,4 +21,4 @@ elektrik, elektriğin keşfi, Leyden şişesi, Musschenbroek, Nollet, keşişler
 
 ## Yükleme notları
 - Uzun videoya bağlantı için yükleme ekranındaki **"Bağlantılı video"** alanında uzun videoyu seç; Shorts'ta başlığın üstünde tıklanabilir bir bağlantı olarak görünür.
-- Video tam ekran (1080×1920), 44 saniye; sonunda kapanış kartı yok.
+- Video tam ekran (1080×1920), 44 saniye; kelime kelime altyazılı, sonunda kapanış kartı yok.
