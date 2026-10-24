@@ -18,7 +18,8 @@ KAPANIS_YAZI = "Anadolu'nun kapısı açıldı"
 KART_SURE = 4.5  # açılış kartı kısa kalır; anlatım ilk sahne görüntüsüyle sürer
 KAPAK = dict(ust="MALAZGİRT", alt="1071", vurgu="İMPARATOR ESİR!",
              sol=("Romen", dict(ifade="panik", poz="kollar_yukari")),
-             sag=("Alparslan", dict(ifade="kararli", poz="isaret", elde={"R": "kilic"})))
+             sag=("Alparslan", dict(ifade="kararli", poz="el_salla", elde={"R": "kilic"})),
+             ok="sol", sol_arma="bizans", sag_arma="selcuklu")
 KART_RENK = {"ust": (0.55, 0.16, 0.14), "alt": (0.25, 0.06, 0.06)}
 YOUTUBE = dict(
     baslik="Malazgirt 1071: Ağır Zırh Hızlı Oka Nasıl Yenildi? | Animasyonlu Anlatım",
