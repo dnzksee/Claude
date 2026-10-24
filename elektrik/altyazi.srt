@@ -1,0 +1,92 @@
+1
+00:00:02,200 --> 00:00:08,185
+Elektriği kimse tek bir günde icat etmedi. Bu, 2500 yıl süren bir keşif hikâyesi.
+
+2
+00:00:10,283 --> 00:00:17,966
+MÖ 600'de Thales, kumaşa sürtülen kehribarın tüyleri çektiğini fark etti. Yunanca kehribar: elektron.
+
+3
+00:00:19,867 --> 00:00:25,707
+1600'de William Gilbert, bu gizemli güce bir isim verdi: elektrik.
+
+4
+00:00:29,450 --> 00:00:36,605
+Otto von Guericke, kükürtten bir küre yapıp döndürdü ve sürttü. Karanlıkta parlayan ilk elektrik makinesi doğmuştu.
+
+5
+00:00:39,033 --> 00:00:47,928
+Hollandalı Musschenbroek, elektriği bir cam şişede biriktirmeyi başardı. Ama aldığı darbe o kadar sertti ki, bir daha asla denemeyeceğini yazdı.
+
+6
+00:00:48,617 --> 00:00:53,820
+Fransız Nollet ise bu şişeyle, el ele tutuşmuş 200 keşişi aynı anda sarstı.
+
+7
+00:00:58,200 --> 00:01:05,230
+1752'de Benjamin Franklin, fırtınada uçurtma uçurarak şimşeğin de elektrik olduğunu gösterdi.
+
+8
+00:01:07,783 --> 00:01:15,533
+Bu keşiften paratoner doğdu. Çatıdaki metal bir çubuk, yıldırımı güvenle toprağa indirerek sayısız evi kurtardı.
+
+9
+00:01:17,367 --> 00:01:26,557
+İtalya'da Luigi Galvani, metal değdirdiği kurbağa bacaklarının seğirdiğini gördü. Ona göre canlıların içinde bir elektrik vardı.
+
+10
+00:01:26,950 --> 00:01:34,578
+Volta buna itiraz etti ve metal diskleri üst üste dizerek ilk pili yaptı. İlk kez sürekli bir akım elde edildi.
+
+11
+00:01:36,533 --> 00:01:45,570
+1820'de Ørsted, akım geçen bir telin pusula iğnesini döndürdüğünü fark etti. Elektrik ve manyetizma, aynı gücün iki yüzüydü.
+
+12
+00:01:46,117 --> 00:01:51,420
+Michael Faraday ise tersini yaptı: mıknatısı bir bobinde hareket ettirerek elektrik üretti.
+
+13
+00:01:55,700 --> 00:02:03,425
+Dönen bir bakır diskle ilk jeneratörü kurdu. Bugün santrallerdeki dev türbinler, hâlâ aynı ilkeyle çalışıyor.
+
+14
+00:02:05,283 --> 00:02:13,445
+1844'te Samuel Morse, telgrafla şehirler arasında ilk mesajı gönderdi. Elektrik artık haber de taşıyordu.
+
+15
+00:02:14,867 --> 00:02:20,440
+1879'da Thomas Edison, saatlerce yanabilen pratik bir ampul geliştirdi.
+
+16
+00:02:24,450 --> 00:02:31,622
+Üç yıl sonra New York'ta ilk elektrik santralini kurdu ve koca bir mahalle, gaz lambası yerine elektrikle aydınlandı.
+
+17
+00:02:34,033 --> 00:02:39,476
+Nikola Tesla ise elektriği çok uzaklara taşıyabilen alternatif akımı geliştirdi.
+
+18
+00:02:43,617 --> 00:02:49,987
+Böylece akımlar savaşı başladı: Edison'un doğru akımı mı, Tesla'nın alternatif akımı mı?
+
+19
+00:02:53,200 --> 00:03:00,597
+1893'te Chicago Dünya Fuarı, alternatif akımla yanan on binlerce ampulle geceyi gündüze çevirdi.
+
+20
+00:03:02,783 --> 00:03:11,167
+Kısa süre sonra Niagara Şelalesi'nin gücü, kilometrelerce öteki şehirlere taşındı. Kazanan, alternatif akımdı.
+
+21
+00:03:12,367 --> 00:03:20,507
+20. yüzyılda elektrik evlere girdi: buzdolabı, radyo, çamaşır makinesi. Hayat bir daha asla eskisi gibi olmadı.
+
+22
+00:03:21,950 --> 00:03:26,443
+Ve bugün, elektriği rüzgârdan ve güneşten üretmenin yollarını arıyoruz.
+
+23
+00:03:31,733 --> 00:03:37,743
+Cebindeki telefondan şehrin ışıklarına kadar her şey, o küçük kıvılcımla başladı.
+
