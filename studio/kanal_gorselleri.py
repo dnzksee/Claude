@@ -185,16 +185,16 @@ def kapak_bolum1():
     draw_zipzip(p, -250, 0, 1.0, {"facing": 1, "happy": 1.0, "mouth": 0.7, "look_up": 0.5})
     draw_umay(p, 0, 0, 1.0, {"facing": 1, "arms": umay_arm_pose("point", 0.3), "happy": 0.8, "mouth": 0.7, "eye_dy": -2})
     ctx.restore()
-    for i, (x, y, col, r) in enumerate(((1020, 250, "mavi", -0.2), (1500, 180, "kirmizi", 0.25), (1300, 420, "sari", 0.05))):
-        draw_butterfly(p, x, y, 1.9, 0.35, rot=r, col=P.COL[col])
-    # büyük yazı: renkler
+    # sağ alt köşe (YouTube süre etiketi) boş bırakılır: yazılar sağ üstte ve ortada
+    text(p, "Renkli Kelebekler", 1400, 105, 92, hexrgb("#FFFFFF"), lw=1.6)
+    for i, (x, y, col, r) in enumerate(((1010, 330, "mavi", -0.2), (960, 565, "kirmizi", 0.25), (1000, 790, "sari", 0.05))):
+        draw_butterfly(p, x, y, 1.6, 0.35, rot=r, col=P.COL[col])
     for i, (w, col) in enumerate((("MAVİ", "mavi"), ("KIRMIZI", "kirmizi"), ("SARI", "sari"))):
         ctx.save()
-        ctx.translate(1450, 620 + i * 150)
+        ctx.translate(1480, 330 + i * 190)
         ctx.rotate(-0.05 + 0.04 * i)
-        text(p, w, 0, 0, 150, P.COL[col], lw=2.0)
+        text(p, w, 0, 0, 170, P.COL[col], lw=2.2)
         ctx.restore()
-    text(p, "Renkli Kelebekler", 1450, 1010, 78, hexrgb("#FFFFFF"), lw=1.5)
     path = save(cv, "_kapak.png")
     im = cv2.imread(path)
     out = os.path.join(OUT, "kapak_bolum1_renkli_kelebekler_1280x720.jpg")
