@@ -187,6 +187,11 @@ BOLUMLER = [
 ]
 
 AD = {A: "Anlatıcı", U: "Umay", Z: "Zıpzıp"}
+from senaryo_renkli_kelebekler import SESLER   # aynı sesler: Aoede, Leda (+küçük çocuk dönüşümü)
+# anlatıcı her bölüm için ayrı dosya (tek istekte uzun metin sorun çıkarır), Umay tek dosya; Zıpzıp kütüphaneden
+DOSYALAR = [(f"anlatici_{i + 1}_{b['kod']}", A, [b["kod"]]) for i, b in enumerate(BOLUMLER)] + [
+    ("umay_tum", U, [b["kod"] for b in BOLUMLER]),
+]
 SEKIL = {"daire": "DAİRE", "kare": "KARE", "ucgen": "ÜÇGEN"}
 
 

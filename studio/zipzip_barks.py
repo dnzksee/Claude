@@ -1,7 +1,8 @@
 """Zıpzıp'ın sesleri: gerçek (CC0) küçük köpek kaydından tek tek havlamalar kesilir.
 Kaynak: assets/sfx/kopek_havlama_CC0_garuda1982.mp3 (bkz. assets/sfx/KAYNAKLAR.md)
 
-    python3 zipzip_barks.py      # assets/vo_ep1/ içine Zıpzıp'ın tüm satırlarını yazar
+    python3 zipzip_barks.py                 # assets/vo_ep1/ içine Zıpzıp'ın tüm satırlarını yazar
+    UMAY_BOLUM=2 python3 zipzip_barks.py    # 2. bölüm (assets/vo_ep2/)
 """
 import os
 import subprocess
@@ -12,7 +13,8 @@ from scipy.signal import butter, sosfilt, sosfiltfilt
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import voice_batch as VB
-from senaryo_renkli_kelebekler import satirlar, Z
+from senaryo_renkli_kelebekler import Z
+satirlar = VB.satirlar
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "assets", "sfx", "kopek_havlama_CC0_garuda1982.mp3")
@@ -92,6 +94,7 @@ def brighten(sig):
 
 def main():
     S = {k: brighten(v) for k, v in build().items()}
+    os.makedirs(VB.OUT, exist_ok=True)
     n = 0
     for cid, _, txt, _ in satirlar(Z):
         VB.write(os.path.join(VB.OUT, f"{cid}.wav"), np.clip(S[txt], -1, 1), FS, Z)

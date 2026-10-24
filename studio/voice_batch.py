@@ -22,12 +22,18 @@ import wave
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from senaryo_renkli_kelebekler import DOSYALAR, SESLER, satirlar
+import importlib
 from engine.toddler_voice import toddler
 
+# hangi bölüm: UMAY_BOLUM=2 → senaryo_sekil_avi, assets/vo_ep2 (varsayılan 1. bölüm)
+BOLUM = os.environ.get("UMAY_BOLUM", "1")
+SENARYO = {"1": "senaryo_renkli_kelebekler", "2": "senaryo_sekil_avi"}[BOLUM]
+_S = importlib.import_module(SENARYO)
+DOSYALAR, SESLER, satirlar = _S.DOSYALAR, _S.SESLER, _S.satirlar
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "assets", "vo_ep1")
-RAW = os.path.join(ROOT, "build", "vo_ep1_raw")
+OUT = os.path.join(ROOT, "assets", f"vo_ep{BOLUM}")
+RAW = os.path.join(ROOT, "build", f"vo_ep{BOLUM}_raw")
 MODEL = "gemini-2.5-flash-preview-tts"
 UMAY_TODDLER = (330.0, 1.20)
 POST = ("highpass=f=70,silenceremove=start_periods=1:start_threshold=-45dB,areverse,"

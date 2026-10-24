@@ -10,8 +10,7 @@ import sys
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from senaryo_renkli_kelebekler import DOSYALAR, satirlar
-from voice_batch import OUT
+from voice_batch import OUT, DOSYALAR, satirlar
 
 MODELS = ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash"]
 
