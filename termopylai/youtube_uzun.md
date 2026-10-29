@@ -16,12 +16,12 @@ Bölümler:
 00:42 Kserkses'in İntikamı
 01:49 Bölünmüş Yunanistan
 02:56 Sıcak Kapılar
-03:46 Bekleyiş ve Meydan Okuma
-04:45 Birinci Gün
-06:00 İkinci Gün
-06:29 İhanet
-07:20 Son Sabah
-08:44 Sonrası ve Miras
+03:43 Bekleyiş ve Meydan Okuma
+04:42 Birinci Gün
+05:58 İkinci Gün
+06:27 İhanet
+07:18 Son Sabah
+08:42 Sonrası ve Miras
 
 ▶ Kısa versiyon (Shorts): [SHORT LİNKİ]
 

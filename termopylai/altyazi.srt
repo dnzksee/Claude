@@ -87,162 +87,162 @@ Geçit bazı yerlerde o kadar daralıyordu ki, yan yana sadece birkaç kişi ge�
 Aynı günlerde Yunan donanması da, Artemisyon açıklarında Pers gemilerini durdurmaya çalışıyordu.
 
 23
-00:03:37,725 --> 00:03:44,507
+00:03:34,433 --> 00:03:41,216
 Ve sonunda, Pers ordusu ufukta göründü. Gece olduğunda, kamp ateşleri bütün ovayı kaplıyordu.
 
 24
-00:03:47,308 --> 00:03:53,354
+00:03:44,017 --> 00:03:50,062
 Kserkses dört gün bekledi. Bu kadar büyük bir orduyu gören Yunanlıların kaçacağından emindi.
 
 25
-00:03:56,892 --> 00:04:03,717
+00:03:53,600 --> 00:04:00,426
 Gönderdiği gözcü ise şaşkınlıkla geri döndü: Spartalılar jimnastik yapıyor, uzun saçlarını tarıyordu.
 
 26
-00:04:06,475 --> 00:04:16,624
+00:04:03,183 --> 00:04:13,332
 Kserkses kahkahalarla güldü. Ama yanındaki sürgün Spartalı kral Demaratos uyardı: Spartalılar, ölümle yüzleşmeden önce saçlarını tarar.
 
 27
-00:04:17,392 --> 00:04:25,128
+00:04:14,100 --> 00:04:21,836
 Kserkses silahlarını teslim etmelerini istedi. Anlatılana göre Leonidas'ın cevabı iki kelimeydi: Gel de al!
 
 28
-00:04:26,975 --> 00:04:35,604
+00:04:23,683 --> 00:04:32,312
 Bir yerli, Pers oklarının güneşi karartacağını söyleyince, Spartalı Dienekes gülümsedi: Ne güzel, o zaman gölgede savaşırız.
 
 29
-00:04:36,558 --> 00:04:41,322
+00:04:33,267 --> 00:04:38,031
 Beşinci günün sabahı, Kserkses'in sabrı tükendi. Saldırı emri verildi.
 
 30
-00:04:46,142 --> 00:04:52,763
+00:04:42,850 --> 00:04:49,471
 İlk saldırıyı Medler yaptı. Dar geçide dalga dalga aktılar, ama bronz bir duvara çarptılar.
 
 31
-00:04:55,725 --> 00:05:03,274
+00:04:52,433 --> 00:04:59,982
 Spartalıların sırrı falanks düzeniydi: birbirine kenetlenmiş kalkanlar ve Perslerinkinden çok daha uzun mızraklar.
 
 32
-00:05:04,058 --> 00:05:10,579
+00:05:02,017 --> 00:05:08,537
 Dar geçitte Persler kalabalıklarını kullanamıyordu. Her seferinde sadece en öndeki birkaç sıra savaşabiliyordu.
 
 33
-00:05:13,642 --> 00:05:16,817
+00:05:11,600 --> 00:05:14,775
 Spartalılar zaman zaman kaçıyormuş gibi yaptı.
 
 34
-00:05:23,225 --> 00:05:28,122
+00:05:21,183 --> 00:05:26,080
 Persler zafer çığlıklarıyla peşlerine düşünce, aniden dönüp saldırdılar.
 
 35
-00:05:32,808 --> 00:05:40,740
+00:05:30,767 --> 00:05:38,698
 Yunan birlikleri sırayla ön safa geçiyor, yorulanlar geride dinleniyordu. Persler ise hep aynı dar noktaya yükleniyordu.
 
 36
-00:05:42,392 --> 00:05:48,205
+00:05:40,350 --> 00:05:46,164
 Akşamüstü Kserkses en seçkin birliğini gönderdi: 10.000 kişilik Ölümsüzler.
 
 37
-00:05:51,975 --> 00:06:00,452
+00:05:49,933 --> 00:05:58,411
 Ama Ölümsüzler de geçidi aşamadı. Herodot'a göre Kserkses, savaşı izlerken korkudan tahtından tam üç kez fırladı.
 
 38
-00:06:01,558 --> 00:06:06,532
+00:05:59,517 --> 00:06:04,490
 İkinci gün Kserkses, Yunanlıların yorgun düştüğünü düşünerek yeniden saldırttı.
 
 39
-00:06:11,142 --> 00:06:17,399
+00:06:09,100 --> 00:06:15,357
 Ama sonuç değişmedi. Dalga dalga gelen saldırılar, yine aynı kalkan duvarına çarpıp geri döndü.
 
 40
-00:06:20,725 --> 00:06:26,625
+00:06:18,683 --> 00:06:24,583
 Gün bitti, geçit hâlâ Yunanlıların elindeydi. Kserkses ne yapacağını bilemiyordu.
 
 41
-00:06:30,308 --> 00:06:39,225
+00:06:28,267 --> 00:06:37,183
 Tam o sırada Kserkses'in çadırına bir Yunanlı geldi: Trakhisli Ephialtes. Ödül umuduyla, dağın üzerinden geçen gizli bir patikayı anlattı.
 
 42
-00:06:40,017 --> 00:06:44,523
+00:06:37,975 --> 00:06:42,481
 Bu patika dağı dolaşıp, geçidi savunan Yunanlıların tam arkasına iniyordu.
 
 43
-00:06:49,600 --> 00:06:54,202
+00:06:47,558 --> 00:06:52,161
 Aynı gece Ölümsüzler, Ephialtes'in rehberliğinde dağ yolundan yürümeye başladı.
 
 44
-00:06:59,183 --> 00:07:10,476
+00:06:57,142 --> 00:07:08,434
 Patikayı 1.000 Fokisli asker bekliyordu. Kuru meşe yapraklarının hışırtısıyla uyandılar ve tepeye çekildiler. Persler ise hiç durmadan yollarına devam etti.
 
 45
-00:07:11,267 --> 00:07:18,022
+00:07:09,225 --> 00:07:15,980
 Ephialtes'in adı tarihe kara harflerle geçti. Bugün Yunancada "efialtis" kelimesi, kâbus anlamına geliyor.
 
 46
-00:07:20,850 --> 00:07:28,897
+00:07:18,808 --> 00:07:26,856
 Üçüncü günün şafağında kâhin Megistias kurban ateşine baktı ve yüzü karardı: ölüm, şafakla birlikte geliyordu.
 
 47
-00:07:29,683 --> 00:07:33,879
+00:07:27,642 --> 00:07:31,837
 Az sonra dağdan haberciler koşarak indi: Persler arkadan geliyordu.
 
 48
-00:07:39,267 --> 00:07:44,155
+00:07:37,225 --> 00:07:42,114
 Leonidas müttefiklerin çoğunu geri gönderdi. Ama kendisi kalmaya karar verdi.
 
 49
-00:07:48,850 --> 00:07:57,141
+00:07:46,808 --> 00:07:55,099
 Yanında 300 Spartalı, 700 Thespiali ve 400 Thebaili kaldı. Thespialılar kendi istekleriyle kalmayı seçti.
 
 50
-00:07:58,433 --> 00:08:06,001
+00:07:56,392 --> 00:08:03,959
 Bu kez Yunanlılar duvarın önündeki geniş alana çıktı. Persler, arkalarından kırbaç şaklatan komutanlarıyla ileri sürüldü.
 
 51
-00:08:07,808 --> 00:08:12,985
+00:08:05,975 --> 00:08:11,152
 Saatler süren çarpışmada mızrakları kırıldı; kılıçlarıyla savaşmaya devam ettiler.
 
 52
-00:08:17,392 --> 00:08:24,632
+00:08:15,558 --> 00:08:22,799
 Leonidas bu çarpışmada düştü. Spartalılar kralının bedenini korumak için dört kez saldırdı ve düşmanı geri püskürttü.
 
 53
-00:08:26,975 --> 00:08:32,088
+00:08:25,142 --> 00:08:30,255
 Arkadan Ölümsüzler de gelince, geriye kalanlar duvarın ardındaki küçük bir tepeye çekildi.
 
 54
-00:08:36,558 --> 00:08:41,704
+00:08:34,725 --> 00:08:39,871
 Persler artık yaklaşmadı; uzaktan ok yağdırdılar. Ve geçit sustu.
 
 55
-00:08:44,725 --> 00:08:51,423
+00:08:42,892 --> 00:08:49,590
 Geçit açılınca Pers ordusu güneye aktı ve Atina'yı ateşe verdi. Ama Atinalılar şehri çoktan boşaltmıştı.
 
 56
-00:08:54,308 --> 00:09:01,687
+00:08:52,475 --> 00:08:59,853
 Birkaç hafta sonra Salamis'te Yunan donanması, Pers gemilerini dar bir boğaza çekip yendi. Kserkses yine bir tepeden izliyordu.
 
 57
-00:09:03,892 --> 00:09:10,997
+00:09:02,058 --> 00:09:09,163
 Ertesi yıl Plataia'da, Spartalıların da en önde savaştığı Yunan ordusu, Persleri kesin olarak yendi.
 
 58
-00:09:13,475 --> 00:09:19,988
+00:09:11,642 --> 00:09:18,154
 Pers istilası sona ermişti. Termopylai'de kazanılan zaman, bu zaferlerin yolunu açmıştı.
 
 59
-00:09:23,058 --> 00:09:33,754
+00:09:21,225 --> 00:09:31,921
 Düşenler için dikilen taşa şair Simonides şu sözleri yazdı: Ey yolcu, git Spartalılara söyle; sözlerine sadık kalarak burada yatıyoruz.
 
 60
-00:09:34,558 --> 00:09:42,608
+00:09:32,725 --> 00:09:40,775
 Bugün deniz kilometrelerce geri çekildi; o dar geçit artık yok. Ama hikâyesi, 2.500 yıldır anlatılıyor.
 
 61
-00:09:44,142 --> 00:09:53,602
+00:09:42,308 --> 00:09:51,768
 Gerçekte Spartalılar yalnız değildi; yanlarında binlerce Yunanlı vardı. Ama efsaneyi yaşatan, geri dönmek yerine kalmayı seçmeleriydi.
 
 62
-00:09:54,592 --> 00:09:56,998
+00:09:52,758 --> 00:09:55,165
 Siz olsaydınız, kalır mıydınız?
 
