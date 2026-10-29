@@ -40,4 +40,4 @@ Termopylai, Termopylai Savaşı, 300 Spartalı, Sparta, Leonidas, Kserkses, Pers
 ## Yükleme notları
 - **Kapak:** `kapak.png`
 - **Kitle:** "Hayır, çocuklara yönelik değil."
-- **Altyazı:** Video içinde gömülü; `altyazi.srt` isteğe bağlı.
+- **Altyazı:** Videoda gömülü altyazı yok; `altyazi.srt` dosyasını YouTube'a yükle (izleyici CC ile açar).
