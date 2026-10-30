@@ -19,6 +19,11 @@ Kroniknâme: Tarihin büyük savaşları, unutulmuş hikâyeleri ve dünyayı de
 mumya, mumya ilacı, mumya tozu, sahte mumya, Antik Mısır, tıp tarihi, tuhaf tarih, ilginç bilgiler, tarih shorts, animasyon, Kroniknâme, shorts
 ```
 
+## Etiketler, # ile
+```
+#mumya #mumyailacı #mumyatozu #sahtemumya #antikmısır #tıptarihi #tuhaftarih #ilginçbilgiler #tarihshorts #animasyon #kroniknâme #shorts
+```
+
 ## Yükleme notları
 - Yükleme ekranında **"Bağlantılı video"** alanında uzun mumya videosunu seç.
 - Tam ekran 1080×1920, 38 sn, kelime kelime altyazılı.

@@ -36,6 +36,11 @@ Kroniknâme: Tarihin büyük savaşları, unutulmuş hikâyeleri ve dünyayı de
 mumya, mumya ilacı, mumya yemek, mumya tozu, mumia, ceset ilacı, Antik Mısır, mumyalar, Avrupa tarihi, eczacılık tarihi, tıp tarihi, sahte mumya, Kralın Damlaları, mumya kahverengisi, Burne-Jones, İbn-i Sina, tuhaf tarih, ilginç bilgiler, tarih belgeseli, animasyon, çizgi film, Kroniknâme
 ```
 
+## Etiketler, # ile
+```
+#mumya #mumyailacı #mumyayemek #mumyatozu #mumia #cesetilacı #antikmısır #mumyalar #avrupatarihi #eczacılıktarihi #tıptarihi #sahtemumya #kralındamlaları #mumyakahverengisi #burnejones #ibnisina #tuhaftarih #ilginçbilgiler #tarihbelgeseli #animasyon #çizgifilm #kroniknâme
+```
+
 ## Yükleme notları
 - **Kapak:** `kapak.png`
 - **Kitle:** "Hayır, çocuklara yönelik değil."
