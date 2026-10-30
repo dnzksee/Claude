@@ -1,116 +1,116 @@
 1
-00:00:00,800 --> 00:00:04,985
+00:00:00,500 --> 00:00:04,685
 Yıl 1600. Başın ağrıyor ve bir eczaneye giriyorsun.
 
 2
-00:00:10,183 --> 00:00:14,563
+00:00:04,750 --> 00:00:09,130
 Eczacı raftan bir kavanoz alıyor ve sana kahverengi bir toz uzatıyor.
 
 3
-00:00:19,767 --> 00:00:26,177
+00:00:09,208 --> 00:00:15,618
 Bu toz, öğütülmüş bir Mısır mumyası. Ve Avrupa'da yüzyıllarca ilaç diye satıldı.
 
 4
-00:00:33,517 --> 00:00:40,300
+00:00:18,875 --> 00:00:25,659
 Her şey bir kelimeyle başladı: mumya. Farsçada bu kelime, dağlardan sızan kara bir zift demekti.
 
 5
-00:00:41,100 --> 00:00:46,630
+00:00:25,750 --> 00:00:31,280
 İbn-i Sina gibi doğulu hekimler, bu zifti yaralara ve kırıklara şifa diye sürüyordu.
 
 6
-00:00:48,600 --> 00:00:57,120
+00:00:31,375 --> 00:00:39,895
 Kitaplar Latinceye çevrilirken Avrupalılar, mumyaların üzerindeki kara reçineyi bu zift sandı. Böylece mumyanın kendisi ilaç oldu.
 
 7
-00:00:57,892 --> 00:01:03,266
+00:00:39,958 --> 00:00:45,332
 Talep o kadar büyüktü ki, Mısır'daki mezar soyguncuları kendine yeni bir iş buldu.
 
 8
-00:01:05,475 --> 00:01:08,623
+00:00:45,417 --> 00:00:48,565
 Mumyalar İskenderiye limanında sandıklara dolduruldu.
 
 9
-00:01:13,058 --> 00:01:17,718
+00:00:48,667 --> 00:00:53,326
 Gemiler onları Akdeniz'i aşarak Venedik'e, Marsilya'ya ve Londra'ya taşıdı.
 
 10
-00:01:22,642 --> 00:01:27,027
+00:00:53,750 --> 00:00:58,135
 Yolculuk bazen, mumyalar için bile fazla çalkantılıydı.
 
 11
-00:01:30,225 --> 00:01:34,165
+00:00:58,208 --> 00:01:02,148
 Avrupa limanlarında mumya, altın değerinde bir ticaret malıydı.
 
 12
-00:01:37,725 --> 00:01:40,897
+00:01:02,250 --> 00:01:05,422
 Eczacılar mumyaları havanda dövüp toz hâline getirdi.
 
 13
-00:01:45,308 --> 00:01:50,389
+00:01:05,500 --> 00:01:10,581
 Bu toz baş ağrısına, morluklara, hatta iç kanamaya karşı reçete ediliyordu.
 
 14
-00:01:52,892 --> 00:01:55,968
+00:01:10,667 --> 00:01:13,743
 Toz genellikle şaraba ya da bala karıştırılıp içiliyordu.
 
 15
-00:01:57,808 --> 00:02:01,135
+00:01:13,833 --> 00:01:17,160
 Ve en kalitelisi, en karası ve en pahalısıydı.
 
 16
-00:02:01,933 --> 00:02:09,592
+00:01:17,250 --> 00:01:24,909
 Bu moda saraylara da ulaştı. Fransa Kralı Birinci François'nın, yanında hep bir kese mumya tozu taşıdığı anlatılır.
 
 17
-00:02:10,392 --> 00:02:16,363
+00:01:25,000 --> 00:01:30,971
 İngiltere'de ise kraliyet doktorları, Kralın Damlaları denen tuhaf bir iksir hazırlıyordu.
 
 18
-00:02:17,975 --> 00:02:25,445
+00:01:31,042 --> 00:01:38,512
 Kral İkinci Charles bu damlalara o kadar inanıyordu ki, tarifini binlerce sterline satın aldı.
 
 19
-00:02:26,225 --> 00:02:30,858
+00:01:38,583 --> 00:01:43,216
 Talep o kadar arttı ki, gerçek mumyalar tükenmeye başladı.
 
 20
-00:02:33,808 --> 00:02:37,248
+00:01:43,292 --> 00:01:46,731
 Kurnaz tüccarlar da kendi mumyalarını üretmeye başladı.
 
 21
-00:02:41,225 --> 00:02:45,716
+00:01:46,833 --> 00:01:51,325
 Kurutup katranla boyadıkları bedenleri, antik mumya diye satıyorlardı.
 
 22
-00:02:48,808 --> 00:02:57,264
+00:01:51,417 --> 00:01:59,872
 1564'te bir Fransız doktor, İskenderiye'de bu sırrı keşfetti. Tüccar gülerek itiraf etti.
 
 23
-00:02:58,058 --> 00:03:06,534
+00:01:59,958 --> 00:02:08,434
 Ceset ilacı sadece mumyayla sınırlı değildi. Almanya'da sara hastaları, idam günlerinde meydanda şifa bekliyordu.
 
 24
-00:03:07,308 --> 00:03:13,472
+00:02:08,500 --> 00:02:14,663
 Cellatlar da, ağrılara iyi geldiğine inanılan, insan yağından yapılmış merhemler satıyordu.
 
 25
-00:03:14,892 --> 00:03:22,357
+00:02:14,750 --> 00:02:22,216
 Mumya sadece yenmedi, tuvallere de sürüldü. Ressamlar, mumya kahverengisi adlı bir boyaya bayılıyordu.
 
 26
-00:03:23,142 --> 00:03:29,043
+00:02:22,292 --> 00:02:28,193
 Ressam Burne-Jones, boyanın gerçekten mumyadan yapıldığını öğrenince, tüpünü bahçesine gömdü.
 
 27
-00:03:30,725 --> 00:03:34,894
+00:02:28,292 --> 00:02:32,461
 Bugün biliyoruz ki mumya tozu, hiçbir hastalığı iyileştirmedi.
 
 28
-00:03:38,308 --> 00:03:42,094
+00:02:32,542 --> 00:02:36,328
 Ders basit: Bir şeye inanmadan önce, kanıt iste.
 
 29
-00:03:46,092 --> 00:03:47,570
+00:02:36,967 --> 00:02:38,445
 Siz bunu biliyor muydunuz?
 
