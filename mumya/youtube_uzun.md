@@ -15,7 +15,7 @@ Bölümler:
 00:00 Giriş
 00:21 Bir Kelime Hatası
 00:46 Mısır'dan Avrupa'ya
-01:14 Mumya Eczanesi
+01:13 Mumya Eczanesi
 01:34 Krallar da Yedi
 01:59 Sahte Mumyalar
 02:25 Ceset İlacı
