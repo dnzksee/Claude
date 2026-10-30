@@ -13,14 +13,14 @@ Avrupa'da yaklaşık 300 yıl boyunca mumyalar ilaç diye satıldı. Bu videoda 
 
 Bölümler:
 00:00 Giriş
-00:18 Bir Kelime Hatası
-00:39 Mısır'dan Avrupa'ya
-01:02 Mumya Eczanesi
-01:17 Krallar da Yedi
-01:38 Sahte Mumyalar
-01:59 Ceset İlacı
-02:14 Mumya Kahverengisi
-02:28 Bugün
+00:22 Bir Kelime Hatası
+00:46 Mısır'dan Avrupa'ya
+01:15 Mumya Eczanesi
+01:34 Krallar da Yedi
+01:59 Sahte Mumyalar
+02:25 Ceset İlacı
+02:42 Mumya Kahverengisi
+02:58 Bugün
 
 ▶ Kısa versiyon (Shorts): [SHORT LİNKİ]
 
