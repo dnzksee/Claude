@@ -18,12 +18,12 @@ Bölümler:
 01:47 Boğazkesen
 02:20 Şahi Topları
 03:02 Kuşatma Başlıyor
-03:54 Deniz Savaşı
-04:35 Gemiler Karadan
-05:24 Toprak Altında Savaş
-05:54 Son Günler
-06:36 Son Hücum
-07:29 Fetih
+03:53 Deniz Savaşı
+04:34 Gemiler Karadan
+05:23 Toprak Altında Savaş
+05:51 Son Günler
+06:30 Son Hücum
+07:24 Fetih
 
 Kaynaklar konusunda: Ordu mevcudu, gemi sayısı ve top ölçüleri gibi bilgilerde tarihî kaynaklar farklı rakamlar verir; videoda bu yüzden "yaklaşık" ve "kaynaklara göre" ifadelerini kullandık. Anlatım, dönemin kaynaklarına (Kritovulos, Dukas, Sfrancis) dayanan tarih çalışmalarından derlenmiştir.
 
