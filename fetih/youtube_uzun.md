@@ -14,16 +14,16 @@ Bu videoda İstanbul'un fethini baştan sona anlatıyoruz: Rumeli Hisarı'nın 4
 Bölümler:
 00:00 Giriş
 00:31 Bin Yıllık Hayal
-01:22 Genç Sultan
-01:47 Boğazkesen
-02:20 Şahi Topları
-03:02 Kuşatma Başlıyor
-03:53 Deniz Savaşı
-04:34 Gemiler Karadan
-05:23 Toprak Altında Savaş
-05:51 Son Günler
-06:30 Son Hücum
-07:24 Fetih
+01:27 Genç Sultan
+01:52 Boğazkesen
+02:25 Şahi Topları
+03:07 Kuşatma Başlıyor
+03:58 Deniz Savaşı
+04:39 Gemiler Karadan
+05:27 Toprak Altında Savaş
+05:56 Son Günler
+06:35 Son Hücum
+07:29 Fetih
 
 Kaynaklar konusunda: Ordu mevcudu, gemi sayısı ve top ölçüleri gibi bilgilerde tarihî kaynaklar farklı rakamlar verir; videoda bu yüzden "yaklaşık" ve "kaynaklara göre" ifadelerini kullandık. Anlatım, dönemin kaynaklarına (Kritovulos, Dukas, Sfrancis) dayanan tarih çalışmalarından derlenmiştir.
 
