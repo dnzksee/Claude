@@ -18,3 +18,6 @@ Ses asla hızlandırılmaz ya da yavaşlatılmaz. Yeni videolar Google Drive'a y
 3. **Hikâye:** Bölümler hâlinde, orta tempo. Yaklaşık 1:30'da "Abone ol" butonu.
 4. **Kapanış:** Yoruma davet eden soru ve kanal kartı.
 Shorts: ilk 1-2 saniyede ekranda büyük soru ya da şaşırtıcı cümle.
+Her uzun videodan 3 Short: her biri tek bir şaşırtıcı ayrıntı, "bunu bilmiyordum" dedirten başlık, ekrandaki yazılar düz (eğik değil).
+Kapaklarda sağ alt köşe boş kalır (YouTube süre etiketi oraya gelir).
+Uzun video hedefi: 8-10 dakika.
