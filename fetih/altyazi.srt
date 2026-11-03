@@ -1,304 +1,308 @@
 1
-00:00:00,700 --> 00:00:09,230
-29 Mayıs 1453. Şafaktan önce. Bin yüz yıldır ayakta duran bir şehrin surları önünde, binlerce meşale yanıyor.
+00:00:00,300 --> 00:00:07,461
+Gemiler karadan yürür mü? 1453'te yürüdü... ve bin yıllık bir şehrin kaderi değişti.
 
 2
-00:00:10,367 --> 00:00:13,814
-Ordunun başında, henüz 21 yaşında bir sultan var.
+00:00:08,325 --> 00:00:16,855
+29 Mayıs 1453. Şafaktan önce. Bin yüz yıldır ayakta duran bir şehrin surları önünde, binlerce meşale yanıyor.
 
 3
-00:00:14,950 --> 00:00:20,580
-Bu sabah dünya tarihi değişecek. Bir çağ kapanacak, yeni bir çağ açılacak.
+00:00:17,992 --> 00:00:21,439
+Ordunun başında, henüz 21 yaşında bir sultan var.
 
 4
-00:00:21,700 --> 00:00:26,920
-Peki genç bir sultan, yüzyıllardır kimsenin alamadığı bu şehri nasıl fethetti?
+00:00:22,575 --> 00:00:28,205
+Bu sabah dünya tarihi değişecek. Bir çağ kapanacak, yeni bir çağ açılacak.
 
 5
-00:00:32,075 --> 00:00:40,340
-Konstantinopolis, Roma İmparatoru Konstantin tarafından kuruldu ve bin yıldan uzun süre Doğu Roma'nın, yani Bizans'ın başkenti oldu.
+00:00:29,325 --> 00:00:34,545
+Peki genç bir sultan, yüzyıllardır kimsenin alamadığı bu şehri nasıl fethetti?
 
 6
-00:00:41,492 --> 00:00:48,142
-İki kıtanın ve iki denizin buluştuğu bu şehir, dünyanın en zengin ve en iyi korunan şehirlerinden biriydi.
+00:00:38,492 --> 00:00:46,757
+Konstantinopolis, Roma İmparatoru Konstantin tarafından kuruldu ve bin yıldan uzun süre Doğu Roma'nın, yani Bizans'ın başkenti oldu.
 
 7
-00:00:49,283 --> 00:01:02,817
-Müslümanlar bu şehre yüzyıllardır bakıyordu. Çünkü bir hadis-i şerifte şöyle müjdelenmişti: Kostantiniyye mutlaka fethedilecektir. Onu fetheden komutan ne güzel komutan, onu fetheden asker ne güzel askerdir.
+00:00:47,908 --> 00:00:54,558
+İki kıtanın ve iki denizin buluştuğu bu şehir, dünyanın en zengin ve en iyi korunan şehirlerinden biriydi.
 
 8
-00:01:03,950 --> 00:01:11,821
-Emeviler şehri iki kez kuşattı. Sahabeden Ebu Eyyub el-Ensari, bu kuşatmalardan birinde surların dibinde vefat etti.
+00:00:55,700 --> 00:01:09,234
+Müslümanlar bu şehre yüzyıllardır bakıyordu. Çünkü bir hadis-i şerifte şöyle müjdelenmişti: Kostantiniyye mutlaka fethedilecektir. Onu fetheden komutan ne güzel komutan, onu fetheden asker ne güzel askerdir.
 
 9
-00:01:12,950 --> 00:01:18,759
-Osmanlılar da denedi. Yıldırım Bayezid ve II. Murad şehri kuşattı, ama surları aşamadı.
+00:01:10,367 --> 00:01:18,238
+Emeviler şehri iki kez kuşattı. Sahabeden Ebu Eyyub el-Ensari, bu kuşatmalardan birinde surların dibinde vefat etti.
 
 10
-00:01:19,908 --> 00:01:26,510
-Şehir her kuşatmadan sonra efsaneleşti. Herkes aynı şeyi söylüyordu: Bu surlar yıkılmaz.
+00:01:19,367 --> 00:01:25,176
+Osmanlılar da denedi. Yıldırım Bayezid ve II. Murad şehri kuşattı, ama surları aşamadı.
 
 11
-00:01:27,908 --> 00:01:32,535
-1451'de II. Mehmed, 18 yaşında Osmanlı tahtına oturdu.
+00:01:26,325 --> 00:01:32,927
+Şehir her kuşatmadan sonra efsaneleşti. Herkes aynı şeyi söylüyordu: Bu surlar yıkılmaz.
 
 12
-00:01:33,658 --> 00:01:37,751
-Bilime, tarihe ve haritalara meraklı, kararlı bir hükümdardı.
+00:01:34,325 --> 00:01:38,952
+1451'de II. Mehmed, 18 yaşında Osmanlı tahtına oturdu.
 
 13
-00:01:38,867 --> 00:01:44,398
-Bazı Avrupalılar onu tecrübesiz bir genç sandı. Yanıldıklarını çok yakında anlayacaklardı.
+00:01:40,075 --> 00:01:44,167
+Bilime, tarihe ve haritalara meraklı, kararlı bir hükümdardı.
 
 14
-00:01:45,533 --> 00:01:51,366
-Kaynaklara göre genç sultan geceleri uyumuyor, şehrin surlarını ve kuşatma planlarını çiziyordu.
+00:01:45,283 --> 00:01:50,814
+Bazı Avrupalılar onu tecrübesiz bir genç sandı. Yanıldıklarını çok yakında anlayacaklardı.
 
 15
-00:01:52,742 --> 00:01:55,069
-İlk hamlesi, İstanbul Boğazı oldu.
+00:01:51,950 --> 00:01:57,783
+Kaynaklara göre genç sultan geceleri uyumuyor, şehrin surlarını ve kuşatma planlarını çiziyordu.
 
 16
-00:01:57,075 --> 00:02:02,502
-1452 baharında, Boğaz'ın en dar yerinde dev bir kale yükselmeye başladı.
+00:01:59,158 --> 00:02:01,485
+İlk hamlesi, İstanbul Boğazı oldu.
 
 17
-00:02:03,617 --> 00:02:08,143
-Binlerce işçi gece gündüz çalıştı ve kale yaklaşık dört ayda tamamlandı.
+00:02:03,492 --> 00:02:08,918
+1452 baharında, Boğaz'ın en dar yerinde dev bir kale yükselmeye başladı.
 
 18
-00:02:09,283 --> 00:02:13,105
-Karşı kıyıda, Yıldırım Bayezid'in yaptırdığı Anadolu Hisarı duruyordu.
+00:02:10,033 --> 00:02:14,560
+Binlerce işçi gece gündüz çalıştı ve kale yaklaşık dört ayda tamamlandı.
 
 19
-00:02:15,867 --> 00:02:24,315
-İki kale arasından artık hiçbir gemi izinsiz geçemezdi. Kalenin adı da bunu anlatıyordu: Boğazkesen. Bugünkü adıyla, Rumeli Hisarı.
+00:02:15,700 --> 00:02:19,522
+Karşı kıyıda, Yıldırım Bayezid'in yaptırdığı Anadolu Hisarı duruyordu.
 
 20
-00:02:25,700 --> 00:02:29,300
-Bu surları yıkmak için daha önce görülmemiş bir silah gerekiyordu.
+00:02:22,283 --> 00:02:30,731
+İki kale arasından artık hiçbir gemi izinsiz geçemezdi. Kalenin adı da bunu anlatıyordu: Boğazkesen. Bugünkü adıyla, Rumeli Hisarı.
 
 21
-00:02:30,450 --> 00:02:36,213
-Orban adında bir top ustası, önce Bizans'a gitti. Ama Bizans'ın ona ödeyecek parası yoktu.
+00:02:32,117 --> 00:02:35,716
+Bu surları yıkmak için daha önce görülmemiş bir silah gerekiyordu.
 
 22
-00:02:37,367 --> 00:02:44,067
-Orban, Osmanlı'ya geldi. Genç sultan ona tek bir soru sordu: Bu surları yıkacak bir top dökebilir misin?
+00:02:36,867 --> 00:02:42,630
+Orban adında bir top ustası, önce Bizans'a gitti. Ama Bizans'ın ona ödeyecek parası yoktu.
 
 23
-00:02:45,200 --> 00:02:49,462
-Edirne'de, yaklaşık 8 metre uzunluğunda dev bir top döküldü.
+00:02:43,783 --> 00:02:50,484
+Orban, Osmanlı'ya geldi. Genç sultan ona tek bir soru sordu: Bu surları yıkacak bir top dökebilir misin?
 
 24
-00:02:50,575 --> 00:02:54,861
-Attığı taş güllelerin her biri, yüzlerce kilo ağırlığındaydı.
+00:02:51,617 --> 00:02:55,879
+Edirne'de, yaklaşık 8 metre uzunluğunda dev bir top döküldü.
 
 25
-00:02:55,992 --> 00:03:01,778
-Kaynaklara göre bu dev topu İstanbul'a taşımak için 60 öküz ve yüzlerce asker çalıştı.
+00:02:56,992 --> 00:03:01,278
+Attığı taş güllelerin her biri, yüzlerce kilo ağırlığındaydı.
 
 26
-00:03:02,908 --> 00:03:06,132
-Bu dev toplar, Osmanlı'da Şahi topu olarak anıldı.
+00:03:02,408 --> 00:03:08,194
+Kaynaklara göre bu dev topu İstanbul'a taşımak için 60 öküz ve yüzlerce asker çalıştı.
 
 27
-00:03:07,742 --> 00:03:11,744
-1453 baharında, Osmanlı ordusu şehrin önüne geldi.
+00:03:09,325 --> 00:03:12,548
+Bu dev toplar, Osmanlı'da Şahi topu olarak anıldı.
 
 28
-00:03:12,867 --> 00:03:18,856
-Kaynaklar ordunun büyüklüğü için farklı rakamlar verir, ama tahminler on binlerce askerden söz eder.
+00:03:14,158 --> 00:03:18,161
+1453 baharında, Osmanlı ordusu şehrin önüne geldi.
 
 29
-00:03:19,992 --> 00:03:26,827
-Karşılarında yaklaşık 6 kilometrelik kara surları vardı: Geniş bir hendek ve arkasında iki sıra dev duvar.
+00:03:19,283 --> 00:03:25,272
+Kaynaklar ordunun büyüklüğü için farklı rakamlar verir, ama tahminler on binlerce askerden söz eder.
 
 30
-00:03:27,950 --> 00:03:31,775
-Şehrin içinde ise yalnızca 7-8 bin kadar savunucu vardı.
+00:03:26,408 --> 00:03:33,244
+Karşılarında yaklaşık 6 kilometrelik kara surları vardı: Geniş bir hendek ve arkasında iki sıra dev duvar.
 
 31
-00:03:32,908 --> 00:03:36,945
-Onlara, Cenevizli komutan Giustiniani ve askerleri yardım ediyordu.
+00:03:34,367 --> 00:03:38,192
+Şehrin içinde ise yalnızca 7-8 bin kadar savunucu vardı.
 
 32
-00:03:38,075 --> 00:03:43,505
-Haliç'in girişi, dev bir zincirle kapatılmıştı. Osmanlı gemileri içeri giremiyordu.
+00:03:39,325 --> 00:03:43,361
+Onlara, Cenevizli komutan Giustiniani ve askerleri yardım ediyordu.
 
 33
-00:03:44,658 --> 00:03:50,772
-6 Nisan'da Şahi topları ateşlendi. Surlar ilk kez böyle bir güçle sarsıldı.
+00:03:44,492 --> 00:03:49,922
+Haliç'in girişi, dev bir zincirle kapatılmıştı. Osmanlı gemileri içeri giremiyordu.
 
 34
-00:03:51,908 --> 00:03:57,648
-Ama savunucular her gece, yıkılan yerleri tahta, toprak ve taşla yeniden dolduruyordu.
+00:03:51,075 --> 00:03:57,189
+6 Nisan'da Şahi topları ateşlendi. Surlar ilk kez böyle bir güçle sarsıldı.
 
 35
-00:03:59,033 --> 00:04:04,554
-20 Nisan'da ufukta dört gemi göründü. Şehre yardım ve erzak getiriyorlardı.
+00:03:58,325 --> 00:04:04,065
+Ama savunucular her gece, yıkılan yerleri tahta, toprak ve taşla yeniden dolduruyordu.
 
 36
-00:04:05,700 --> 00:04:12,885
-Osmanlı donanması onları durdurmak için saldırdı. Küçük Osmanlı gemileri, dev yelkenlilerin etrafını sardı.
+00:04:05,450 --> 00:04:10,971
+20 Nisan'da ufukta dört gemi göründü. Şehre yardım ve erzak getiriyorlardı.
 
 37
-00:04:14,033 --> 00:04:20,741
-Genç sultan savaşı kıyıdan izliyordu. Öyle heyecanlanmıştı ki, kaynaklara göre atını denize sürdü.
+00:04:12,117 --> 00:04:19,302
+Osmanlı donanması onları durdurmak için saldırdı. Küçük Osmanlı gemileri, dev yelkenlilerin etrafını sardı.
 
 38
-00:04:21,867 --> 00:04:25,985
-Ama rüzgâr döndü ve dört gemi, zincir açılarak Haliç'e alındı.
+00:04:20,450 --> 00:04:27,158
+Genç sultan savaşı kıyıdan izliyordu. Öyle heyecanlanmıştı ki, kaynaklara göre atını denize sürdü.
 
 39
-00:04:27,117 --> 00:04:30,332
-Bu yenilgi, Osmanlı ordusunda moralleri bozdu.
+00:04:28,283 --> 00:04:32,402
+Ama rüzgâr döndü ve dört gemi, zincir açılarak Haliç'e alındı.
 
 40
-00:04:31,700 --> 00:04:38,352
-Sultanın hocası Akşemseddin ona mektuplar yazdı: Sabretmesini ve ordusuna güvenmesini öğütledi.
+00:04:33,533 --> 00:04:36,749
+Bu yenilgi, Osmanlı ordusunda moralleri bozdu.
 
 41
-00:04:39,742 --> 00:04:43,052
-Genç sultan, kimsenin aklına gelmeyecek bir plan yaptı.
+00:04:38,117 --> 00:04:44,769
+Sultanın hocası Akşemseddin ona mektuplar yazdı: Sabretmesini ve ordusuna güvenmesini öğütledi.
 
 42
-00:04:44,200 --> 00:04:49,327
-Zincir gemileri durduruyorsa, gemiler denizden değil, karadan gidecekti.
+00:04:46,158 --> 00:04:49,468
+Genç sultan, kimsenin aklına gelmeyecek bir plan yaptı.
 
 43
-00:04:50,450 --> 00:04:54,986
-Galata'nın arkasındaki tepelere tahtadan bir yol döşendi, kızaklar yağlandı.
+00:04:50,617 --> 00:04:55,743
+Zincir gemileri durduruyorsa, gemiler denizden değil, karadan gidecekti.
 
 44
-00:04:57,033 --> 00:05:02,203
-21 Nisan gecesi, öküzler ve askerler gemileri tepeye doğru çekmeye başladı.
+00:04:56,867 --> 00:05:01,403
+Galata'nın arkasındaki tepelere tahtadan bir yol döşendi, kızaklar yağlandı.
 
 45
-00:05:03,325 --> 00:05:09,114
-Gemilerin yelkenleri açıktı, davullar çalıyordu. Sanki gemiler karada yüzüyordu.
+00:05:03,450 --> 00:05:08,619
+21 Nisan gecesi, öküzler ve askerler gemileri tepeye doğru çekmeye başladı.
 
 46
-00:05:10,242 --> 00:05:13,559
-Sabah olduğunda, Bizanslılar gözlerine inanamadı.
+00:05:09,742 --> 00:05:15,531
+Gemilerin yelkenleri açıktı, davullar çalıyordu. Sanki gemiler karada yüzüyordu.
 
 47
-00:05:14,825 --> 00:05:19,763
-Yaklaşık 70 Osmanlı gemisi, zincirin arkasında, Haliç'in sularındaydı.
+00:05:16,658 --> 00:05:19,976
+Sabah olduğunda, Bizanslılar gözlerine inanamadı.
 
 48
-00:05:20,908 --> 00:05:27,058
-Artık şehir, Haliç tarafından da savunulmak zorundaydı. Zaten az olan savunucular daha da dağıldı.
+00:05:21,242 --> 00:05:26,180
+Yaklaşık 70 Osmanlı gemisi, zincirin arkasında, Haliç'in sularındaydı.
 
 49
-00:05:28,450 --> 00:05:31,353
-Mayıs ayında savaş, toprağın altına indi.
+00:05:27,325 --> 00:05:33,475
+Artık şehir, Haliç tarafından da savunulmak zorundaydı. Zaten az olan savunucular daha da dağıldı.
 
 50
-00:05:32,783 --> 00:05:36,443
-Osmanlı lağımcıları, surların altına gizli tüneller kazıyordu.
+00:05:34,867 --> 00:05:37,770
+Mayıs ayında savaş, toprağın altına indi.
 
 51
-00:05:37,575 --> 00:05:44,010
-Bizanslılar da karşı tüneller kazarak onları bulmaya çalıştı. Toprağın altında karanlık bir savaş başladı.
+00:05:39,200 --> 00:05:42,860
+Osmanlı lağımcıları, surların altına gizli tüneller kazıyordu.
 
 52
-00:05:45,158 --> 00:05:50,345
-Osmanlılar ayrıca surlara, tahtadan yapılmış dev bir kuşatma kulesi yaklaştırdı.
+00:05:43,992 --> 00:05:50,427
+Bizanslılar da karşı tüneller kazarak onları bulmaya çalıştı. Toprağın altında karanlık bir savaş başladı.
 
 53
-00:05:51,492 --> 00:05:55,788
-Ama savunucular direniyordu. Kuşatma haftalardır sürüyordu.
+00:05:51,575 --> 00:05:56,761
+Osmanlılar ayrıca surlara, tahtadan yapılmış dev bir kuşatma kulesi yaklaştırdı.
 
 54
-00:05:57,158 --> 00:06:00,354
-22 Mayıs gecesi, gökyüzünde ay tutuldu.
+00:05:57,908 --> 00:06:02,205
+Ama savunucular direniyordu. Kuşatma haftalardır sürüyordu.
 
 55
-00:06:01,492 --> 00:06:05,896
-Şehirde eski bir kehanet anlatılıyordu ve Bizanslılar bunu kötüye yordu.
+00:06:03,575 --> 00:06:06,770
+22 Mayıs gecesi, gökyüzünde ay tutuldu.
 
 56
-00:06:07,033 --> 00:06:13,207
-Genç sultan imparatora son bir teklif gönderdi: Şehri teslim ederse, halkın canı ve malı bağışlanacaktı.
+00:06:07,908 --> 00:06:12,313
+Şehirde eski bir kehanet anlatılıyordu ve Bizanslılar bunu kötüye yordu.
 
 57
-00:06:14,325 --> 00:06:22,210
-İmparator XI. Konstantin reddetti: "Şehri teslim etmek ne benim elimde, ne de başkasının. Hepimiz ölmeye razıyız."
+00:06:13,450 --> 00:06:19,623
+Genç sultan imparatora son bir teklif gönderdi: Şehri teslim ederse, halkın canı ve malı bağışlanacaktı.
 
 58
-00:06:23,325 --> 00:06:28,457
-28 Mayıs gecesi, Osmanlı ordugâhında dualar edildi, meşaleler yakıldı.
+00:06:20,742 --> 00:06:28,627
+İmparator XI. Konstantin reddetti: "Şehri teslim etmek ne benim elimde, ne de başkasının. Hepimiz ölmeye razıyız."
 
 59
-00:06:29,575 --> 00:06:34,548
-Surların ardında ise insanlar, Ayasofya'da son kez bir araya geldi.
+00:06:29,742 --> 00:06:34,874
+28 Mayıs gecesi, Osmanlı ordugâhında dualar edildi, meşaleler yakıldı.
 
 60
-00:06:35,950 --> 00:06:41,228
-29 Mayıs, şafaktan önce. Davullar ve mehterin sesi geceyi yırttı.
+00:06:35,992 --> 00:06:40,965
+Surların ardında ise insanlar, Ayasofya'da son kez bir araya geldi.
 
 61
-00:06:42,367 --> 00:06:45,572
-Osmanlı ordusu, dalgalar hâlinde surlara yüklendi.
+00:06:42,367 --> 00:06:47,644
+29 Mayıs, şafaktan önce. Davullar ve mehterin sesi geceyi yırttı.
 
 62
-00:06:46,950 --> 00:06:51,697
-İlk iki dalga surlarda durduruldu. Savunucular bütün gücüyle direniyordu.
+00:06:48,783 --> 00:06:51,988
+Osmanlı ordusu, dalgalar hâlinde surlara yüklendi.
 
 63
-00:06:52,825 --> 00:06:56,062
-Sonra yeniçeriler yeniden saldırıya geçti.
+00:06:53,367 --> 00:06:58,114
+İlk iki dalga surlarda durduruldu. Savunucular bütün gücüyle direniyordu.
 
 64
-00:06:57,408 --> 00:07:03,569
-Tam o sırada, savunmanın kalbi olan Giustiniani ağır yaralandı ve surlardan çekildi.
+00:06:59,242 --> 00:07:02,479
+Sonra yeniçeriler yeniden saldırıya geçti.
 
 65
-00:07:04,700 --> 00:07:08,224
-Savunma sarsıldı. Yeniçeriler surlara tırmandı.
+00:07:03,825 --> 00:07:09,986
+Tam o sırada, savunmanın kalbi olan Giustiniani ağır yaralandı ve surlardan çekildi.
 
 66
-00:07:09,367 --> 00:07:15,723
-Oklara ve taşlara rağmen surlara tırmanan yiğit bir asker, Osmanlı sancağını surların üzerine dikti.
+00:07:11,117 --> 00:07:14,641
+Savunma sarsıldı. Yeniçeriler surlara tırmandı.
 
 67
-00:07:16,867 --> 00:07:20,823
-Kısa süre sonra surların üzerinde Osmanlı sancakları dalgalanıyordu.
+00:07:15,783 --> 00:07:22,140
+Oklara ve taşlara rağmen surlara tırmanan yiğit bir asker, Osmanlı sancağını surların üzerine dikti.
 
 68
-00:07:21,950 --> 00:07:28,335
-İmparator Konstantin, son ana kadar askerlerinin arasında savaştı ve şehriyle birlikte düştü.
+00:07:23,283 --> 00:07:27,239
+Kısa süre sonra surların üzerinde Osmanlı sancakları dalgalanıyordu.
 
 69
-00:07:29,700 --> 00:07:34,179
-29 Mayıs öğleden sonra, genç sultan atıyla şehre girdi.
+00:07:28,367 --> 00:07:34,751
+İmparator Konstantin, son ana kadar askerlerinin arasında savaştı ve şehriyle birlikte düştü.
 
 70
-00:07:35,325 --> 00:07:41,771
-Doğruca Ayasofya'ya gitti. Bin yıllık kubbenin altında durdu ve uzun süre sessizce izledi.
+00:07:36,117 --> 00:07:40,596
+29 Mayıs öğleden sonra, genç sultan atıyla şehre girdi.
 
 71
-00:07:42,908 --> 00:07:47,756
-Ayasofya camiye çevrildi ve 1 Haziran'da burada ilk Cuma namazı kılındı.
+00:07:41,742 --> 00:07:48,188
+Doğruca Ayasofya'ya gitti. Bin yıllık kubbenin altında durdu ve uzun süre sessizce izledi.
 
 72
-00:07:48,908 --> 00:07:54,494
-Sultan, şehrin Rum halkına yeni bir patrik atadı ve dinlerini yaşamalarına izin verdi.
+00:07:49,325 --> 00:07:54,172
+Ayasofya camiye çevrildi ve 1 Haziran'da burada ilk Cuma namazı kılındı.
 
 73
-00:07:55,617 --> 00:07:59,881
-Artık ona yeni bir isim veriliyordu: Fatih. Yani fetheden.
+00:07:55,325 --> 00:08:00,910
+Sultan, şehrin Rum halkına yeni bir patrik atadı ve dinlerini yaşamalarına izin verdi.
 
 74
-00:08:01,033 --> 00:08:09,481
-Bin yüz yılı aşkın Roma mirası sona ermişti. Birçok tarihçiye göre bu gün, Orta Çağ'ın sonu ve Yeni Çağ'ın başlangıcıdır.
+00:08:02,033 --> 00:08:06,298
+Artık ona yeni bir isim veriliyordu: Fatih. Yani fetheden.
 
 75
-00:08:10,617 --> 00:08:15,301
-Ve İstanbul, o günden sonra yeni bir imparatorluğun başkenti oldu.
+00:08:07,450 --> 00:08:15,897
+Bin yüz yılı aşkın Roma mirası sona ermişti. Birçok tarihçiye göre bu gün, Orta Çağ'ın sonu ve Yeni Çağ'ın başlangıcıdır.
 
 76
-00:08:16,800 --> 00:08:21,042
+00:08:17,033 --> 00:08:21,717
+Ve İstanbul, o günden sonra yeni bir imparatorluğun başkenti oldu.
+
+77
+00:08:23,217 --> 00:08:27,459
 Sizce bu fethin en büyük sırrı neydi? Yorumlarda buluşalım.
 
