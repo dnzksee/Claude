@@ -3,6 +3,7 @@
 Her konunun klasöründe: uzun video (1080p), Short, YouTube kapak resmi, başlık/açıklama/etiketler, altyazı.
 İndirmek için dosyaya tıklayın, sağ üstteki **indir (Download raw file)** düğmesine basın.
 
+- `preveze/` — Preveze Deniz Savaşı 1538 (7:30) + 3 Short — uzun video Git LFS ile saklanır
 - `fetih/` — İstanbul'un Fethi 1453 (8:30) + Short — uzun video Git LFS ile saklanır
 - `mumya/` — Avrupalılar Mumya Yedi: İlaç Diye (3:14)
 - `kanal/` — profil resimleri, kanal kapakları (A: ilk sürüm, B: zaman çizelgeli), kanal açıklaması

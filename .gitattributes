@@ -1,3 +1,4 @@
 termopylai/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
 mumya/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
 fetih/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
+preveze/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
