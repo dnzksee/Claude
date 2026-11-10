@@ -3,6 +3,7 @@
 Her konunun klasöründe: uzun video (1080p), Short, YouTube kapak resmi, başlık/açıklama/etiketler, altyazı.
 İndirmek için dosyaya tıklayın, sağ üstteki **indir (Download raw file)** düğmesine basın.
 
+- `lagari/` — Lagari Hasan Çelebi 1633 (4:40) + 3 Short — uzun video Git LFS ile saklanır
 - `dans/` — Dans Vebası 1518 (5:34) + 3 Short — uzun video Git LFS ile saklanır
 - `preveze/` — Preveze Deniz Savaşı 1538 (7:30) + 3 Short — uzun video Git LFS ile saklanır
 - `fetih/` — İstanbul'un Fethi 1453 (8:30) + Short — uzun video Git LFS ile saklanır
@@ -21,5 +22,7 @@ Ses asla hızlandırılmaz ya da yavaşlatılmaz. Yeni videolar Google Drive'a y
 4. **Kapanış:** Yoruma davet eden soru ve kanal kartı.
 Shorts: ilk 1-2 saniyede ekranda büyük soru ya da şaşırtıcı cümle.
 Her uzun videodan 3 Short: her biri tek bir şaşırtıcı ayrıntı, "bunu bilmiyordum" dedirten başlık, ekrandaki yazılar düz (eğik değil).
+Short süresi en fazla 25-30 saniye (daha uzunu izleyiciyi sıkıyor).
+Evliya Çelebi gibi kaynakların doğruluğu videoda tartışılmaz; hikâye kaynağın anlattığı gibi aktarılır ("Evliya Çelebi'ye göre").
 Kapaklarda sağ alt köşe boş kalır (YouTube süre etiketi oraya gelir).
 Uzun video hedefi: 8-10 dakika.
