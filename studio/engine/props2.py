@@ -100,6 +100,18 @@ def shape_box(p, x, y, s, filled=(), glow=None, lid_shake=0.0):
     ctx.restore()
 
 
+def toy_wagon(p, x, y, s, rot=0.0):
+    """Şekil kutusunu taşıyan küçük kırmızı oyuncak araba (Umay'ın yanında yuvarlanır). Kasa üstü: y - 38*s."""
+    p.part(lambda c: capsule(c, x - 95 * s, y - 52 * s, x - 150 * s, y - 95 * s, 5 * s, 4 * s), COL["kahve"], seed="tw_h")
+    p.part(lambda c: circle(c, x - 152 * s, y - 97 * s, 9 * s), COL["sari"], seed="tw_hk", lw=0.6)
+    p.part(lambda c: rounded_rect(c, x - 100 * s, y - 62 * s, 200 * s, 30 * s, 8 * s), COL["kirmizi"], seed="tw_b")
+    for wx in (x - 62 * s, x + 62 * s):
+        p.part(lambda c, wx=wx: circle(c, wx, y - 16 * s, 17 * s), hexrgb("#3A3A44"), seed=f"tw_w{wx}")
+        p.part(lambda c, wx=wx: circle(c, wx, y - 16 * s, 7 * s), hexrgb("#C9CBD6"), seed=f"tw_r{wx}", lw=0.5)
+        p.stroke(lambda c, wx=wx: (c.move_to(wx, y - 16 * s), c.line_to(wx + math.cos(rot) * 14 * s, y - 16 * s + math.sin(rot) * 14 * s)),
+                 (0.85, 0.85, 0.9), width=3)
+
+
 def stump(p, x, y, s):
     p.part(lambda c: rounded_rect(c, x - 55 * s, y - 70 * s, 110 * s, 72 * s, 10 * s), hexrgb("#9A6A45"), seed="st_b")
     p.part(lambda c: ellipse(c, x, y - 70 * s, 55 * s, 16 * s), hexrgb("#D9A86C"), seed="st_t")

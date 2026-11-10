@@ -105,6 +105,7 @@ OUTLINES = {
 EDGES = {"K04": ("kare", 4), "T04": ("ucgen", 3)}       # kenar sayma
 TIK = {"D21": "daire", "K10": "kare", "T17": "ucgen"}  # parça deliğine oturur
 PIECE_R = 34
+WAGON_H = 62          # oyuncak arabanın kasa yüksekliği (kutu bunun üstünde durur)
 
 
 def vo_path(cid):
@@ -309,9 +310,9 @@ class State:
         # D4: kurabiyeleri koklar
         if "D16" in T and T["D15"][1] - 0.3 < t < T["D17"][1] + 1.0:
             return STUMP_D[0] - 150
-        # K2: parçayı alıp kutuya götürür
-        if "K06" in T and T["K06"][0] - 1.5 < t < T["K08"][0]:
-            return lerp(PIECE_K[0] - 110, ux + 150 - 150, smooth((t - T["K06"][0] + 0.5) / 1.6))
+        # K2: kutunun öbür yanına geçer, kapaktaki parçayı burnuyla iter
+        if "K06" in T and T["K06"][0] - 1.2 < t < T["K08"][0] + 0.6:
+            return ux + 300
         # K4: kemik
         if "K17" in T and T["K17"][0] < t < T["K18"][1] + 1.5:
             return GIFT[0] - 140
@@ -352,19 +353,20 @@ def roll_x(pl, t):
 
 
 def box_mode(pl, t):
-    """Kutu nerede: 'house' (açılış), 'back' (Zıpzıp'ın sırtında), 'ground' (Umay'ın yanında) + geçiş oranı."""
+    """Kutu nerede: 'house' (açılışta kapının önünde) ya da 'wagon' (oyuncak arabada, Umay'ın yanında yuvarlanır).
+    Zıpzıp kutuyu da parçaları da taşımaz (ağzında oyuncak taşıyan köpek çocuklara kötü örnek olur)."""
     if "A09" in pl.T and t < pl.T["A09"][1] + 2.5:
         return "house", 0.0
-    sc = pl.scene_at(t)
-    if pl.seg_at(t, "travel"):
-        return "back", 0.0
-    if SC[sc["code"]].get("box"):
-        return "ground", smooth((t - sc["t0"]) / 0.9)
-    return "back", 0.0
+    return "wagon", 0.0
 
 
 def box_ground_x(pl, t):
-    return pl_ux(t) + 150
+    """Arabanın x'i: açılışta kapının önünden Umay'ın yanına yumuşakça gelir."""
+    x = pl_ux(t) + 150
+    if "A09" in pl.T:
+        t0 = pl.T["A09"][1] + 2.5
+        x = lerp(BOX0, x, smooth((t - t0) / 1.5))
+    return x
 
 
 def pl_ux(t):
@@ -381,7 +383,7 @@ def focus_point(pl, code, t, ux, zx):
     if f == "roll":
         return np.array([roll_x(pl, t), GROUND_Y - 40.0])
     if f == "box":
-        return np.array([ux + 150, GROUND_Y - 120.0])
+        return np.array([ux + 150, GROUND_Y - WAGON_H - 120.0])
     if f == "boat":
         return np.array([boat_x(pl, t), LAKE[1] - 90.0])
     return np.array(f, float)
@@ -419,7 +421,7 @@ def piece_state(pl, t, kind, anchors, box_top):
             u = (t - a) / 1.6
             k = KINDS.index(kind)
             x = lerp(BOX0, BOX0 + 700 + 260 * k, u)
-            y = lerp(GROUND_Y - 150, GROUND_Y - 60, u) - math.sin(math.pi * u) * (330 + 60 * k)
+            y = lerp(GROUND_Y - 150 - WAGON_H, GROUND_Y - 60, u) - math.sin(math.pi * u) * (330 + 60 * k)
             return x, y, u * 9, 1.0
     if kind == "daire":
         if "D01" in T and t < Tq("D05", 1, 0) + 1.5:
@@ -435,15 +437,22 @@ def piece_state(pl, t, kind, anchors, box_top):
             return lerp(h[0] if h else box_top[0], box_top[0] - 62, smooth((u - 0.55) / 0.45)), box_top[1] - 60 * (1 - u), 0.0, 0.9
         return None
     if kind == "kare":
-        if "K06" in T and t < T["K06"][0] - 0.5:
+        if "K06" in T and t < T["K05"][1] + 0.3:
             return PIECE_K[0], PIECE_K[1] - PIECE_R, 0.0, 1.0
-        n = anchors.get("nose")
+        h = anchors.get("umay_hand")
+        if "K06" in T and t < T["K06"][0]:
+            # Umay parçayı alır, kutunun kapağına bırakır
+            u = clamp((t - T["K05"][1] - 0.3) / max(T["K06"][0] - T["K05"][1] - 0.3, 0.1))
+            hx, hy = (h[0], h[1] + 10) if h is not None else (PIECE_K[0], PIECE_K[1] - PIECE_R)
+            if u < 0.4:
+                return lerp(PIECE_K[0], hx, smooth(u / 0.4)), lerp(PIECE_K[1] - PIECE_R, hy, smooth(u / 0.4)), 0.0, 0.9
+            v = smooth((u - 0.4) / 0.6)
+            return lerp(hx, box_top[0] + 40, v), lerp(hy, box_top[1] - 22, v) - math.sin(math.pi * v) * 40, 0.0, 0.9
         if "K08" in T and t < T["K08"][0]:
-            # Zıpzıp ağzında taşır, daire deliğe dener (titreyerek)
-            u = clamp((t - T["K07"][0]) / max(T["K07"][1] - T["K07"][0] + 0.5, 0.1))
-            if n is not None and t < T["K07"][0]:
-                return n[0] + 22, n[1] + 20, 0.0, 0.9
-            return box_top[0] - 62 + 4 * math.sin(t * 40) * (1 - u), box_top[1] - 8, 0.0, 0.9
+            # Zıpzıp burnuyla iter: parça kapakta daire deliğe kayar, sığmaz, titrer
+            u = clamp((t - T["K06"][0]) / max(T["K07"][0] - T["K06"][0], 0.1))
+            jig = 4 * math.sin(t * 40) if t > T["K07"][0] - 0.2 else 0.0
+            return lerp(box_top[0] + 40, box_top[0] - 62, smooth(u)) + jig, box_top[1] - 12, 0.0, 0.9
         if "K09" in T and t < T["K09"][0]:
             u = clamp((t - T["K08"][0]) / 0.9)
             return lerp(box_top[0] - 62, pl_ux(t) + 60, u), box_top[1] - 10 - math.sin(math.pi * u) * 160, u * 6, 0.9
@@ -719,7 +728,7 @@ def final_picture(p, pl, t, ux):
     fade = 1 - smooth((t - Tq("F11", 0, 1e9) + 0.6) / 0.6)    # kapanış kartından önce söner
     if fade <= 0.01:
         return
-    bx, by = box_ground_x(pl, t), GROUND_Y - 130
+    bx, by = box_ground_x(pl, t), GROUND_Y - WAGON_H - 130
     targets = {"kare": (ux + 120, 430, 120), "ucgen": (ux + 120, 255, 175), "daire": (ux - 260, 250, 75)}
     for kind, (tx, ty, tr) in targets.items():
         k = KINDS.index(kind)
@@ -796,13 +805,15 @@ def render_frame(i, layers):
         shake = 0.06 * math.sin(t * 50)
     box_top = None
     if mode == "house":
-        bx, by = BOX0, GROUND_Y
-        a_box = smooth((t - Tq("A05", 0, 0)) / 0.8)
-        if a_box > 0.01:
+        bx, by = BOX0, GROUND_Y - WAGON_H
+        if t > Tq("A05", 0, 0) - 0.4:
+            Q.toy_wagon(p, bx, GROUND_Y, 1.0, rot=bx / 17.0)
             Q.shape_box(p, bx, by, 0.75, filled=filled, lid_shake=shake)
         box_top = (bx, by - 0.75 * 128)
-    elif mode == "ground":
-        bx, by = box_ground_x(pl, t), GROUND_Y
+    elif mode == "wagon":
+        bx = box_ground_x(pl, t)
+        Q.toy_wagon(p, bx, GROUND_Y, 1.0, rot=bx / 17.0)
+        by = GROUND_Y - WAGON_H
         Q.shape_box(p, bx, by, 0.75, filled=filled, glow=gl, lid_shake=shake)
         box_top = (bx, by - 0.75 * 128)
 
@@ -816,13 +827,6 @@ def render_frame(i, layers):
         a_z = draw_zipzip(p, zx, GROUND_Y, 0.95, zst)
     anchors["nose"] = inv.transform_point(*a_z["nose"])
     anchors["collar"] = inv.transform_point(*a_z["collar"])
-    if mode == "back" and not hidden:
-        # Zıpzıp'ın sırtında küçük çanta gibi (Umay'dan önce çizilir: Zıpzıp arkada kalınca kutu da arkada kalır)
-        cxl, cyl = anchors["collar"]
-        bx = cxl - 70 * zst["facing"]
-        by = cyl - 18 + 4 * math.sin(STATE.zph[i] * 2)
-        Q.shape_box(p, bx, by, 0.42, filled=filled)
-        box_top = (bx, by - 0.42 * 128)
     if not hidden:
         a_u = draw_umay(p, ux, GROUND_Y, 1.0, ust)
     hands = a_u.get("hands", {})
