@@ -38,7 +38,7 @@ Durum: ✅ yapıldı · 🎬 yapılıyor · ⬜ sırada
 
 ## Tuhaf olaylar
 - ⬜ Pekmez Seli (Boston, 1919) — "Bir şehri dev bir pekmez dalgası vurdu."
-- ⬜ Büyük Emu Savaşı (1932) — "Ordu kuşlara savaş açtı ve kaybetti."
+- 🎬 Büyük Emu Savaşı (1932) — "Ordu kuşlara savaş açtı ve kaybetti."
 - ⬜ Napolyon'u Tavşanlar Yendi (1807) — "İmparator bir tavşan sürüsünün saldırısına uğradı."
 - ⬜ Londra Bira Seli (1814) — "Patlayan dev bir fıçıdan taşan bira sokakları bastı."
 - ⬜ Gökyüzü Yandığında (Carrington Olayı, 1859) — "Telgraf telleri kıvılcım saçtı."
