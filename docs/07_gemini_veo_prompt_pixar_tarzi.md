@@ -56,3 +56,43 @@ Audio: same cheerful ukulele music, soft grass rustle, girl's laugh, happy puppy
   *"2D hand-drawn cartoon with soft Pixar-like lighting and shading"*.
 - **Uyarı:** Yapay zekâ videosunda karakterlerin yüzü ve kıyafeti klipten klibe biraz değişebilir. Bu yüzden 10 dakikalık
   bölümlerde kendi çizim motorumuzu kullanıyoruz. Ama kısa tanıtım ve Shorts için Veo klipleri çok güzel olabilir.
+
+---
+
+## Klip 3 (8 sn, dikey): referans videodaki görünüm — yüksek detaylı 3D, sıcak sinematik ışık
+
+Kullanıcının gönderdiği örnek: dikey 9:16, dokusu çok zengin (pul, kumaş, deri), sıcak lamba ışıkları, detaylarla dolu
+mekân, sığ alan derinliği, büyük parlak gözler, yakın plana itilen kamera, parlayan sihirli parçacıklar.
+
+```
+Vertical 9:16 video. Premium 3D CGI animated feature-film look, Pixar / Illumination quality. Ultra-detailed tactile
+textures: soft cotton fabric weave, fluffy individual fur strands, polished wood grain, knitted wool. Warm cinematic
+lighting from glowing lamps and string lights, soft volumetric light rays through a window, subsurface scattering on
+skin, big expressive eyes with bright catchlights, shallow depth of field with creamy bokeh, rich warm color palette
+(honey, coral, teal, sunny yellow).
+
+Characters (keep exactly this design):
+- UMAY: a cute 3-year-old Turkish girl, big round sparkling brown eyes, rosy cheeks, chestnut-brown hair in two puffy
+  pigtails tied with small yellow flower hair ties and a short fringe; coral-red short-sleeved cotton dress with a round
+  white Peter Pan collar and a small yellow heart on the chest; orange shoes.
+- ZIPZIP: her small puppy, cream-white fluffy fur with caramel-brown patches, one big floppy caramel ear, a brown patch
+  around one eye, shiny black button nose, red leather collar with a round golden tag, wagging tail.
+
+Setting: grandma's cozy, cluttered living room full of details: wooden shelves with toys, potted plants, a knitted
+blanket on an armchair, warm glowing lamps, a round colorful rug, sunlight through a window.
+
+Action (8 seconds):
+0–3 s: Medium shot. Umay kneels on the rug in front of a colorful wooden shape-sorter box with three holes (circle,
+       square, triangle). Zıpzıp sits beside her, tail wagging. Slow push-in.
+3–6 s: Umay lifts the lid; a glowing sunny-yellow circle, a sky-blue square and a cherry-red triangle float up out of
+       the box with sparkling golden magic particles. Close-up of Umay's amazed face, eyes wide, mouth open in delight;
+       Zıpzıp's ears pop up in surprise.
+6–8 s: Umay laughs, points at the floating shapes and says in Turkish, in a sweet toddler voice: "Şekil avı başlasın!"
+       Zıpzıp jumps up and gives a happy "Hav!" The shapes zip out through the window into the sunny garden.
+
+Audio: playful whimsical orchestral music with pizzicato strings and glockenspiel, magical chime when the shapes
+float up, the girl's giggle, one cute puppy bark. Child-friendly, no scary elements, no extra text on screen.
+```
+
+Not: Referanstaki gibi ekranda Türkçe bir yazı istenirse sona eklenebilir: *"A glowing wooden sign on the wall reads
+\"ŞEKİL AVI\""*. Veo Türkçe harflerde (Ş, İ, I) hata yapabilir; yanlış çıkarsa yazıyı kaldırıp montajda ekleriz.
