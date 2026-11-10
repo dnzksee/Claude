@@ -10,7 +10,7 @@ Durum: ✅ yapıldı · 🎬 yapılıyor · ⬜ sırada
 - ✅ İstanbul'un Fethi 1453
 - ✅ Preveze Deniz Savaşı 1538
 - ✅ Dans Vebası 1518
-- 🎬 Lagari Hasan Çelebi'nin Roketi (1633) — "1633'te bir Osmanlı mucidi kendini gökyüzüne fırlattı."
+- ✅ Lagari Hasan Çelebi'nin Roketi (1633) — "1633'te bir Osmanlı mucidi kendini gökyüzüne fırlattı."
 
 ## Türk ve Osmanlı tarihi
 - ⬜ Hezarfen Ahmed Çelebi — "Bir adam kanat taktı ve Boğaz'ı uçarak geçti… mi?"
