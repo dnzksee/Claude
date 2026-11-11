@@ -33,7 +33,7 @@
 19. Savaşta tüfek kullanmayı bilen bu adamların istediği şey belliydi: makineli tüfekler.
 
 ## Ordu Geliyor
-20. Savunma Bakanı Sir George Pearce, isteği kabul etti.
+20. Savunma Bakanı George Pearce, isteği kabul etti.
 21. Binbaşı Meredith komutasında, iki asker, iki makineli tüfek ve on bin mermi bölgeye gönderildi.
 22. Plan basitti: Emuları toplu hâlde yakalamak ve hepsini birden durdurmak.
 23. Herkes bu işin birkaç günde biteceğini düşünüyordu.
