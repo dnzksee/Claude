@@ -27,5 +27,6 @@ Short süresi en fazla 25-30 saniye (daha uzunu izleyiciyi sıkıyor).
 Her video bitince (sorulmadan) uzun video ve 3 Short için başlık, açıklama (uzun videoda bölüm zamanlarıyla) ve etiketler verilir; etiketler hem virgüllü hem # ile. Ayrıca `<konu>/yayin/youtube.md` dosyasına yazılır.
 Short başlıkları 80-100 karakter (#shorts dahil, YouTube sınırı 100): olayı merak uyandıran tek bir cümleyle anlatır, sonunda bir emoji + #shorts.
 Evliya Çelebi gibi kaynakların doğruluğu videoda tartışılmaz; hikâye kaynağın anlattığı gibi aktarılır ("Evliya Çelebi'ye göre").
+Videolarda fotoğraf kullanılmaz (küçük çözünürlük TV'de bulanık görünüyor); her sahne Veo videosu olur, eksik sahne için yeniden video istenir.
 Kapaklarda sağ alt köşe boş kalır (YouTube süre etiketi oraya gelir).
 Uzun video hedefi: 8-10 dakika.
