@@ -25,6 +25,7 @@ Shorts: ilk 1-2 saniyede ekranda büyük soru ya da şaşırtıcı cümle.
 Her uzun videodan 3 Short: her biri tek bir şaşırtıcı ayrıntı, "bunu bilmiyordum" dedirten başlık, ekrandaki yazılar düz (eğik değil).
 Short süresi en fazla 25-30 saniye (daha uzunu izleyiciyi sıkıyor).
 Her video bitince (sorulmadan) uzun video ve 3 Short için başlık, açıklama (uzun videoda bölüm zamanlarıyla) ve etiketler verilir; etiketler hem virgüllü hem # ile. Ayrıca `<konu>/yayin/youtube.md` dosyasına yazılır.
+Short başlıkları kısa olur: en fazla 3-4 kelime + bir emoji + #shorts (örnek: "Ordu Kuşlara Yenildi! 🐦 #shorts").
 Evliya Çelebi gibi kaynakların doğruluğu videoda tartışılmaz; hikâye kaynağın anlattığı gibi aktarılır ("Evliya Çelebi'ye göre").
 Kapaklarda sağ alt köşe boş kalır (YouTube süre etiketi oraya gelir).
 Uzun video hedefi: 8-10 dakika.

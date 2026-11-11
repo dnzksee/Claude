@@ -33,19 +33,19 @@ büyük emu savaşı, emu savaşı, emu war, avustralya tarihi, 1932, tuhaf tari
 #emusavaşı #büyükemusavaşı #emuwar #avustralya #1932 #tuhaftarih #ilginçtarih #emu #inanılmazamagerçek #tarih #belgesel #animasyon #kroniknâme #dünyatarihi #bunubiliyormuydunuz #ilginçbilgiler
 
 ## SHORT 1 — Ordu kuşlara yenildi
-**Başlık:** Ordu Kuşlara Savaş Açtı ve Kaybetti! 🐦 #shorts
+**Başlık:** Ordu Kuşlara Yenildi! 🐦 #shorts
 **Açıklama:** 1932'de Avustralya ordusu makineli tüfeklerle emulara savaş açtı. Sonuç? Tamamı kanalda. #shorts #tarih #emusavaşı
 **Etiketler:** emu savaşı, büyük emu savaşı, avustralya, tuhaf tarih, ilginç tarih, shorts, bunu biliyor muydun
 **#:** #shorts #emusavaşı #avustralya #tuhaftarih #ilginçtarih #bunubiliyormuydun
 
 ## SHORT 2 — Makineli tüfek tutukluk yaptı
-**Başlık:** Tam Ateş Edecekken Silah Tutukluk Yaptı! 😂 #shorts
+**Başlık:** Silah Tutukluk Yaptı! 😂 #shorts
 **Açıklama:** Askerler bin emuyu pusuya düşürdü… ve makineli tüfek tutukluk yaptı. Sonra tüfeği kamyona koydular, ama emular kamyondan hızlıydı! #shorts #tarih #emusavaşı
 **Etiketler:** emu savaşı, makineli tüfek, avustralya ordusu, komik tarih, tuhaf tarih, shorts, bunu bilmiyordum
 **#:** #shorts #emusavaşı #komiktarih #tuhaftarih #avustralya #bunubilmiyordum
 
 ## SHORT 3 — Orduyu yenen dev kuş
-**Başlık:** Orduyu Yenen Dev Kuş: Emu! Bunu Bilmiyordum 😳 #shorts
+**Başlık:** Orduyu Yenen Kuş! 😳 #shorts
 **Açıklama:** İnsan boyunda, saatte 50 km koşan ve bir orduyu yenen kuş. Binbaşı bile itiraf etti: "Bu kuşların dayanıklılığına sahip bir ordum olsaydı…" #shorts #tarih #emu
 **Etiketler:** emu, emu savaşı, avustralya hayvanları, ilginç bilgiler, tuhaf tarih, shorts, bunu bilmiyordum
 **#:** #shorts #emu #emusavaşı #ilginçbilgiler #avustralya #bunubilmiyordum
