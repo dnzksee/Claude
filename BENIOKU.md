@@ -22,7 +22,8 @@ Ses asla hızlandırılmaz ya da yavaşlatılmaz. Yeni videolar Google Drive'a y
 3. **Hikâye:** Bölümler hâlinde, orta tempo. Yaklaşık 1:30'da "Abone ol" butonu.
 4. **Kapanış:** Yoruma davet eden soru ve kanal kartı.
 Shorts: ilk 1-2 saniyede ekranda büyük soru ya da şaşırtıcı cümle.
-Her uzun videodan 3 Short: her biri tek bir şaşırtıcı ayrıntı, "bunu bilmiyordum" dedirten başlık, ekrandaki yazılar düz (eğik değil).
+Her uzun videodan 2 güçlü Short kesin; konunun gerçekten üçüncü bir "nasıl yani?" anı varsa 3. Short. Her konuda kaç Short çıkacağı önceden kullanıcıya söylenir. Her biri tek bir şaşırtıcı ayrıntı, "bunu bilmiyordum" dedirten başlık, ekrandaki yazılar düz (eğik değil).
+Yükleme takvimi: uzun video 1. gün, Short'lar sonraki günlerde günde birer tane.
 Short süresi en fazla 25-30 saniye (daha uzunu izleyiciyi sıkıyor).
 Short kanca yazısı somut olur ve olayın kendisini söyler ("ORDU KUŞLARA YENİLDİ!", "ROKETLE UÇTU!"); bağlamsız alıntı kullanılmaz.
 Short'un ilk karesi, kanca yazısının anlattığını gösteren en hareketli sahne olur (sakin sahneyle açılmaz). Dans Short'u (15 B) böyleydi; Lagari Short'u (21) değildi.
