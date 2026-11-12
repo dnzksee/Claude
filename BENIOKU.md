@@ -24,6 +24,9 @@ Ses asla hızlandırılmaz ya da yavaşlatılmaz. Yeni videolar Google Drive'a y
 Shorts: ilk 1-2 saniyede ekranda büyük soru ya da şaşırtıcı cümle.
 Her uzun videodan 3 Short: her biri tek bir şaşırtıcı ayrıntı, "bunu bilmiyordum" dedirten başlık, ekrandaki yazılar düz (eğik değil).
 Short süresi en fazla 25-30 saniye (daha uzunu izleyiciyi sıkıyor).
+Short kanca yazısı somut olur ve olayın kendisini söyler ("ORDU KUŞLARA YENİLDİ!", "ROKETLE UÇTU!"); bağlamsız alıntı kullanılmaz.
+Short'un ilk karesi, kanca yazısının anlattığını gösteren en hareketli sahne olur (sakin sahneyle açılmaz). Dans Short'u (15 B) böyleydi; Lagari Short'u (21) değildi.
+Short'lar günde en fazla 1 tane yüklenir; uzun videoyla aynı gün yüklenmez.
 Her video bitince (sorulmadan) uzun video ve 3 Short için başlık, açıklama (uzun videoda bölüm zamanlarıyla) ve etiketler verilir; etiketler hem virgüllü hem # ile. Ayrıca `<konu>/yayin/youtube.md` dosyasına yazılır.
 Short başlıkları 80-100 karakter (#shorts dahil, YouTube sınırı 100): olayı merak uyandıran tek bir cümleyle anlatır, sonunda bir emoji + #shorts.
 Evliya Çelebi gibi kaynakların doğruluğu videoda tartışılmaz; hikâye kaynağın anlattığı gibi aktarılır ("Evliya Çelebi'ye göre").
