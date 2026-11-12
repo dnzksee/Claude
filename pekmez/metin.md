@@ -64,7 +64,7 @@
 42. Bu felaketten sonra, Amerika'da inşaat kuralları değişti.
 43. Artık büyük yapıların hesapları mühendisler tarafından imzalanmak zorundaydı.
 44. Bugün tankın olduğu yerde çocuk parkı ve spor sahaları var.
-45. Ve bazı Bostonlular, sıcak yaz günlerinde hâlâ pekmez kokusu aldıklarını söyler.
+45. Ve Boston'da yaşayan bazı insanlar, sıcak yaz günlerinde hâlâ pekmez kokusu aldıklarını söyler.
 
 KAPANIŞ: Sizce bu felaket önlenebilir miydi? Yorumlarda buluşalım.
 
