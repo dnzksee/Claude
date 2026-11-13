@@ -32,7 +32,7 @@ Durum: ✅ yapıldı · 🎬 yapılıyor · ⬜ sırada
 ## Gizemler
 - ⬜ Tunguska Patlaması (1908) — "80 milyon ağaç bir anda devrildi."
 - ⬜ Kayıp Koloni Roanoke (1590) — "115 kişi kayboldu, geriye tek bir kelime kaldı."
-- ⬜ Mary Celeste Hayalet Gemisi (1872) — "Masada yemekler duruyordu… ama gemide kimse yoktu."
+- 🎬 Mary Celeste Hayalet Gemisi (1872) — "Masada yemekler duruyordu… ama gemide kimse yoktu."
 - ⬜ Voynich El Yazması — "600 yıldır kimsenin okuyamadığı bir kitap."
 - ⬜ Dyatlov Geçidi (1959) — "Dokuz dağcı çadırlarını içeriden yırtıp karda kaçtı."
 
