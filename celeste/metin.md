@@ -31,7 +31,7 @@
 19. Peki on kişi, sapasağlam bir gemiyi neden terk etmişti?
 
 ## İpuçları
-20. Deveau, gemiyi dikkatle inceledi.
+20. İkinci kaptan, gemiyi dikkatle inceledi.
 21. Geminin tek filikası, yani küçük kurtarma sandalı, yerinde yoktu.
 22. Kaptanın seyir aletleri ve geminin belgeleri de kaybolmuştu.
 23. Ambarda bir miktar su vardı. Ama gemiyi batıracak kadar değildi.
@@ -41,7 +41,7 @@
 27. Yani Mary Celeste, en az dokuz gün boyunca okyanusta tek başına yol almıştı.
 
 ## Cebelitarık'ta Dava
-28. Dei Gratia tayfaları, Mary Celeste'yi Cebelitarık'a getirdi.
+28. Tayfalar, hayalet gemiyi Cebelitarık'a getirdi.
 29. Orada bir mahkeme kuruldu.
 30. Bazı yetkililer, tayfaların bir suç işlediğinden şüphelendi.
 31. Ama hiçbir kanıt bulunamadı.

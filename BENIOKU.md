@@ -3,6 +3,7 @@
 Her konunun klasöründe: uzun video (1080p), Short, YouTube kapak resmi, başlık/açıklama/etiketler, altyazı.
 İndirmek için dosyaya tıklayın, sağ üstteki **indir (Download raw file)** düğmesine basın.
 
+- `celeste/` — Mary Celeste Hayalet Gemisi 1872 (4:49) + 3 Short — uzun video Git LFS ile saklanır
 - `pekmez/` — Büyük Pekmez Seli 1919 (4:32) + 3 Short — uzun video Git LFS ile saklanır
 - `emu/` — Büyük Emu Savaşı 1932 (4:52) + 3 Short — uzun video Git LFS ile saklanır
 - `lagari/` — Lagari Hasan Çelebi 1633 (4:40) + 3 Short — uzun video Git LFS ile saklanır
