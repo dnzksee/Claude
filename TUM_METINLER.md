@@ -669,13 +669,13 @@ Kaybolan filika, sökülmüş bir pompa, sızdıran alkol fıçıları, Cebelita
 Sizce Mary Celeste'de gerçekten ne oldu? Yorumlarda buluşalım!
 
 00:00 Giriş
-00:43 Yolculuk
-01:18 Boş Gemi
-01:59 İpuçları
-02:42 Cebelitarık'ta Dava
-03:07 Efsane Doğuyor
-03:33 Ne Oldu?
-04:18 Geminin Sonu
+00:45 Yolculuk
+01:20 Boş Gemi
+02:07 İpuçları
+02:51 Cebelitarık'ta Dava
+03:16 Efsane Doğuyor
+03:42 Ne Oldu?
+04:26 Geminin Sonu
 
 Kroniknâme — tarihin az bilinen hikâyeleri. Abone olmayı unutmayın!
 

@@ -9,7 +9,7 @@
 1. 4 Aralık 1872. Atlas Okyanusu, Azor Adaları ile Portekiz arasında bir yer.
 2. Dei Gratia adlı bir yük gemisinin tayfaları, ufukta bir yelkenli görüyor.
 3. Gemi tuhaf bir şekilde ilerliyor. Sanki kimse dümeni tutmuyor.
-4. Kaptan, gemiye seslenmelerini istiyor. Ama hiç cevap gelmiyor.
+4. Dei Gratia'nın kaptanı, tayfalarına gemiye seslenmelerini söylüyor. Ama hiç cevap gelmiyor.
 5. Bu gemi, tarihin en ünlü gizemlerinden birine dönüşecek: Mary Celeste.
 
 ## Yolculuk
@@ -21,7 +21,7 @@
 11. Kaptan Briggs, yola çıkmadan önce annesine bir mektup yazdı. Her şeyin yolunda olduğunu söylüyordu.
 
 ## Boş Gemi
-12. Dei Gratia'nın ikinci kaptanı Oliver Deveau, küçük bir sandalla Mary Celeste'ye geçti.
+12. Şimdi 4 Aralık'a, Dei Gratia'ya geri dönelim. Kaptan, gizemli gemiyi incelemesi için ikinci kaptanı Oliver Deveau'yu gönderdi. Deveau, küçük bir sandalla Mary Celeste'ye geçti.
 13. Güverteye çıktığında gördüğü şey, onu şaşkına çevirdi.
 14. Gemide kimse yoktu.
 15. Ne kaptan, ne eşi, ne küçük kız, ne de tayfalar.
