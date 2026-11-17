@@ -13,6 +13,7 @@ Bu dosyada şimdiye kadar yapılan bütün videoların (uzun + Short) YouTube ba
 6. [Büyük Emu Savaşı 1932](#6-emu)
 7. [Büyük Pekmez Seli 1919](#7-pekmez)
 8. [Mary Celeste Hayalet Gemisi 1872](#8-celeste)
+9. [Napolyon ve Tavşanlar 1807](#9-tavsan)
 
 ---
 
@@ -702,3 +703,52 @@ mary celeste, hayalet gemi, mary celeste gizemi, 1872, atlas okyanusu, çözüle
 **Açıklama:** Sızdıran alkol fıçıları, korkan bir kaptan ve gemiye bağlı küçük bir filika… Halat koparsa ne olurdu? #shorts #gizem #maryceleste
 **Etiketler:** mary celeste, hayalet gemi, gizem teorisi, çözülemeyen gizemler, deniz gizemleri, shorts, bunu bilmiyordum
 **#:** #shorts #maryceleste #hayaletgemi #gizem #denizgizemleri #bunubilmiyordum
+
+---
+
+<a id="9-tavsan"></a>
+# 9. Napolyon ve Tavşanlar 1807
+
+**Video dosyaları:** [tavsan_1080p.mp4](https://github.com/dnzksee/Claude/blob/kroniknane-videolar/tavsan/tavsan_1080p.mp4) · [tavsan_short1.mp4](https://github.com/dnzksee/Claude/blob/kroniknane-videolar/tavsan/tavsan_short1.mp4) · [tavsan_short2.mp4](https://github.com/dnzksee/Claude/blob/kroniknane-videolar/tavsan/tavsan_short2.mp4) · [kapak](https://github.com/dnzksee/Claude/blob/kroniknane-videolar/tavsan/kapak.png)
+
+### UZUN VİDEO
+**Başlık önerileri**
+1. Avrupa'yı Fetheden Napolyon'u Tavşanlar Kaçırdı! | İmparatorun En Tuhaf Yenilgisi (1807)
+2. Napolyon'a Binlerce Tavşan Saldırdı: Tarihin En Komik Av Partisi
+3. Orduların Yenemediği Napolyon'u Tavşanlar Yendi!
+
+**Açıklama**
+Temmuz 1807. Napolyon gücünün zirvesindeydi ve Tilsit Antlaşması'nı kutlamak için büyük bir av partisi istedi. Sadık mareşali Berthier yaklaşık 3.000 tavşan getirtti. Ama kafesler açıldığında tavşanlar kaçmadı… hepsi birden Napolyon'a koştu!
+
+Çizmelere tırmanan tavşanlar, iki kola ayrılıp kuşatan bir "tavşan ordusu" ve arabasına kaçan bir imparator… Peki tavşanlar neden saldırdı? Cevap çok basitti.
+
+Sizce Napolyon'un en zor düşmanı kimdi? Yorumlarda buluşalım!
+
+00:00 Giriş
+00:40 Barış Kutlaması
+01:02 Berthier'nin Planı
+01:29 Kafesler Açılıyor
+01:59 Saldırı
+02:30 Kaçış
+02:51 Neden?
+03:19 Sonrası
+
+Kroniknâme — tarihin az bilinen hikâyeleri. Abone olmayı unutmayın!
+
+**Etiketler (virgüllü)**
+napolyon, napolyon ve tavşanlar, napolyon tavşan, napoleon rabbits, 1807, tilsit antlaşması, berthier, fransız tarihi, komik tarih, tuhaf tarih, ilginç tarih, bunu biliyor muydunuz, inanılmaz ama gerçek, tarih belgeseli, animasyon tarih, kroniknâme, dünya tarihi, ilginç bilgiler, tarih hikayeleri
+
+**Etiketler (#)**
+#napolyon #napoleon #tavşan #1807 #komiktarih #tuhaftarih #ilginçtarih #inanılmazamagerçek #tarih #belgesel #animasyon #kroniknâme #dünyatarihi #bunubiliyormuydunuz
+
+### SHORT 1 — Tavşanlar Napolyon'a saldırdı
+**Başlık:** Kafesler Açıldı, Tavşanlar Kaçmak Yerine Hep Birden Napolyon'a Saldırdı! 🐰 #shorts
+**Açıklama:** 1807'de Napolyon'un av partisinde binlerce tavşan imparatoru kuşattı. Tamamı kanalda. #shorts #tarih #napolyon
+**Etiketler:** napolyon, napolyon tavşan, komik tarih, tuhaf tarih, ilginç tarih, shorts, bunu biliyor muydun
+**#:** #shorts #napolyon #tavşan #komiktarih #tuhaftarih #bunubiliyormuydun
+
+### SHORT 2 — Aslında yemek istiyorlardı
+**Başlık:** Tavşanlar Napolyon'a Neden Saldırdı? Cevap Çok Basit: Aslında Yemek İstiyorlardı! 🥕 #shorts
+**Açıklama:** Mareşal Berthier yabani tavşan yerine çiftçilerden evcil tavşan almıştı. İnsan görünce yemek geleceğini sanıyorlardı! #shorts #tarih #napolyon
+**Etiketler:** napolyon, napolyon tavşan, berthier, komik tarih, ilginç bilgiler, shorts, bunu bilmiyordum
+**#:** #shorts #napolyon #tavşan #komiktarih #ilginçbilgiler #bunubilmiyordum

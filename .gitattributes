@@ -7,3 +7,4 @@ lagari/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
 emu/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
 pekmez/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
 celeste/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
+tavsan/*_1080p.mp4 filter=lfs diff=lfs merge=lfs -text
