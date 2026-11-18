@@ -107,54 +107,54 @@ Avrupa'yı fetheden komutanı, şimdi tavşanlar kuşatıyordu.
 Napolyon, sonunda geri çekilmek zorunda kaldı.
 
 28
-00:02:31,367 --> 00:02:33,747
+00:02:31,242 --> 00:02:33,622
 İmparator, arabasına doğru koştu.
 
 29
-00:02:35,700 --> 00:02:38,602
+00:02:35,575 --> 00:02:38,477
 Tavşanlar, peşinden gelmeye devam etti.
 
 30
-00:02:40,283 --> 00:02:44,711
+00:02:40,158 --> 00:02:44,586
 Bazı anlatımlara göre, birkaç tavşan arabanın içine bile atladı.
 
 31
-00:02:45,825 --> 00:02:50,791
+00:02:45,700 --> 00:02:50,666
 Araba hızla uzaklaşırken, tavşanlar hâlâ arkasından bakıyordu.
 
 32
-00:02:52,158 --> 00:02:55,153
+00:02:52,033 --> 00:02:55,028
 Peki tavşanlar neden kaçmak yerine saldırdı?
 
 33
-00:02:56,492 --> 00:02:57,944
+00:02:56,367 --> 00:02:57,819
 Cevap çok basitti.
 
 34
-00:03:00,075 --> 00:03:05,581
+00:02:59,950 --> 00:03:05,456
 Berthier, yabani tavşan bulmak yerine, çiftçilerden evcil tavşanlar satın almıştı.
 
 35
-00:03:06,700 --> 00:03:10,470
+00:03:06,575 --> 00:03:10,345
 Bu tavşanlar, insanları gördüğünde yiyecek geleceğini sanıyordu.
 
 36
-00:03:11,617 --> 00:03:16,109
+00:03:11,492 --> 00:03:15,984
 Yani Napolyon'a saldırmıyorlardı. Ondan yemek istiyorlardı!
 
 37
-00:03:17,492 --> 00:03:22,725
+00:03:17,367 --> 00:03:22,600
 Bu hikâye, yıllar sonra bir Fransız generalin anılarında anlatıldı.
 
 38
-00:03:23,867 --> 00:03:29,265
+00:03:23,742 --> 00:03:29,140
 Ve tarihe, Napolyon'un en tuhaf yenilgisi olarak geçti.
 
 39
-00:03:30,408 --> 00:03:36,233
+00:03:30,283 --> 00:03:36,108
 Avrupa'nın orduları onu yenemedi. Ama bir sürü aç tavşan, onu kaçırmayı başardı.
 
 40
-00:03:37,717 --> 00:03:42,357
+00:03:37,592 --> 00:03:42,232
 Sizce Napolyon'un en zor düşmanı kimdi? Yorumlarda buluşalım.
 
