@@ -731,7 +731,7 @@ Sizce Napolyon'un en zor düşmanı kimdi? Yorumlarda buluşalım!
 01:59 Saldırı
 02:30 Kaçış
 02:51 Neden?
-03:19 Sonrası
+03:16 Sonrası
 
 Kroniknâme — tarihin az bilinen hikâyeleri. Abone olmayı unutmayın!
 
