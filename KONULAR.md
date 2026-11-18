@@ -25,7 +25,7 @@ Durum: ✅ yapıldı · 🎬 yapılıyor · ⬜ sırada
 - ⬜ Ellerini Yıkamayan Doktorlar (Semmelweis) — "'Ellerinizi yıkayın' dedi, ona deli dediler."
 - ⬜ Antikythera Mekanizması — "2000 yıllık bir bilgisayar."
 - ⬜ Takvimden Silinen 10 Gün (1582) — "4 Ekim'de yatan insanlar 15 Ekim'de uyandı."
-- ⬜ İlk Aşı ve İstanbul (Lady Montagu, 1717) — "Avrupa'ya aşıyı bir İstanbul hamamı öğretti."
+- 🎬 İlk Aşı ve İstanbul (Lady Montagu, 1717) — "Avrupa'ya aşıyı bir İstanbul hamamı öğretti."
 - ⬜ Penisilinin Tesadüfi Keşfi — "Unutulan bir tabak, milyonlarca hayat kurtardı."
 - ⬜ Galileo'nun Yargılanması — "'Dünya dönüyor' dediği için ev hapsinde öldü."
 
