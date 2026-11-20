@@ -50,7 +50,17 @@ def _post(model, body, aralik=0.0):
     raise RuntimeError(f"{model}: çok fazla deneme")
 
 
+def _sayac():
+    """Bu makinede bugün yapılan TTS istek sayısı. TTS_SINIR aşılırsa durur (Türkçe videolara kota bırakmak için)."""
+    yol = os.path.expanduser(f"~/.tts_sayac_{time.strftime('%Y-%m-%d', time.gmtime())}")
+    n = int(open(yol).read()) if os.path.exists(yol) else 0
+    if n >= int(os.environ.get("TTS_SINIR", "60")):
+        raise KotaBitti(f"günlük dublaj sınırı ({n} istek) doldu; kalan kota Türkçe videolara")
+    open(yol, "w").write(str(n + 1))
+
+
 def tts(metin, diladi):
+    _sayac()
     stil = (f"Read the following in {diladi} like a very excited, energetic documentary narrator, "
             "full of wonder and amazement:\n")
     body = {"contents": [{"parts": [{"text": stil + metin}]}],
@@ -230,7 +240,10 @@ class Proje:
         return out
 
     def onar(self):
-        for k in self.kotu():
+        kotu = self.kotu()
+        if len(kotu) > 12:     # bu kadar çok sorun bölmede hata demektir; kotayı tek tek onarımla harcama
+            raise RuntimeError(f"{self.dil}: {len(kotu)} sorunlu cümle, önce üretimi kontrol et: {kotu}")
+        for k in kotu:
             en = None
             if os.path.exists(self.yol(k)):
                 y = self.oku(k); en = (self.kontrol_v[str(k)][0] - max(0, len(y) / SR - self.pencere(k) - 0.4) * 0.1, y, self.kontrol_v[str(k)])
