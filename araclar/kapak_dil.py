@@ -1,5 +1,5 @@
 """Dil kapakları: yazısız arka plan + dilde 3 satır yazı (PIL + raqm: Arapça/Urduca sağdan sola ve bitişik).
-python3 kapak_dil.py <arka.png> <cikti.png> <dil> "<satır1>" "<satır2>" "<satır3>" [x_merkez]
+python3 kapak_dil.py <arka.png> <cikti.png> <dil> "<satır1>" "<satır2>" "<satır3>" [x_merkez] [y_kaydirma]
 Arka plan yoksa Türkçe kapaktan yazıyı Gemini görsel modeliyle sildirip (gemini-3.1-flash-image) 1280x720'ye ölçekle.
 Sağ alt köşe (süre etiketi) boş bırakılır."""
 import sys
@@ -35,14 +35,15 @@ def yaz(im, metin, cx, cy, boy, renk, dil, max_w=620):
 if __name__ == "__main__":
     arka, cikti, dil, s1, s2, s3 = sys.argv[1:7]
     cx = float(sys.argv[7]) if len(sys.argv) > 7 else 950
+    dy = float(sys.argv[8]) if len(sys.argv) > 8 else 0   # yazıyı aşağı kaydır (üstte önemli görsel varsa)
     im = Image.open(arka).convert("RGBA").resize((1280, 720), Image.LANCZOS)
     # sağa doğru hafif koyulaşma (yazı okunurluğu)
     g = Image.new("L", (1280, 1), 0)
     for x in range(1280):
         g.putpixel((x, 0), int(max(0, min(1, (x - 560) / 720)) * 170))
     im.alpha_composite(Image.merge("RGBA", [Image.new("L", (1280, 720), c) for c in (8, 8, 20)] + [g.resize((1280, 720))]))
-    yaz(im, s1, cx, 200, 84, (255, 255, 255), dil)
-    yaz(im, s2, cx, 318, 118, (255, 200, 60), dil)
-    yaz(im, s3, cx, 432, 50, (255, 122, 94), dil)
+    yaz(im, s1, cx, 200 + dy, 84, (255, 255, 255), dil)
+    yaz(im, s2, cx, 318 + dy, 118, (255, 200, 60), dil)
+    yaz(im, s3, cx, 432 + dy, 50, (255, 122, 94), dil)
     im.convert("RGB").save(cikti)
     print("ok", cikti)
