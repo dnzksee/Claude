@@ -21,10 +21,12 @@ for k in $SIRA; do
     fi
     cp "$DEPO/$k/altyazi.srt" "$w/tr.srt"
     cp "$DEPO/$k/dil_kaynak/$d.py" "$w/"
-    (cd "$w" && python3 -W ignore "$DEPO/araclar/dublaj.py" . "$d" "$ad" hepsi 2>&1 | grep -v "^\s*$")
-    c=${PIPESTATUS[0]}
+    (cd "$w" && set -o pipefail && python3 -W ignore "$DEPO/araclar/dublaj.py" . "$d" "$ad" hepsi 2>&1 | grep --line-buffered -v "^\s*$")
+    c=$?
     [ "$c" -eq 3 ] && { echo "KOTA_BITTI $k $d"; exit 3; }
+    [ "$c" -eq 4 ] && { echo "KREDI_BITTI $k $d"; exit 4; }
     [ "$c" -ne 0 ] && { echo "HATA $k $d ($c)"; exit "$c"; }
+    [ -f "$w/${k}_${d}_ses.mp3" ] || { echo "HATA $k $d (mp3 yok)"; exit 1; }
     mkdir -p "$DEPO/$k/$d"
     cp "$w/${k}_${d}_ses.mp3" "$w/altyazi_${d}.srt" "$DEPO/$k/$d/"
     echo "BITTI $k $d"

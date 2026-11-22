@@ -26,6 +26,10 @@ class KotaBitti(Exception):
     pass
 
 
+class KrediBitti(Exception):
+    pass
+
+
 _son = [0.0]
 
 
@@ -43,6 +47,8 @@ def _post(model, body, aralik=0.0):
                 raise KotaBitti(f"{model}: günlük kota doldu")
             time.sleep(20 + 10 * deneme)
             continue
+        if r.status_code == 402:
+            raise KrediBitti(f"{model}: Gemini ön ödemeli kredi bitti (AI Studio'dan yüklenmeli)")
         if r.status_code >= 500:
             time.sleep(10)
             continue
@@ -316,3 +322,5 @@ if __name__ == "__main__":
             pr.birlestir(ad)
     except KotaBitti as e:
         print("KOTA:", e, flush=True); sys.exit(3)
+    except KrediBitti as e:
+        print("KREDI:", e, flush=True); sys.exit(4)
