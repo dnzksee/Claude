@@ -2,6 +2,8 @@
 
 Bulut ortamı yenilenince çalışma klasörü silinir; araçlar burada yedeklidir.
 
+Kota: Gemini TTS günlük kotası Pasifik gece yarısı (≈08:00 UTC) sıfırlanır; sayaç dosyası ~/.tts_sayac_pt_<PT tarihi>.
+
 Kurulum: `pip install faster-whisper soundfile requests demucs` + `pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu`,
 `apt-get update && apt-get install -y fonts-noto-core fonts-noto-cjk libraqm0`. Anahtar: `GEMINI_API_KEY` ortam değişkeni.
 

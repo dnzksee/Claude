@@ -52,7 +52,11 @@ def _post(model, body, aralik=0.0):
 
 def _sayac():
     """Bu makinede bugün yapılan TTS istek sayısı. TTS_SINIR aşılırsa durur (Türkçe videolara kota bırakmak için)."""
-    yol = os.path.expanduser(f"~/.tts_sayac_{time.strftime('%Y-%m-%d', time.gmtime())}")
+    # Gemini günlük kotası Pasifik saatiyle gece yarısı (≈08:00 UTC) sıfırlanır; sayaç da o güne göre tutulur
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    gun = datetime.now(ZoneInfo("America/Los_Angeles")).strftime('%Y-%m-%d')
+    yol = os.path.expanduser(f"~/.tts_sayac_pt_{gun}")
     n = int(open(yol).read()) if os.path.exists(yol) else 0
     if n >= int(os.environ.get("TTS_SINIR", "60")):
         raise KotaBitti(f"günlük dublaj sınırı ({n} istek) doldu; kalan kota Türkçe videolara")
