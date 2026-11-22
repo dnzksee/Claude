@@ -14,3 +14,6 @@ Bir video için çalışma klasörü:
 4. `python3 dublaj.py . <dil> <DilAdi> hepsi` (üret → kontrol → onar → birleştir). Kota dolarsa ertesi gün aynı komut kaldığı yerden sürer.
 5. Kapak: `python3 kapak_dil.py <konu>/dil_kaynak/kapak_arka.png kapak_<dil>.png <dil> "satır1" "satır2" "satır3" 950`
    Yazısız arka plan yoksa: `python3 yazi_sil.py <konu>/kapak.png <konu>/dil_kaynak/kapak_arka.png` (gemini-3.1-flash-image; TTS kotası harcamaz).
+
+Toplu yürütme: `TTS_SINIR=100 bash araclar/sirayla.sh` (depo kökünden). Biten dilleri atlar, çalışma klasörü yoksa hazırlar,
+her bitişte `BITTI <konu> <dil>` yazar ve dosyaları `<konu>/<dil>/` içine koyar; kota dolunca `KOTA_BITTI` ile durur (kod 3).
