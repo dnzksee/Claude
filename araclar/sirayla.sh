@@ -29,6 +29,14 @@ for k in $SIRA; do
     [ -f "$w/${k}_${d}_ses.mp3" ] || { echo "HATA $k $d (mp3 yok)"; exit 1; }
     mkdir -p "$DEPO/$k/$d"
     cp "$w/${k}_${d}_ses.mp3" "$w/altyazi_${d}.srt" "$DEPO/$k/$d/"
+    # ses videoyla aynı uzunlukta mı (en fazla 0.5 sn fark)
+    sv=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$DEPO/$k/${k}_1080p.mp4")
+    sa=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$DEPO/$k/$d/${k}_${d}_ses.mp3")
+    python3 -c "import sys; sys.exit(0 if abs($sv-$sa) <= 0.5 else 1)" || { echo "HATA $k $d (süre: video $sv, ses $sa)"; exit 1; }
+    # teslim: dnzksee/Claude, kroniknane-videolar dalı
+    (cd "$DEPO" && git add "$k/$d/${k}_${d}_ses.mp3" "$k/$d/altyazi_${d}.srt" "$k/$d/kapak_${d}.png" "$k/youtube_diller.md" \
+      && git commit -q -m "$k: $d ses ve altyazı" -m "Co-Authored-By: Claude <noreply@anthropic.com>" \
+      && for i in 1 2 3 4; do git push -q -u origin kroniknane-videolar && break; sleep $((2**i)); done)
     echo "BITTI $k $d"
   done
 done
