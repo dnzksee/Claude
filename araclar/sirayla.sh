@@ -7,7 +7,7 @@
 DEPO=$(cd "$(dirname "$0")/.." && pwd)
 IS=/home/user/is
 SIRA="pekmez celeste tavsan lagari preveze fetih"
-DILLER="en:English es:Spanish ru:Russian ar:Arabic ur:Urdu ko:Korean"
+DILLER="en:English es:Spanish ar:Arabic ur:Urdu ko:Korean"   # Rusça kullanıcı isteğiyle çıkarıldı (25 Kasım)
 for k in $SIRA; do
   for x in $DILLER; do
     d=${x%%:*}; ad=${x#*:}
