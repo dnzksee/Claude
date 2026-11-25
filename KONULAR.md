@@ -13,6 +13,7 @@ Durum: ✅ yapıldı · 🎬 yapılıyor · ⬜ sırada
 - ✅ Lagari Hasan Çelebi'nin Roketi (1633) — "1633'te bir Osmanlı mucidi kendini gökyüzüne fırlattı."
 
 ## Türk ve Osmanlı tarihi
+- 🎬 Göbeklitepe (MÖ 9600) — "Piramitlerden 7000 yıl önce yapılan tapınak."
 - ⬜ Hezarfen Ahmed Çelebi — "Bir adam kanat taktı ve Boğaz'ı uçarak geçti… mi?"
 - ⬜ Piri Reis Haritası — "500 yıllık bir haritada henüz keşfedilmemiş bir kıta mı vardı?"
 - ⬜ Osmanlı'nın Hint Okyanusu Seferi — "Osmanlı donanması Hindistan'a kadar gitti."
