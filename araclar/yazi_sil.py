@@ -14,7 +14,7 @@ if __name__ == "__main__":
     veri = base64.b64encode(open(giris, "rb").read()).decode()
     body = {"contents": [{"parts": [{"text": ISTEK}, {"inlineData": {"mimeType": "image/png", "data": veri}}]}],
             "generationConfig": {"responseModalities": ["IMAGE"]}}
-    r = requests.post(URL, json=body, headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"]}, timeout=300)
+    r = requests.post(URL, json=body, headers={"x-goog-api-key": os.environ["GEMINI_API_KEY"].replace("buraya_yeni_anahtar", "").strip().strip("'\"=").strip()}, timeout=300)
     r.raise_for_status()
     for p in r.json()["candidates"][0]["content"]["parts"]:
         if "inlineData" in p:

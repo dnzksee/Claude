@@ -14,7 +14,7 @@ import numpy as np
 import requests
 import soundfile as sf
 
-ANAHTAR = os.environ["GEMINI_API_KEY"]
+ANAHTAR = os.environ["GEMINI_API_KEY"].replace("buraya_yeni_anahtar", "").strip().strip("'\"=").strip()  # ortamda kalan yer tutucuyu temizle
 TTS = "gemini-3.8-flash-tts"
 METIN_MODEL = "gemini-3.8-flash"
 SR = 24000
