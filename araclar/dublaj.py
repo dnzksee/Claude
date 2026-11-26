@@ -212,7 +212,7 @@ class Proje:
             ks = list(range(kes[g], kes[g + 1]))
             if all(os.path.exists(self.yol(k)) for k in ks):
                 continue
-            for deneme in range(3):
+            for deneme in range(int(os.environ.get("GRUP_DENEME", "2"))):  # ücretsiz kotada (10/gün) boşa harcamamak için 2
                 ham = f"{self.d}/ham{g}.wav"
                 if deneme == 0 and os.path.exists(ham):
                     x = sf.read(ham, dtype="float32")[0]
