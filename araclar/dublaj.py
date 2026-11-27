@@ -18,6 +18,8 @@ ANAHTAR = os.environ["GEMINI_API_KEY"].replace("buraya_yeni_anahtar", "").strip(
 TTS = "gemini-3.8-flash-tts"
 METIN_MODEL = "gemini-3.8-flash"
 METIN_YEDEK = "gemini-3.5-flash"   # yalnızca yazıya dökme kontrolü için
+METIN_MODELLER = [METIN_MODEL, METIN_YEDEK, "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
+_metin_bitti = set()
 SR = 24000
 ESIK = 0.85
 URL = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent"
@@ -100,10 +102,18 @@ def dokum(x, diladi):
              "(Urdu in Urdu/Arabic script, never Devanagari). Write numbers as digits. Output only the transcription.")
     body = {"contents": [{"parts": [{"inlineData": {"mimeType": "audio/wav", "data": base64.b64encode(b.getvalue()).decode()}},
                                     {"text": istem}]}]}
-    try:
-        d = _post(METIN_MODEL, body, aralik=1.0)
-    except RuntimeError:   # ana metin modeli yoğun (503): yalnızca kontrol için yedek modele geç (TTS değişmez)
-        d = _post(METIN_YEDEK, body, aralik=1.0)
+    d = None
+    for m in METIN_MODELLER:   # yalnızca yazıya dökme kontrolü: biri yoğun (503) ya da günlük kotası dolmuşsa sıradakine geç (TTS değişmez)
+        if m in _metin_bitti:
+            continue
+        try:
+            d = _post(m, body, aralik=1.0); break
+        except KotaBitti:
+            _metin_bitti.add(m)
+        except RuntimeError:
+            pass
+    if d is None:
+        raise KotaBitti("yazıya dökme modellerinin hepsi dolu/yoğun")
     try:
         return "".join(p.get("text", "") for p in d["candidates"][0]["content"]["parts"]).strip()
     except (KeyError, IndexError):
