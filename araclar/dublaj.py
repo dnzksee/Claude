@@ -17,6 +17,7 @@ import soundfile as sf
 ANAHTAR = os.environ["GEMINI_API_KEY"].replace("buraya_yeni_anahtar", "").strip().strip("'\"=").strip()  # ortamda kalan yer tutucuyu temizle
 TTS = "gemini-3.8-flash-tts"
 METIN_MODEL = "gemini-3.8-flash"
+METIN_YEDEK = "gemini-3.5-flash"   # yalnızca yazıya dökme kontrolü için
 SR = 24000
 ESIK = 0.85
 URL = "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent"
@@ -54,6 +55,8 @@ def _post(model, body, aralik=0.0):
         if r.status_code == 402:
             raise KrediBitti(f"{model}: Gemini ön ödemeli kredi bitti (AI Studio'dan yüklenmeli)")
         if r.status_code >= 500:
+            if model != TTS and deneme >= 2:
+                break
             time.sleep(10)
             continue
         raise RuntimeError(f"{model} {r.status_code}: {r.text[:300]}")
@@ -97,7 +100,10 @@ def dokum(x, diladi):
              "(Urdu in Urdu/Arabic script, never Devanagari). Write numbers as digits. Output only the transcription.")
     body = {"contents": [{"parts": [{"inlineData": {"mimeType": "audio/wav", "data": base64.b64encode(b.getvalue()).decode()}},
                                     {"text": istem}]}]}
-    d = _post(METIN_MODEL, body, aralik=1.0)
+    try:
+        d = _post(METIN_MODEL, body, aralik=1.0)
+    except RuntimeError:   # ana metin modeli yoğun (503): yalnızca kontrol için yedek modele geç (TTS değişmez)
+        d = _post(METIN_YEDEK, body, aralik=1.0)
     try:
         return "".join(p.get("text", "") for p in d["candidates"][0]["content"]["parts"]).strip()
     except (KeyError, IndexError):
