@@ -39,7 +39,11 @@ def _post(model, body, aralik=0.0):
         time.sleep(bekle)
     for deneme in range(8):
         _son[0] = time.time()
-        r = requests.post(URL.format(model), json=body, headers={"x-goog-api-key": ANAHTAR}, timeout=300)
+        try:
+            r = requests.post(URL.format(model), json=body, headers={"x-goog-api-key": ANAHTAR}, timeout=300)
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+            time.sleep(15)   # ağ/zaman aşımı: yeniden dene
+            continue
         if r.status_code == 200:
             return r.json()
         if r.status_code == 429:
